@@ -248,15 +248,17 @@ public class PLSPProjection2D extends Projection {
             }
         }
 
+        float w = 20.0f; //weigthing the control points
+
         for (int i = 0; i < cpoints.size(); i++) {
-            solver.addToA((cluster.size() + i), indexes.get(cpoints.get(i)), 1.0f);
+            solver.addToA((cluster.size() + i), indexes.get(cpoints.get(i)), w);
         }
 
         ////////////////////////////////////////////
         //creating matrix B
         for (int i = 0; i < cpoints.size(); i++) {
-            solver.addToB((cluster.size() + i), 0, cpointsproj.get(i)[0]);
-            solver.addToB((cluster.size() + i), 1, cpointsproj.get(i)[1]);
+            solver.addToB((cluster.size() + i), 0, cpointsproj.get(i)[0] * w);
+            solver.addToB((cluster.size() + i), 1, cpointsproj.get(i)[1] * w);
         }
 
         ///////////////////////////////////////////
