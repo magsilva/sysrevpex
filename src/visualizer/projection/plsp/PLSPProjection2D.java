@@ -248,7 +248,7 @@ public class PLSPProjection2D extends Projection {
             }
         }
 
-        float w = 20.0f; //weigthing the control points
+        float w = 1.0f; //weigthing the control points
 
         for (int i = 0; i < cpoints.size(); i++) {
             solver.addToA((cluster.size() + i), indexes.get(cpoints.get(i)), w);
