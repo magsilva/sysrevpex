@@ -48,7 +48,6 @@ address = {Washington, DC, USA},
 package visualizer.projection.stress;
 
 import visualizer.projection.distance.view.DistanceHistogramView;
-import visualizer.datamining.dataanalysis.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,13 +60,14 @@ import visualizer.projection.distance.Dissimilarity;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.DissimilarityType;
 import visualizer.projection.distance.DistanceMatrix;
+import visualizer.projection.stress.StressFactory.StressType;
 import visualizer.util.OpenDialog;
 import visualizer.util.filefilter.DATAFilter;
 import visualizer.util.filefilter.DMATFilter;
 
 /**
  *
- * @author  Fernando Paulovich
+ * @author  Fernando Vieira Paulovich
  */
 public class CalculateStressView extends javax.swing.JDialog {
 
@@ -81,6 +81,10 @@ public class CalculateStressView extends javax.swing.JDialog {
                 this.distanceComboBox.addItem(disstype);
             }
         }
+
+        for (StressType stresstype : StressType.values()) {
+            this.stressComboBox.addItem(stresstype);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -93,7 +97,6 @@ public class CalculateStressView extends javax.swing.JDialog {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        stressButtonGroup = new javax.swing.ButtonGroup();
         dataPanel = new javax.swing.JPanel();
         chooseDistanceTypePanel2 = new javax.swing.JPanel();
         distanceComboBox = new javax.swing.JComboBox();
@@ -105,8 +108,7 @@ public class CalculateStressView extends javax.swing.JDialog {
         pointsButton = new javax.swing.JButton();
         distanceMatrixButton = new javax.swing.JButton();
         stressPanel = new javax.swing.JPanel();
-        kruskalRadioButton = new javax.swing.JRadioButton();
-        sammonRadioButton = new javax.swing.JRadioButton();
+        stressComboBox = new javax.swing.JComboBox();
         buttonPanel = new javax.swing.JPanel();
         generateButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
@@ -221,21 +223,7 @@ public class CalculateStressView extends javax.swing.JDialog {
 
         stressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Stress Function"));
         stressPanel.setLayout(new java.awt.GridBagLayout());
-
-        stressButtonGroup.add(kruskalRadioButton);
-        kruskalRadioButton.setSelected(true);
-        kruskalRadioButton.setText("Kruskal's stress");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        stressPanel.add(kruskalRadioButton, gridBagConstraints);
-
-        stressButtonGroup.add(sammonRadioButton);
-        sammonRadioButton.setText("Sammon's stress");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        stressPanel.add(sammonRadioButton, gridBagConstraints);
+        stressPanel.add(stressComboBox, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -315,13 +303,7 @@ private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 DissimilarityType mtype = (DissimilarityType) this.distanceComboBox.getSelectedItem();
                 Dissimilarity diss = DissimilarityFactory.getInstance(mtype);
 
-                Stress stress = null;
-                if (kruskalRadioButton.isSelected()) {
-                    stress = new KruskalStress();
-                } else {
-                    stress = new SammonStress();
-                }
-
+                Stress stress = StressFactory.getInstance((StressType) stressComboBox.getSelectedItem());
                 float value = stress.calculate(matrix, diss, graph);
 
                 JOptionPane.showMessageDialog(this, "Stress= " + value,
@@ -338,13 +320,7 @@ private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
             try {
                 DistanceMatrix dmat = new DistanceMatrix(this.distanceMatrixTextField.getText());
 
-                Stress stress = null;
-                if (kruskalRadioButton.isSelected()) {
-                    stress = new KruskalStress();
-                } else {
-                    stress = new SammonStress();
-                }
-
+                Stress stress = StressFactory.getInstance((StressType) stressComboBox.getSelectedItem());
                 float value = stress.calculate(dmat, graph);
 
                 JOptionPane.showMessageDialog(this, "Stress= " + value,
@@ -358,7 +334,7 @@ private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
     }
 
-    this.setVisible(false);
+    //this.setVisible(false);
 }//GEN-LAST:event_generateButtonActionPerformed
 
 private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
@@ -377,7 +353,7 @@ private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.setVisible(true);
     }
 
-    private Graph graph;
+    private Graph graph;    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel chooseDistanceTypePanel2;
@@ -388,13 +364,11 @@ private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JRadioButton distanceMatrixRadioButton;
     private javax.swing.JTextField distanceMatrixTextField;
     private javax.swing.JButton generateButton;
-    private javax.swing.JRadioButton kruskalRadioButton;
     private javax.swing.JButton pointsButton;
     private javax.swing.JRadioButton pointsRadioButton;
     private javax.swing.JTextField pointsTextField;
-    private javax.swing.JRadioButton sammonRadioButton;
     private javax.swing.JPanel sourcePanel;
-    private javax.swing.ButtonGroup stressButtonGroup;
+    private javax.swing.JComboBox stressComboBox;
     private javax.swing.JPanel stressPanel;
     // End of variables declaration//GEN-END:variables
 }
