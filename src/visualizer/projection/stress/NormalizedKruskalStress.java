@@ -59,6 +59,7 @@ import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.distance.Euclidean;
 import visualizer.projection.distance.LightWeightDistanceMatrix;
 import visualizer.projection.plsp.PLSPProjection2D;
+import visualizer.util.Email;
 import visualizer.util.Util;
 
 /**
@@ -161,6 +162,11 @@ public class NormalizedKruskalStress extends Stress {
             KruskalStress stress = new KruskalStress();
             float value = stress.calculate(points, diss, projection);
 
+            String msg = "Points: " + pointsfilename + "\r\n" +
+                    "Projection: " + projfilename + "\r\n" +
+                    "Kruskal stress: " + value + "\r\n";
+            Email.send(msg);
+
             System.out.println("---");
             System.out.println("Points: " + pointsfilename);
             System.out.println("Projection: " + projfilename);
@@ -168,7 +174,7 @@ public class NormalizedKruskalStress extends Stress {
             System.out.println("---");
 
         } catch (IOException ex) {
-            Logger.getLogger(PLSPProjection2D.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NormalizedKruskalStress.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
