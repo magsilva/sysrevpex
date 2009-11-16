@@ -64,7 +64,7 @@ public class FastmapProjection extends Projector {
     public FastmapProjection(int targetDimension) {
         this.targetDimension = targetDimension;
     }
-
+    
     @Override
     public float[][] project(DistanceMatrix dmat) {
         float[][] points = null;

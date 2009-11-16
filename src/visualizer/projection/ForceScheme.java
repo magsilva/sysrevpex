@@ -44,7 +44,6 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.projection;
 
 import java.io.IOException;
@@ -107,6 +106,15 @@ public class ForceScheme {
                     if (dr2 < EPSILON) {
                         dr2 = EPSILON;
                     }
+
+//                    float drn = dmat.getDistance(instance, instance2);
+//                    float normdrn = drn;//(drn - dmat.getMinDistance()) /
+//                    //(dmat.getMaxDistance() - dmat.getMinDistance());
+//
+//                    //Calculating the (fraction of) delta
+//                    double delta = Math.sqrt(normdrn) - Math.sqrt(dr2);
+//                    delta *= Math.abs(delta);
+//                    delta /= this.fractionDelta;
 
                     float drn = dmat.getDistance(instance, instance2);
                     float normdrn = (drn - dmat.getMinDistance()) /
@@ -289,7 +297,6 @@ public class ForceScheme {
             Logger.getLogger(ForceScheme.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     private float fractionDelta;
     private int[] index;
     private static final float EPSILON = 0.0000001f;

@@ -47,18 +47,25 @@ address = {Washington, DC, USA},
 
 package visualizer.projection.idmap;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.matrix.Matrix;
+import visualizer.matrix.MatrixFactory;
 import visualizer.projection.ForceScheme;
 import visualizer.projection.Projection;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.Projector;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.ProjectorFactory;
+import visualizer.projection.ProjectorType;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
+import visualizer.projection.distance.DissimilarityType;
+import visualizer.util.Email;
+import visualizer.util.Util;
 import visualizer.wizard.ProjectionView;
 
 /**
@@ -121,4 +128,66 @@ public class IDMAPProjection extends Projection {
         return new IDMAPProjectionView(pdata);
     }
 
+    public static void main(String[] args) {
+        try {
+            Util.log(true, false);
+
+            if (args.length != 3) {
+                System.out.println("Usage: java IDMAPProjection <number iterations> <points> <dissimilarity>");
+                System.out.println("   ex: java IDMAPProjection 10 points.data cosine");
+            }
+
+            DissimilarityType disstype = null;
+            if (args[2].trim().toLowerCase().equals("cosine")) {
+                disstype = DissimilarityType.COSINE_BASED;
+            } else {
+                disstype = DissimilarityType.EUCLIDEAN;
+            }
+
+            String filename = args[1];
+            Matrix matrix = MatrixFactory.getInstance(filename);
+
+            ProjectionData pdata = new ProjectionData();
+            pdata.setDissimilarityType(disstype);
+            pdata.setFractionDelta(8.0f);
+            pdata.setNumberIterations(Integer.parseInt(args[0]));
+            pdata.setProjectorType(ProjectorType.FASTMAP);
+            pdata.setSourceFile(filename);
+
+            IDMAPProjection idmap = new IDMAPProjection();
+            float[][] projection = idmap.project(matrix, pdata, null);
+
+            BufferedWriter out = null;
+            try {
+                out = new BufferedWriter(new FileWriter(filename + "-IDMAP.prj"));
+
+                out.write("DY\r\n");
+                out.write(projection.length + "\r\n");
+                out.write("2\r\n");
+                out.write("x;y\r\n");
+
+                for (int i = 0; i < projection.length; i++) {
+                    out.write(matrix.getRow(i).getId() + ";" + projection[i][0] +
+                            ";" + projection[i][1] + ";" + matrix.getRow(i).getKlass() + "\r\n");
+                }
+            } catch (IOException e) {
+                throw new IOException(e.getMessage());
+            } finally {
+                if (out != null) {
+                    try {
+                        out.flush();
+                        out.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(IDMAPProjection.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            String msg = "IDMAP finished: " + filename;
+            Email.send(msg);
+
+        } catch (IOException ex) {
+            Logger.getLogger(IDMAPProjection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

@@ -68,6 +68,7 @@ import visualizer.projection.distance.DissimilarityType;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.lsp.ControlPointsType;
 import visualizer.projection.lsp.LSPProjection2D;
+import visualizer.util.Email;
 import visualizer.util.KNN;
 import visualizer.util.PExConstants;
 import visualizer.util.Pair;
@@ -373,7 +374,7 @@ public class PLSPProjection2D extends Projection {
             }
 
             DissimilarityType disstype = null;
-            if (args[1].trim().toLowerCase().equals("cosine")) {
+            if (args[2].trim().toLowerCase().equals("cosine")) {
                 disstype = DissimilarityType.COSINE_BASED;
             } else {
                 disstype = DissimilarityType.EUCLIDEAN;
@@ -420,9 +421,13 @@ public class PLSPProjection2D extends Projection {
                 }
             }
 
+            String msg = "P-LSP finished: " + filename;
+            Email.send(msg);
+
         } catch (IOException ex) {
             Logger.getLogger(PLSPProjection2D.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private ArrayList<ArrayList<Integer>> cpoints;
 }

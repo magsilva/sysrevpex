@@ -75,7 +75,7 @@ public class LightWeightDistanceMatrix extends DistanceMatrix {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new LightWeightDistanceMatrix(matrix, diss);
     }
 
     @Override

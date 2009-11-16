@@ -55,6 +55,7 @@ import visualizer.projection.distance.DistanceMatrix;
  */
 public class NearestNeighborProjection extends Projector {
 
+    @Override
     public float[][] project(DistanceMatrix dmat) {
 
         float[][] projection = new float[dmat.getElementCount()][];
