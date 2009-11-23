@@ -45,9 +45,9 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.graph;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,6 +78,7 @@ import visualizer.topic.TopicData;
 public class Graph implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * Return the size of the graph, i.e., the maximum height and width.
      * @return The size of the graph
@@ -146,7 +147,7 @@ public class Graph implements java.io.Serializable {
                 //Draw each edges of the graph
                 if (this.isEdgeVisible) {
                     for (Edge edge : edges) {
-                        edge.draw(image, highquality);
+                        edge.draw(image, null, highquality);
                     }
                 }
             }
@@ -155,19 +156,53 @@ public class Graph implements java.io.Serializable {
         //Draw each vertice of the graph
         for (Vertex v : this.vertex) {
             if (!v.isValid()) {
-                v.draw(image, highquality);
+                v.draw(image, null, highquality);
             }
         }
 
         for (Vertex v : this.vertex) {
             if (v.isValid() && !v.isSelected()) {
-                v.draw(image, highquality);
+                v.draw(image, null, highquality);
             }
         }
 
         for (Vertex v : this.vertex) {
             if (v.isValid() && v.isSelected()) {
-                v.draw(image, highquality);
+                v.draw(image, null, highquality);
+            }
+        }
+    }
+
+    public void draw(Connectivity connectivity, Graphics2D g2, boolean highquality) {
+        if (connectivity != null) {
+            if (connectivity != null) {
+                ArrayList<Edge> edges = connectivity.getEdges();
+
+                //Draw each edges of the graph
+                if (this.isEdgeVisible) {
+                    for (Edge edge : edges) {
+                        edge.draw(null, g2, highquality);
+                    }
+                }
+            }
+        }
+
+        //Draw each vertice of the graph
+        for (Vertex v : this.vertex) {
+            if (!v.isValid()) {
+                v.draw(null, g2, highquality);
+            }
+        }
+
+        for (Vertex v : this.vertex) {
+            if (v.isValid() && !v.isSelected()) {
+                v.draw(null, g2, highquality);
+            }
+        }
+
+        for (Vertex v : this.vertex) {
+            if (v.isValid() && v.isSelected()) {
+                v.draw(null, g2, highquality);
             }
         }
     }
@@ -699,7 +734,6 @@ public class Graph implements java.io.Serializable {
             vertex.get(i).setY(vertex.get(i).getY() + diffy * rand.nextFloat());
         }
     }
-
     protected Corpus corpus;
     protected TopicData tdata = new TopicData(this);
     protected boolean isEdgeVisible = true;

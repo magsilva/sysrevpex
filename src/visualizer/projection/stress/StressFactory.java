@@ -53,7 +53,7 @@ public class StressFactory {
 
     public enum StressType {
 
-        KRUSKAL, NORMALIZED_KRUSKAL, SAMMON
+        KRUSKAL, NORMALIZED_KRUSKAL, SAMMON, NORMALIZED_SAMMON
     }
 
     public static Stress getInstance(StressType type) {
@@ -64,6 +64,8 @@ public class StressFactory {
             return new NormalizedKruskalStress();
         } else if (type.equals(StressType.SAMMON)) {
             return new SammonStress();
+        } else if (type.equals(StressType.NORMALIZED_SAMMON)) {
+            return new NormalizedSammnonStress();
         }
 
         return null;

@@ -44,7 +44,6 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.graph;
 
 import java.awt.Color;
@@ -61,6 +60,7 @@ public class Edge implements Comparable, java.io.Serializable {
 
     public static final float NO_SIZE = -1;
     private static final long serialVersionUID = 1L;
+
     /**
      * Constructor of the edge
      * 
@@ -91,8 +91,10 @@ public class Edge implements Comparable, java.io.Serializable {
      * @param globalsel Indicates if there is at least one selected vertex on 
      * the graph this vertex belongs to
      */
-    public void draw(BufferedImage image, boolean highquality) {
-        Graphics2D g2 = (Graphics2D) image.getGraphics();
+    public void draw(BufferedImage image, Graphics2D g2, boolean highquality) {
+        if (image != null) {
+            g2 = (Graphics2D) image.getGraphics();
+        }
 
         if (highquality) {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -107,7 +109,6 @@ public class Edge implements Comparable, java.io.Serializable {
                     (this.source.getColor().getGreen() + this.target.getColor().getGreen()) / 2,
                     (this.source.getColor().getBlue() + this.target.getColor().getBlue()) / 2);
         }
-
 
         g2.setColor(this.color);
         g2.setStroke(new java.awt.BasicStroke(1.3f));
@@ -235,7 +236,6 @@ public class Edge implements Comparable, java.io.Serializable {
     public static void setShowLength(boolean aShowLength) {
         showLength = aShowLength;
     }
-
     private float length = Edge.NO_SIZE;
     private Color color = Color.WHITE; //Color of the edge
     private Vertex source; //The first vertex of the edge

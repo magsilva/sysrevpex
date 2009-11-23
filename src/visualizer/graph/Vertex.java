@@ -45,7 +45,6 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.graph;
 
 import java.awt.BasicStroke;
@@ -94,8 +93,10 @@ public class Vertex implements Comparable, java.io.Serializable {
      * @param globalsel Indicates if there is at least one selected vertex on 
      * the graph this vertex belongs to
      */
-    public void draw(BufferedImage image, boolean highquality) {
-        Graphics2D g2 = (Graphics2D) image.getGraphics();
+    public void draw(BufferedImage image, Graphics2D g2, boolean highquality) {
+        if (image != null) {
+            g2 = (Graphics2D) image.getGraphics();
+        }
 
         if (highquality) {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -110,7 +111,7 @@ public class Vertex implements Comparable, java.io.Serializable {
                     g2.setColor(this.color);
                     g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) -
                             this.getRay(), this.getRay() * 2, this.getRay() * 2);
-                    
+
                     g2.setColor(Color.DARK_GRAY);
                     g2.drawOval(((int) this.x) - this.getRay(), ((int) this.y) -
                             this.getRay(), this.getRay() * 2, this.getRay() * 2);
@@ -164,29 +165,46 @@ public class Vertex implements Comparable, java.io.Serializable {
         } else { //draw as points
             if (this.valid) {
                 if (this.selected) {
-                    int rgbcolor = this.color.getRGB();
-                    image.setRGB((int) this.x, (int) this.y, rgbcolor);
+                    if (image != null) {
+                        int rgbcolor = this.color.getRGB();
+                        image.setRGB((int) this.x, (int) this.y, rgbcolor);
 
-                    int rgbborder = this.color.darker().darker().getRGB();
-                    image.setRGB((int) this.x - 1, (int) this.y - 1, rgbborder);
-                    image.setRGB((int) this.x, (int) this.y - 1, rgbborder);
-                    image.setRGB((int) this.x + 1, (int) this.y - 1, rgbborder);
-                    image.setRGB((int) this.x - 1, (int) this.y, rgbborder);
-                    image.setRGB((int) this.x + 1, (int) this.y, rgbborder);
-                    image.setRGB((int) this.x - 1, (int) this.y + 1, rgbborder);
-                    image.setRGB((int) this.x, (int) this.y + 1, rgbborder);
-                    image.setRGB((int) this.x + 1, (int) this.y + 1, rgbborder);
+                        int rgbborder = this.color.darker().darker().getRGB();
+                        image.setRGB((int) this.x - 1, (int) this.y - 1, rgbborder);
+                        image.setRGB((int) this.x, (int) this.y - 1, rgbborder);
+                        image.setRGB((int) this.x + 1, (int) this.y - 1, rgbborder);
+                        image.setRGB((int) this.x - 1, (int) this.y, rgbborder);
+                        image.setRGB((int) this.x + 1, (int) this.y, rgbborder);
+                        image.setRGB((int) this.x - 1, (int) this.y + 1, rgbborder);
+                        image.setRGB((int) this.x, (int) this.y + 1, rgbborder);
+                        image.setRGB((int) this.x + 1, (int) this.y + 1, rgbborder);
+                    } else {
+                        g2.setColor(this.color.darker().darker());
+                        g2.fillRect((int) this.x - 1, (int) this.y - 1, 3, 3);
+
+                        g2.setColor(this.color);
+                        g2.fillRect((int) this.x, (int) this.y, 1, 1);
+                    }
                 } else {
-                    int rgb = this.color.getRGB();
-                    this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y - 1, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x, (int) this.y - 1, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y - 1, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x, (int) this.y, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y + 1, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x, (int) this.y + 1, rgb);
-                    this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y + 1, rgb);
+                    if (image != null) {
+                        int rgb = this.color.getRGB();
+                        this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y - 1, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x, (int) this.y - 1, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y - 1, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x, (int) this.y, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x - 1, (int) this.y + 1, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x, (int) this.y + 1, rgb);
+                        this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y + 1, rgb);
+                    } else {
+                        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
+
+                        g2.setColor(this.color);
+                        g2.fillRect((int) this.x - 1, (int) this.y - 1, 3, 3);
+
+                        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 1.0f));
+                    }
                 }
 
                 //show the label associated to this vertex
@@ -587,7 +605,6 @@ public class Vertex implements Comparable, java.io.Serializable {
             return -1;
         }
     }
-
     private static final long serialVersionUID = 1L;
     private static final float EPSILON = 0.00001f;
     private long id = 0; //The vertex identification

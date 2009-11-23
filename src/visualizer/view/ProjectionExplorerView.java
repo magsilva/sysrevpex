@@ -45,7 +45,6 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.view;
 
 import visualizer.projection.ProjectionViewer;
@@ -119,6 +118,7 @@ import visualizer.topic.Topic;
 import visualizer.topic.TopicClusters;
 import visualizer.topic.RulesTopicGrid;
 import visualizer.util.filefilter.DIRFilter;
+import visualizer.util.filefilter.EPSFilter;
 import visualizer.view.tools.BrowserControl;
 import visualizer.view.tools.CreateDistanceScalar;
 import visualizer.view.tools.KnnConnectivity;
@@ -148,7 +148,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
                     BrowserControl.displayURL(e.getURL().toString());
                 }
             }
-
         });
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -228,6 +227,7 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         fileExportToPng = new javax.swing.JMenuItem();
         fileExportToVtk = new javax.swing.JMenuItem();
         fileExportToProjection = new javax.swing.JMenuItem();
+        fileExportToEps = new javax.swing.JMenuItem();
         separator2 = new javax.swing.JSeparator();
         importMenu = new javax.swing.JMenu();
         fileImportFromProjection = new javax.swing.JMenuItem();
@@ -734,6 +734,16 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
             }
         });
         exportMenu.add(fileExportToProjection);
+
+        fileExportToEps.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        fileExportToEps.setMnemonic('E');
+        fileExportToEps.setText("Export EPS File");
+        fileExportToEps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileExportToEpsActionPerformed(evt);
+            }
+        });
+        exportMenu.add(fileExportToEps);
 
         menuFile.add(exportMenu);
         menuFile.add(separator2);
@@ -1247,7 +1257,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
                         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
                     }
                 }
-
             });
 
             this.menuWindows.add(menuItem);
@@ -1273,7 +1282,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
                         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
             });
 
             this.menuWindows.add(menuItem);
@@ -2193,6 +2201,32 @@ private void silhouetteCoefficientMenuItemActionPerformed(java.awt.event.ActionE
     }
 }//GEN-LAST:event_silhouetteCoefficientMenuItemActionPerformed
 
+private void fileExportToEpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileExportToEpsActionPerformed
+    Viewer gv = (Viewer) this.desktop.getSelectedFrame();
+
+    if (gv != null) {
+        String filename = "image.eps";
+
+        if (gv.getGraph() != null) {
+            filename = gv.getGraph().getProjectionData().getSourceFile();
+        }
+
+        int result = SaveDialog.showSaveDialog(new EPSFilter(), this, filename);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            filename = SaveDialog.getFilename();
+
+            try {
+                gv.saveToEpsImageFile(filename);
+            } catch (IOException e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                        "Problems saving the file", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+}//GEN-LAST:event_fileExportToEpsActionPerformed
+
     public void refreshLists() {
         this.nearestNeighborsList.repaint();
         this.pointsList.repaint();
@@ -2322,7 +2356,6 @@ private void silhouetteCoefficientMenuItemActionPerformed(java.awt.event.ActionE
     public Coordinator getCoordinator() {
         return this.coordinator;
     }
-
     private Coordinator coordinator = new Coordinator();
     private HashMap<JComponent, JRadioButtonMenuItem> windows = new HashMap<JComponent, JRadioButtonMenuItem>();
     private DefaultListModel nearestNeighborListModel = new DefaultListModel();
@@ -2366,6 +2399,7 @@ private void silhouetteCoefficientMenuItemActionPerformed(java.awt.event.ActionE
     private javax.swing.JMenuItem exporttitles;
     private javax.swing.JEditorPane fileContentEditorPane;
     private javax.swing.JScrollPane fileContentScrollPane;
+    private javax.swing.JMenuItem fileExportToEps;
     private javax.swing.JMenuItem fileExportToPng;
     private javax.swing.JMenuItem fileExportToProjection;
     private javax.swing.JMenuItem fileExportToVtk;
