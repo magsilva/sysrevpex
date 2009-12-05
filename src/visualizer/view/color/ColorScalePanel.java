@@ -44,11 +44,12 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.view.color;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import visualizer.view.Viewer;
@@ -108,7 +109,6 @@ public class ColorScalePanel extends javax.swing.JPanel {
             super.mouseEntered(e);
             ColorScalePanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
-
     }
 
     public class ColorScale extends javax.swing.JPanel {
@@ -116,27 +116,25 @@ public class ColorScalePanel extends javax.swing.JPanel {
         @Override
         public void paintComponent(java.awt.Graphics g) {
             super.paintComponent(g);
-
-            if (colorTable != null) {
-//                minLabel.setForeground(colorTable.getColor(0.0f));
-//                maxLabel.setForeground(colorTable.getColor(1.0f));
-
-                //Getting the panel dimension - horizontal fill
-                java.awt.Dimension size = this.getSize();
-                int height = size.height;
-                int width = size.width;
-
-                for (int i = 0; i < width; i++) {
-                    float index = ((float) i) / ((float) width);
-                    g.setColor(colorTable.getColor(index));
-                    g.drawRect(i, 0, i, height);
-                    g.fillRect(i, 0, i, height);
-                }
-            }
+            drawScale(g);
         }
-
     }
 
+    public void drawScale(Graphics g) {
+        if (colorTable != null) {
+            Dimension size = scale.getSize();
+            int height = size.height;
+            int width = size.width;
+
+            for (int i = 0; i < width; i++) {
+                float index = ((float) i) / ((float) width);
+                g.setColor(colorTable.getColor(index));
+                g.drawRect(i, 0, i, height);
+                g.fillRect(i, 0, i, height);
+            }
+        }
+    }
+    
     private javax.swing.JLabel maxLabel = new javax.swing.JLabel("Max");
     private javax.swing.JLabel minLabel = new javax.swing.JLabel("Min");
     private ColorScalePanel.ColorScale scale;

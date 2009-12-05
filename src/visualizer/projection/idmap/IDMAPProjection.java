@@ -44,7 +44,6 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
-
 package visualizer.projection.idmap;
 
 import java.io.BufferedWriter;
@@ -99,6 +98,8 @@ public class IDMAPProjection extends Projection {
             view.setStatus("Projecting...", 40);
         }
 
+        long start = System.currentTimeMillis();
+
         Projector proj = ProjectorFactory.getInstance(pdata.getProjectorType());
         float[][] projection = proj.project(dmat);
 
@@ -116,9 +117,15 @@ public class IDMAPProjection extends Projection {
                 String msg = "Iteration " + i + " - error: " + error;
                 if (view != null) {
                     view.setStatus(msg, (int) (45 + (i * 50.0f / pdata.getNumberIterations())));
+                } else {
+                    Logger.getLogger(IDMAPProjection.class.getName()).log(Level.INFO, msg);
                 }
             }
         }
+
+        long finish = System.currentTimeMillis();
+        Logger.getLogger(IDMAPProjection.class.getName()).log(Level.INFO,
+                "Interactive Document Map (IDMAP) time: " + (finish - start) / 1000.0f + "s");
 
         return projection;
     }

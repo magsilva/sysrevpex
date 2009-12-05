@@ -963,8 +963,10 @@ public class ProjectionViewer extends Viewer {
 
         public void saveToPngImageFile(String filename) throws IOException {
             try {
-                this.paintComponents(this.imageBuffer.getGraphics());
-                ImageIO.write(this.imageBuffer, "png", new File(filename));
+                BufferedImage image =  new BufferedImage(graph.getSize().width + 1,
+                        graph.getSize().height + 1, BufferedImage.TYPE_INT_RGB);
+                this.paint(image.getGraphics());
+                ImageIO.write(image, "png", new File(filename));
             } catch (IOException ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
@@ -1000,6 +1002,8 @@ public class ProjectionViewer extends Viewer {
             for (Topic topic : this.topics) {
                 topic.drawTopic(g, this.getFont(), false);
             }
+
+            this.csp.drawScale(g);
 
             // Flush and close the document (don't forget to do this!)
             g.flush();
