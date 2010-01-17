@@ -107,8 +107,10 @@ public class NormalizedKruskalStress extends Stress {
         float den = 0.0f;
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = i + 1; j < dmat.getElementCount(); j++) {
-                float distr2 = dmatprj.getDistance(i, j) / maxr2;
-                den += distr2 * distr2;
+//                float distr2 = dmatprj.getDistance(i, j) / maxr2;
+//                den += distr2 * distr2;
+                float distrn = dmat.getDistance(i, j) / maxrn;
+                den += distrn * distrn;
             }
         }
 

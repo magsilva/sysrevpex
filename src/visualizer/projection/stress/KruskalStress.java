@@ -90,7 +90,8 @@ public class KruskalStress extends Stress {
         float den = 0.0f;
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = i + 1; j < dmat.getElementCount(); j++) {
-                den += dmatprj.getDistance(i, j) * dmatprj.getDistance(i, j);
+                //den += dmatprj.getDistance(i, j) * dmatprj.getDistance(i, j);
+                den += dmat.getDistance(i, j) * dmat.getDistance(i, j);
             }
         }
 
