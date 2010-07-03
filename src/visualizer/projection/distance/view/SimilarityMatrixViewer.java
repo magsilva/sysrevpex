@@ -44,6 +44,7 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
+
 package visualizer.projection.distance.view;
 
 import java.awt.Color;
@@ -57,7 +58,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,8 +68,6 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import net.sf.epsgraphics.ColorMode;
-import net.sf.epsgraphics.EpsGraphics;
 import visualizer.graph.Connectivity;
 import visualizer.graph.Graph;
 import visualizer.graph.Scalar;
@@ -415,13 +413,6 @@ public class SimilarityMatrixViewer extends Viewer {
     }
 
     @Override
-    public void saveToEpsImageFile(String filename) throws IOException {
-        if (this.view != null) {
-            this.view.saveToEpsImageFile(filename);
-        }
-    }
-
-    @Override
     public ArrayList<Vertex> getSelectedVertex(Point source, Point target) {
         if (this.view != null) {
             return this.view.getSelectedVertex(source, target);
@@ -567,7 +558,6 @@ public class SimilarityMatrixViewer extends Viewer {
 //
 //        return index;
 //    }
-
     private int[] createIndex(DistanceMatrix dmat) {
         int[] index_aux = new int[dmat.getElementCount()];
 
@@ -652,8 +642,8 @@ public class SimilarityMatrixViewer extends Viewer {
             order_aux.add(new_ord);
 
             for (int j = new_ord.begin + 1; j < index_aux.length; j++) {
-                if (cdata[index_aux[new_ord.begin]] != cdata[index_aux[j]] ||
-                        j == index_aux.length - 1) {
+                if (cdata[index_aux[new_ord.begin]] != cdata[index_aux[j]]
+                        || j == index_aux.length - 1) {
                     new_ord.end = j - 1;
 
                     if (j == index_aux.length - 1) {
@@ -806,8 +796,8 @@ public class SimilarityMatrixViewer extends Viewer {
                     float colorvalue = 0.0f;
 
                     if (i != j) {
-                        colorvalue = (dmat.getDistance((int) v1.getId(), (int) v2.getId()) - dmat.getMinDistance()) /
-                                (dmat.getMaxDistance() - dmat.getMinDistance());
+                        colorvalue = (dmat.getDistance((int) v1.getId(), (int) v2.getId()) - dmat.getMinDistance())
+                                / (dmat.getMaxDistance() - dmat.getMinDistance());
                     }
 
                     if (v1.isSelected() || v2.isSelected()) {
@@ -859,54 +849,13 @@ public class SimilarityMatrixViewer extends Viewer {
 
         public void saveToPngImageFile(String filename) throws IOException {
             try {
-//                this.paint(this.origimage.getGraphics());
-                ImageIO.write(this.origimage, "png", new File(filename));
+                int space = redimage.getWidth(null) / 20;
+                BufferedImage image = new BufferedImage(redimage.getWidth(null) + 3 * space,
+                        redimage.getHeight(null) + 3 * space, BufferedImage.TYPE_INT_RGB);
+                this.paint(image.getGraphics());
+                ImageIO.write(image, "png", new File(filename));
             } catch (IOException ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        public void saveToEpsImageFile(String filename) throws IOException {
-            FileOutputStream out = null;
-
-            try {
-                out = new FileOutputStream(filename);
-
-                int space = origimage.getWidth() / 20;
-
-                // Create a new document
-                EpsGraphics g = new EpsGraphics(filename, out, 0, 0,
-                        origimage.getWidth() + 3 * space, origimage.getHeight(),
-                        ColorMode.COLOR_RGB);
-
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, origimage.getWidth() + 3 * space,
-                        origimage.getWidth() + 3 * space);
-
-                g.drawImage(origimage, 0, 0, null);
-
-                int height = origimage.getHeight() - 2 * space;
-
-                for (int i = 0; i < height; i++) {
-                    float colorvalue = ((float) i) / ((float) height);
-                    g.setColor(colorTable.getColor(colorvalue));
-                    g.fillRect(origimage.getWidth() + space, i + space, space, 1);
-                }
-
-                // Flush and close the document (don't forget to do this!)
-                g.flush();
-                g.close();
-            } catch (IOException ex) {
-                throw new IOException(ex.getMessage());
-            } finally {
-                if (out != null) {
-                    try {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(SimilarityMatrixViewer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
             }
         }
 
@@ -1057,6 +1006,7 @@ public class SimilarityMatrixViewer extends Viewer {
 
                 repaint();
             }
+
         }
 
         class MouseClickedListener extends MouseAdapter {
@@ -1130,8 +1080,10 @@ public class SimilarityMatrixViewer extends Viewer {
                 target = null;
                 repaint();
             }
+
         }
         //Used to select points with the retangle
+
         private java.awt.Point source = null;
         private java.awt.Point target = null;
         private java.awt.Color color = java.awt.Color.RED;
@@ -1169,11 +1121,13 @@ public class SimilarityMatrixViewer extends Viewer {
                 return -1;
             }
         }
+
         public static final float EPSILON = 0.00001f;
         public int begin;
         public int end;
         public float value;
     }
+
     private DefaultComboBoxModel coordComboModel = new DefaultComboBoxModel();
     private DefaultComboBoxModel titlesComboModel = new DefaultComboBoxModel();
     private java.awt.Font font = new java.awt.Font("Verdana", java.awt.Font.BOLD, 13);
@@ -1181,7 +1135,6 @@ public class SimilarityMatrixViewer extends Viewer {
     private SimilarityMatrixGraph graph;
     private DistanceMatrix dmat;
     private Mapping prevCoord = Mapping.OFF;
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel comboPanel;
     private javax.swing.JComboBox coordComboBox;

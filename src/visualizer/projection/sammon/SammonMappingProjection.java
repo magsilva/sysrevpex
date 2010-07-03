@@ -61,7 +61,6 @@ import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
 import visualizer.projection.distance.DissimilarityType;
-import visualizer.util.Email;
 import visualizer.util.Util;
 import visualizer.wizard.ProjectionView;
 
@@ -185,9 +184,6 @@ public class SammonMappingProjection extends Projection {
                     }
                 }
             }
-
-            String msg = "Sammon's Mapping finished: " + filename;
-            Email.send(msg);
 
         } catch (IOException ex) {
             Logger.getLogger(SammonMappingProjection.class.getName()).log(Level.SEVERE, null, ex);

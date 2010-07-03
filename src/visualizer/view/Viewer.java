@@ -226,13 +226,6 @@ public abstract class Viewer extends javax.swing.JInternalFrame {
      */
     public abstract void saveToPngImageFile(String filename) throws IOException;
 
-    /**
-     * Saves the projection as a EPS file.
-     * @param filename The file name.
-     * @throws java.io.IOException Throws an exception if something goes wrong.
-     */
-    public abstract void saveToEpsImageFile(String filename) throws IOException;
-
     public abstract ArrayList<Vertex> getSelectedVertex(Point source, Point target);
 
     public abstract Graph getGraph();

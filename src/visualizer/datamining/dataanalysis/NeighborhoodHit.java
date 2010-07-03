@@ -53,17 +53,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
-import java.awt.geom.Rectangle2D;
-import java.io.FileOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import net.sf.epsgraphics.ColorMode;
-import net.sf.epsgraphics.EpsGraphics;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -87,7 +85,7 @@ import visualizer.util.PExConstants;
 import visualizer.util.Pair;
 import visualizer.util.SaveDialog;
 import visualizer.util.Util;
-import visualizer.util.filefilter.EPSFilter;
+import visualizer.util.filefilter.PNGFilter;
 
 /**
  *
@@ -143,41 +141,18 @@ public class NeighborhoodHit extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
-        int result = SaveDialog.showSaveDialog(new EPSFilter(), this, "image.eps");
+        int result = SaveDialog.showSaveDialog(new PNGFilter(), this, "image.png");
 
         if (result == JFileChooser.APPROVE_OPTION) {
             String filename = SaveDialog.getFilename();
 
-            FileOutputStream out = null;
-
             try {
-                // Save this document to example.eps
-                out = new FileOutputStream(filename);
-
-                // Create a new document with bounding box 0 <= x <= 100 and 0 <= y <= 100.
-                EpsGraphics g = new EpsGraphics(filename, out, 0, 0,
-                        panel.getWidth() + 1, panel.getHeight() + 1, ColorMode.COLOR_RGB);
-
-                freechart.draw(g, new Rectangle2D.Double(0, 0, panel.getWidth() + 1,
-                        panel.getHeight() + 1));
-
-                // Flush and close the document (don't forget to do this!)
-                g.flush();
-                g.close();
-
+                BufferedImage image = new BufferedImage(panel.getWidth(),
+                        panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                panel.paint(image.getGraphics());
+                ImageIO.write(image, "png", new File(filename));
             } catch (IOException ex) {
-                Logger.getLogger(NeighborhoodHit.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this, ex.getMessage(),
-                        "Problems saving the file", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                if (out != null) {
-                    try {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(NeighborhoodHit.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_saveImageButtonActionPerformed

@@ -54,14 +54,12 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -72,8 +70,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import net.sf.epsgraphics.ColorMode;
-import net.sf.epsgraphics.EpsGraphics;
 import visualizer.forcelayout.ForceData;
 import visualizer.forcelayout.ForceDirectLayout;
 import visualizer.graph.Edge;
@@ -571,13 +567,6 @@ public class ProjectionViewer extends Viewer {
     }
 
     @Override
-    public void saveToEpsImageFile(String filename) throws IOException {
-        if (this.view != null) {
-            this.view.saveToEpsImageFile(filename);
-        }
-    }
-
-    @Override
     public ArrayList<Vertex> getSelectedVertex(Point localSource, Point localTarget) {
         if (this.view != null) {
             return this.view.getSelectedVertex(localSource, localTarget);
@@ -970,44 +959,6 @@ public class ProjectionViewer extends Viewer {
             } catch (IOException ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-        public void saveToEpsImageFile(String filename) throws IOException {
-            // Save this document to example.eps
-            FileOutputStream outputStream = new FileOutputStream(filename);
-
-            EpsGraphics g = new EpsGraphics(filename, outputStream, 0, 0,
-                    graph.getSize().width + 1, graph.getSize().height + 1, ColorMode.COLOR_RGB);
-
-            //create the image
-            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-            g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-            g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-
-            if (highQualityRender) {
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            } else {
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-            }
-
-            g.setColor(this.getBackground());
-            g.fillRect(0, 0, graph.getSize().width + 1, graph.getSize().height + 1);
-            g.setFont(this.getFont());
-
-            graph.draw(getCurrentConnectivity(), (Graphics2D) g, highQualityRender);
-
-            for (Topic topic : this.topics) {
-                topic.drawTopic(g, this.getFont(), false);
-            }
-
-            this.csp.drawScale(g);
-
-            // Flush and close the document (don't forget to do this!)
-            g.flush();
-            g.close();
         }
 
         public void setGraph(Graph graph) {

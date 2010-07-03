@@ -17,7 +17,6 @@ import visualizer.projection.distance.Dissimilarity;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.distance.Euclidean;
 import visualizer.projection.distance.LightWeightDistanceMatrix;
-import visualizer.util.Email;
 import visualizer.util.Util;
 
 /**
@@ -119,9 +118,6 @@ public class NormalizedSammnonStress extends Stress {
 
             NormalizedSammnonStress stress = new NormalizedSammnonStress();
             float value = stress.calculate(points, diss, projection);
-
-            String msg = "Points: " + pointsfilename + " - Normalized Sammnon Stress stress: " + value;
-            Email.send(msg);
 
             System.out.println("---");
             System.out.println("Points: " + pointsfilename);

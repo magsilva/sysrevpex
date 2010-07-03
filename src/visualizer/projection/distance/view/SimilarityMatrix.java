@@ -54,22 +54,21 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import net.sf.epsgraphics.ColorMode;
-import net.sf.epsgraphics.EpsGraphics;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.util.Pair;
 import visualizer.util.SaveDialog;
-import visualizer.util.filefilter.EPSFilter;
+import visualizer.util.filefilter.PNGFilter;
 import visualizer.view.color.ColorScaleType;
 import visualizer.view.color.ColorTable;
 
@@ -129,12 +128,12 @@ public class SimilarityMatrix extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
-        int result = SaveDialog.showSaveDialog(new EPSFilter(), this, "image.eps");
+        int result = SaveDialog.showSaveDialog(new PNGFilter(), this, "image.png");
 
         if (result == JFileChooser.APPROVE_OPTION) {
             try {
                 String filename = SaveDialog.getFilename();
-                this.panel.exportEPSImage(filename);
+                this.panel.saveToPngImageFile(filename);
             } catch (IOException ex) {
                 Logger.getLogger(SimilarityMatrix.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(),
@@ -234,48 +233,16 @@ public class SimilarityMatrix extends javax.swing.JDialog {
             }
         }
 
-        public void exportEPSImage(String filename) throws IOException {
-            FileOutputStream out = null;
-
+        public void saveToPngImageFile(String filename) throws IOException {
             try {
-                out = new FileOutputStream(filename);
-
                 int space = image.getWidth() / 20;
 
-                // Create a new document
-                EpsGraphics g = new EpsGraphics(filename, out, 0, 0,
-                        image.getWidth() + 3 * space, image.getHeight(),
-                        ColorMode.COLOR_RGB);
-
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, image.getWidth() + 3 * space,
-                        image.getWidth() + 3 * space);
-
-                g.drawImage(image, 0, 0, null);
-
-                int height = image.getHeight() - 2 * space;
-
-                for (int i = 0; i < height; i++) {
-                    float color = ((float) i) / ((float) height);
-                    g.setColor(colorTable.getColor(color));
-                    g.fillRect(image.getWidth() + space, i + space, space, 1);
-                }
-
-                // Flush and close the document (don't forget to do this!)
-                g.flush();
-                g.close();
-
+                BufferedImage image = new BufferedImage(this.image.getWidth() + 3 * space,
+                        this.image.getHeight(), BufferedImage.TYPE_INT_RGB);
+                this.paint(image.getGraphics());
+                ImageIO.write(image, "png", new File(filename));
             } catch (IOException ex) {
-                throw new IOException(ex.getMessage());
-            } finally {
-                if (out != null) {
-                    try {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DistanceHistogram.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
         }
 

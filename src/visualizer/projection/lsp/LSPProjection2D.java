@@ -79,7 +79,6 @@ import visualizer.projection.distance.DissimilarityType;
 import visualizer.projection.idmap.IDMAPProjection;
 import visualizer.projection.plsp.PLSPProjection2D;
 import visualizer.util.ANN;
-import visualizer.util.Email;
 import visualizer.util.Util;
 import visualizer.wizard.ProjectionView;
 
@@ -552,9 +551,6 @@ public class LSPProjection2D extends Projection {
                     }
                 }
             }
-
-            String msg = "LSP finished: " + filename;
-            Email.send(msg);
 
         } catch (IOException ex) {
             Logger.getLogger(PLSPProjection2D.class.getName()).log(Level.SEVERE, null, ex);

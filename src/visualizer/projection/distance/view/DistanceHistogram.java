@@ -51,16 +51,14 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.geom.Rectangle2D;
-import java.io.FileOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import net.sf.epsgraphics.ColorMode;
-import net.sf.epsgraphics.EpsGraphics;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -73,6 +71,7 @@ import org.jfree.data.xy.IntervalXYDataset;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.util.SaveDialog;
 import visualizer.util.filefilter.EPSFilter;
+import visualizer.util.filefilter.PNGFilter;
 
 /**
  *
@@ -127,43 +126,20 @@ public class DistanceHistogram extends javax.swing.JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
-        int result = SaveDialog.showSaveDialog(new EPSFilter(), this, "image.eps");
+        int result = SaveDialog.showSaveDialog(new PNGFilter(), this, "image.png");
 
         if (result == JFileChooser.APPROVE_OPTION) {
             String filename = SaveDialog.getFilename();
 
-            FileOutputStream out = null;
-
             try {
-                // Save this document to example.eps
-                out = new FileOutputStream(filename);
-
-                // Create a new document with bounding box 0 <= x <= 100 and 0 <= y <= 100.
-                EpsGraphics g = new EpsGraphics(filename, out, 0, 0,
-                        panel.getWidth() + 1, panel.getHeight() + 1, ColorMode.COLOR_RGB);
-
-                freechart.draw(g, new Rectangle2D.Double(0, 0, panel.getWidth() + 1,
-                        panel.getHeight() + 1));
-
-                // Flush and close the document (don't forget to do this!)
-                g.flush();
-                g.close();
-
+                BufferedImage image = new BufferedImage(panel.getWidth(),
+                        panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                panel.paint(image.getGraphics());
+                ImageIO.write(image, "png", new File(filename));
             } catch (IOException ex) {
-                Logger.getLogger(DistanceHistogram.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this, ex.getMessage(),
-                        "Problems saving the file", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                if (out != null) {
-                    try {
-                        out.flush();
-                        out.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DistanceHistogram.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }
-        }       
+        }
     }//GEN-LAST:event_saveImageButtonActionPerformed
 
     public static DistanceHistogram getInstance(javax.swing.JDialog parent) {
@@ -173,7 +149,7 @@ public class DistanceHistogram extends javax.swing.JDialog {
     public void display(DistanceMatrix dmat) {
         this.freechart = this.createChart(this.createDataset(dmat));
         this.freechart.removeLegend();
-        
+
         this.panel = new ChartPanel(freechart);
         this.getContentPane().add(panel, BorderLayout.CENTER);
 
@@ -193,8 +169,8 @@ public class DistanceHistogram extends javax.swing.JDialog {
 
         for (int i = 0; i < dmat.getElementCount() - 1; i++) {
             for (int j = dmat.getElementCount() - 1; j > i; j--) {
-                ad[index] = (dmat.getDistance(i, j) - dmat.getMinDistance()) /
-                        (dmat.getMaxDistance() - dmat.getMinDistance());
+                ad[index] = (dmat.getDistance(i, j) - dmat.getMinDistance())
+                        / (dmat.getMaxDistance() - dmat.getMinDistance());
                 index++;
             }
         }
@@ -208,15 +184,15 @@ public class DistanceHistogram extends javax.swing.JDialog {
         JFreeChart chart = ChartFactory.createHistogram("Distance Histogram",
                 "Distances Values", "Occurences", intervalxydataset,
                 PlotOrientation.VERTICAL, true, true, false);
-        
+
 //        JFreeChart chart = ChartFactory.createHistogram("Histograma das Distâncias",
 //                "Valores", "Ocorrências", intervalxydataset,
 //                PlotOrientation.VERTICAL, true, true, false);
-        
+
         chart.setBackgroundPaint(Color.WHITE);
-        
+
         XYPlot xyplot = (XYPlot) chart.getPlot();
-        
+
         NumberAxis numberaxis = (NumberAxis) xyplot.getRangeAxis();
         numberaxis.setAutoRangeIncludesZero(false);
 
@@ -227,11 +203,11 @@ public class DistanceHistogram extends javax.swing.JDialog {
         xyplot.setOutlineStroke(new BasicStroke(1.0f));
         xyplot.setBackgroundPaint(Color.white);
         xyplot.setDomainCrosshairVisible(true);
-        xyplot.setRangeCrosshairVisible(true);        
-        
+        xyplot.setRangeCrosshairVisible(true);
+
         XYBarRenderer xybarrenderer = (XYBarRenderer) xyplot.getRenderer();
         xybarrenderer.setDrawBarOutline(false);
-        
+
         return chart;
     }
 

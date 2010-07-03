@@ -63,7 +63,6 @@ import visualizer.projection.ProjectorType;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
 import visualizer.projection.distance.DissimilarityType;
-import visualizer.util.Email;
 import visualizer.util.Util;
 import visualizer.wizard.ProjectionView;
 
@@ -189,9 +188,6 @@ public class IDMAPProjection extends Projection {
                     }
                 }
             }
-
-            String msg = "IDMAP finished: " + filename;
-            Email.send(msg);
 
         } catch (IOException ex) {
             Logger.getLogger(IDMAPProjection.class.getName()).log(Level.SEVERE, null, ex);
