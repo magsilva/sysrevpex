@@ -91,7 +91,7 @@ public class DenseMatrix extends Matrix {
             char[] header = in.readLine().trim().toCharArray();
 
             //checking
-            if (header.length != 2) {
+            if (header.length != 2 && header.length != 3) {
                 throw new IOException("Wrong format of header information.");
             }
 
@@ -106,6 +106,18 @@ public class DenseMatrix extends Matrix {
             //read the number of dimensions
             int nrdims = Integer.parseInt(in.readLine());
 
+            //read the labels if they are available
+            ArrayList<String> labels = new ArrayList<String>();
+            if (header.length == 3 && header[2] == 'Y') {
+                String line = in.readLine();
+                StringTokenizer t1 = new StringTokenizer(line, ";");
+
+                while (t1.hasMoreTokens()) {
+                    String token = t1.nextToken();
+                    labels.add(token.trim());
+                }
+            }
+
             //read the attributes
             String line = in.readLine();
             StringTokenizer t1 = new StringTokenizer(line, ";");
@@ -117,12 +129,19 @@ public class DenseMatrix extends Matrix {
 
             //checking
             if (this.attributes.size() > 0 && this.attributes.size() != nrdims) {
-                throw new IOException("The number of attributes does not match " +
-                        "with the dimensionality of matrix (" + this.attributes.size() +
-                        " - " + nrdims + ").");
+                throw new IOException("The number of attributes does not match "
+                        + "with the dimensionality of matrix (" + this.attributes.size()
+                        + " - " + nrdims + ").");
+            }
+
+            if (labels.size() > 0 && labels.size() != nrobjs) {
+                throw new IOException("The number of labels does not match "
+                        + "with the number of elements in the matrix ("
+                        + labels.size() + " - " + nrobjs + ").");
             }
 
             //read the vectors
+            int labelcount = 0;
             while ((line = in.readLine()) != null && line.trim().length() > 0) {
                 StringTokenizer t2 = new StringTokenizer(line, ";");
 
@@ -146,8 +165,8 @@ public class DenseMatrix extends Matrix {
                                 vector[index] = value;
                                 index++;
                             } else {
-                                throw new IOException("Vector with wrong number of " +
-                                        "dimensions!");
+                                throw new IOException("Vector with wrong number of "
+                                        + "dimensions!");
                             }
                         } else {
                             klass = value;
@@ -157,22 +176,31 @@ public class DenseMatrix extends Matrix {
                             vector[index] = value;
                             index++;
                         } else {
-                            throw new IOException("Vector with wrong number of " +
-                                    "dimensions!");
+                            throw new IOException("Vector with wrong number of "
+                                    + "dimensions!");
                         }
                     } else {
                         throw new IOException("Unknown class data option");
                     }
                 }
 
-                this.addRow(new DenseVector(vector, id, klass));
+                if (labels.size() > 0) {
+                    if (rows.size() < labels.size()) {
+                        String label = labels.get(labelcount++);
+                        this.addRow(new DenseVector(vector, label, klass));
+                    } else {
+
+                    }
+                } else {
+                    this.addRow(new DenseVector(vector, id, klass));
+                }
             }
 
             //checking
             if (this.getRowCount() != nrobjs) {
-                throw new IOException("The number of vectors does not match " +
-                        "with the matrix size (" + this.getRowCount() +
-                        " - " + nrobjs + ").");
+                throw new IOException("The number of vectors does not match "
+                        + "with the matrix size (" + this.getRowCount()
+                        + " - " + nrobjs + ").");
             }
 
         } catch (FileNotFoundException e) {

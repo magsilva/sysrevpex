@@ -102,7 +102,7 @@ public class MatrixFactory {
             char[] header = in.readLine().trim().toCharArray();
 
             //checking
-            if (header.length != 2) {
+            if (header.length != 2 && header.length != 3) {
                 throw new IOException("Wrong format of header information.");
             }
 

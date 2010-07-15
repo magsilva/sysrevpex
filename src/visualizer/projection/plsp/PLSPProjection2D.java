@@ -44,6 +44,7 @@ address = {Washington, DC, USA},
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
  *
  * ***** END LICENSE BLOCK ***** */
+
 package visualizer.projection.plsp;
 
 import java.io.BufferedWriter;
@@ -68,6 +69,7 @@ import visualizer.projection.distance.DissimilarityType;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.lsp.ControlPointsType;
 import visualizer.projection.lsp.LSPProjection2D;
+import visualizer.util.ANN;
 import visualizer.util.KNN;
 import visualizer.util.PExConstants;
 import visualizer.util.Pair;
@@ -190,8 +192,14 @@ public class PLSPProjection2D extends Projection {
         nrneighbors = (nrneighbors < cluster.size()) ? nrneighbors : cluster.size() - 1;
 
         //creating the neighborhood graph
-        KNN ann = new KNN(nrneighbors);
-        Pair[][] neighbors = ann.execute(projmatrix, diss);
+        Pair[][] neighbors = null;
+        if (nrneighbors > 1000) {
+            ANN ann = new ANN(nrneighbors);
+            neighbors = ann.execute(projmatrix, diss);
+        } else {
+            KNN knn = new KNN(nrneighbors);
+            neighbors = knn.execute(projmatrix, diss);
+        }
 
         ConnectedGraphGenerator congraph = new ConnectedGraphGenerator();
         neighbors = congraph.execute(neighbors, projmatrix, diss);
@@ -285,7 +293,7 @@ public class PLSPProjection2D extends Projection {
         ArrayList<ArrayList<Integer>> controlpoints = new ArrayList<ArrayList<Integer>>();
 
         //percentage of points of each cluster to use
-        float perc = (float) Math.pow(matrix.getRowCount(), 0.75) / matrix.getRowCount();
+        float perc = (float) Math.pow(matrix.getRowCount(), 0.65) / matrix.getRowCount();
 
         //for each patch
         for (int i = 0; i < clusters.size(); i++) {
