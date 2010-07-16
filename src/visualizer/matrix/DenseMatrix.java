@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import visualizer.util.Util;
 
 /**
  *
@@ -91,7 +92,7 @@ public class DenseMatrix extends Matrix {
             char[] header = in.readLine().trim().toCharArray();
 
             //checking
-            if (header.length != 2 && header.length != 3) {
+            if (header.length != 2) {
                 throw new IOException("Wrong format of header information.");
             }
 
@@ -105,18 +106,6 @@ public class DenseMatrix extends Matrix {
 
             //read the number of dimensions
             int nrdims = Integer.parseInt(in.readLine());
-
-            //read the labels if they are available
-            ArrayList<String> labels = new ArrayList<String>();
-            if (header.length == 3 && header[2] == 'Y') {
-                String line = in.readLine();
-                StringTokenizer t1 = new StringTokenizer(line, ";");
-
-                while (t1.hasMoreTokens()) {
-                    String token = t1.nextToken();
-                    labels.add(token.trim());
-                }
-            }
 
             //read the attributes
             String line = in.readLine();
@@ -132,12 +121,6 @@ public class DenseMatrix extends Matrix {
                 throw new IOException("The number of attributes does not match "
                         + "with the dimensionality of matrix (" + this.attributes.size()
                         + " - " + nrdims + ").");
-            }
-
-            if (labels.size() > 0 && labels.size() != nrobjs) {
-                throw new IOException("The number of labels does not match "
-                        + "with the number of elements in the matrix ("
-                        + labels.size() + " - " + nrobjs + ").");
             }
 
             //read the vectors
@@ -184,16 +167,7 @@ public class DenseMatrix extends Matrix {
                     }
                 }
 
-                if (labels.size() > 0) {
-                    if (rows.size() < labels.size()) {
-                        String label = labels.get(labelcount++);
-                        this.addRow(new DenseVector(vector, label, klass));
-                    } else {
-
-                    }
-                } else {
-                    this.addRow(new DenseVector(vector, id, klass));
-                }
+                this.addRow(new DenseVector(vector, id, klass));
             }
 
             //checking
@@ -241,7 +215,6 @@ public class DenseMatrix extends Matrix {
                         out.write(";");
                     }
                 }
-
                 out.write("\r\n");
             } else {
                 out.write("\r\n");
