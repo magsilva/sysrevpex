@@ -55,8 +55,8 @@ import java.awt.Color;
  */
 public class CategoryScale extends ColorScale {
 
-    private static final Color[] BASE_COLORS = {Color.BLACK, Color.YELLOW, Color.MAGENTA,
-        Color.BLUE, Color.RED, Color.ORANGE, Color.CYAN, Color.PINK, Color.GREEN, Color.WHITE
+    private static final Color[] BASE_COLORS = {/*Color.DARK_GRAY,*/ Color.MAGENTA, Color.YELLOW,
+        Color.BLUE, Color.WHITE, Color.RED, Color.CYAN, /*Color.ORANGE,*/ Color.PINK, Color.GREEN
     };
 
     public CategoryScale() {
