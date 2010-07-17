@@ -67,6 +67,8 @@ public class ColorScaleFactory {
             return new RainbowScale();
         } else if (type == ColorScaleType.PSEUDORAINBOWCALE) {
             return new PseudoRainbowScale();
+        } else if(type == ColorScaleType.CATEGORYSCALE){
+            return new CategoryScale();
         }
 
         return null;
