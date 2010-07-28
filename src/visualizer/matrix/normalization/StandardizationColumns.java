@@ -59,7 +59,7 @@ import visualizer.matrix.Vector;
  *
  * @author Fernando Vieira Paulovich
  */
-public class Standardization extends Normalization {
+public class StandardizationColumns extends Normalization {
 
     @Override
     public Matrix execute(Matrix matrix) throws IOException {

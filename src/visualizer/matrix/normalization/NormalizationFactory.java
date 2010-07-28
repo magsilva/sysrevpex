@@ -54,8 +54,10 @@ package visualizer.matrix.normalization;
 public class NormalizationFactory {
 
     public static Normalization getInstance(NormalizationType type) {
-        if (type.equals(NormalizationType.STANDARDIZATION)) {
-            return new Standardization();
+        if (type.equals(NormalizationType.STANDARDIZATION_COLUMNS)) {
+            return new StandardizationColumns();
+        } else if (type.equals(NormalizationType.REMOVE_MEAN)) {
+            return new RemoveMean();
         } else if (type.equals(NormalizationType.VECTORS_UNIT_LENGTH)) {
             return new NormalizeRows();
         } else if (type.equals(NormalizationType.NORMALIZE_COLUMNS)) {

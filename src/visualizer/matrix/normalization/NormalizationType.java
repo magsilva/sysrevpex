@@ -62,7 +62,8 @@ public class NormalizationType {
     public static final NormalizationType NONE = new NormalizationType("None");
     public static final NormalizationType VECTORS_UNIT_LENGTH = new NormalizationType("Vectors with unit length");
     public static final NormalizationType NORMALIZE_COLUMNS = new NormalizationType("Normalize columns [0,1]");
-    public static final NormalizationType STANDARDIZATION = new NormalizationType("Standardization");
+    public static final NormalizationType STANDARDIZATION_COLUMNS = new NormalizationType("Standardization (columns)");
+    public static final NormalizationType REMOVE_MEAN = new NormalizationType("Remove mean (rows)");
     public static final NormalizationType EQUALIZATION = new NormalizationType("Equalization");
     
     /** 
