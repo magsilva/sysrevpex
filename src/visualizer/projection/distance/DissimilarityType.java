@@ -66,6 +66,7 @@ public class DissimilarityType implements Serializable {
     public static final DissimilarityType KOLMOGOROV = new DissimilarityType("Kolmogorov");
     public static final DissimilarityType EXTENDED_JACCARD = new DissimilarityType("Extended Jaccard");
     public static final DissimilarityType INFINITY_NORM = new DissimilarityType("Infinity Norm");
+    public static final DissimilarityType DTW = new DissimilarityType("Dynamic Time Warping (DTW)");
     public static final DissimilarityType NONE = new DissimilarityType("None");
     
     /** 

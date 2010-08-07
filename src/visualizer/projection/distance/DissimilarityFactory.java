@@ -66,6 +66,8 @@ public class DissimilarityFactory {
                 return new ExtendedJaccard();
             } else if (type.equals(DissimilarityType.INFINITY_NORM)) {
                 return new InfinityNorm();
+            } else if (type.equals(DissimilarityType.DTW)) {
+                return new DynamicTimeWarping();
             }
         }
 
