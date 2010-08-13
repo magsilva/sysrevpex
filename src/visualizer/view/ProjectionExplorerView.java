@@ -379,6 +379,7 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         });
         toolBar.add(runForceButton);
 
+        searchPanel.setOpaque(false);
         searchPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 5, 0));
 
         searchToolbarLabel.setText("Search");
