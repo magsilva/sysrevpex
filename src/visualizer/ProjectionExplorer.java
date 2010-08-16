@@ -61,13 +61,13 @@ public class ProjectionExplorer {
 
     public static void main(String args[]) {
         try {
-            String delay = SystemPropertiesManager.getInstance().getProperty("SPLASH.DELAY");
-            if (delay == null || delay.trim().length() < 1) {
-                delay = "3000";
+            String del = SystemPropertiesManager.getInstance().getProperty("SPLASH.DELAY");
+            if (del == null || del.trim().length() < 1) {
+                del = "3000";
             }
 
             Splash.getInstance().start();
-            Thread.sleep(Long.parseLong(delay));
+            Thread.sleep(Long.parseLong(del));
             Splash.getInstance().stop();
 
         } catch (InterruptedException ex) {
