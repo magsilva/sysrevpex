@@ -2,7 +2,6 @@ package visualizer.corpus.bibtex;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -85,22 +84,24 @@ public class BibTeX2Pex
 			BufferedWriter buffer = new BufferedWriter(writer);
 			for (String field : fieldsToImport) {
 				String value = bibtexEntry.getField(field);
-				if (value != null) {
+				if (value != null && ! value.trim().isEmpty()) {
 					if ("keywords".equals(field)) {
-						writer.write("Keywords: ");
+						writer.append("Keywords: ");
 					}
-					buffer.write(value);
-					buffer.write("\n");
-					buffer.write("\n");
+					buffer.append(value);
+					buffer.append("\n");
+					buffer.append("\n");
+					buffer.flush();
 				}
 			}
 			buffer.flush();
 			buffer.close();
+			writer.flush();
+			writer.close();
 			ZipEntry entry = new ZipEntry(fileName);
 			zipfile.putNextEntry(entry);
 			byte[] data = writer.toString().getBytes();
 			zipfile.write(data, 0, data.length);
-			writer.close();
 
 			String year = bibtexEntry.getField("year");
 			scalarwriter.write(fileName + ";" + year);
@@ -114,7 +115,7 @@ public class BibTeX2Pex
 	
 	public static void main(String[] args) throws Exception
 	{
-		BibTeX2Pex converter = new BibTeX2Pex(new File("/home/magsilva/x/ConvertBibtexInPExFormat/data/Infovis2006.bib"));
+		BibTeX2Pex converter = new BibTeX2Pex(new File("/home/magsilva/tmp/root.bib"));
 		converter.convert();
 	}
 }
