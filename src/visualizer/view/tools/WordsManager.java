@@ -50,12 +50,13 @@ package visualizer.view.tools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import visualizer.textprocessing.Startword;
-import visualizer.textprocessing.Stopword;
+import visualizer.textprocessing.stopword.SetStopword;
 import visualizer.util.OpenDialog;
 import visualizer.util.SaveDialog;
 import visualizer.util.SystemPropertiesManager;
@@ -229,7 +230,7 @@ public class WordsManager extends javax.swing.JDialog {
 
             try {
                 if (this.stopwordsDialog) {
-                    Stopword stp = Stopword.getInstance();
+                    SetStopword stp = SetStopword.getInstance();
                     stp.removeStopword(stopword);
                 } else {
                     Startword stp = Startword.getInstance();
@@ -249,7 +250,7 @@ public class WordsManager extends javax.swing.JDialog {
             if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
                 try {
                     String filename = SaveDialog.getFilename();
-                    Stopword stp = Stopword.getInstance();
+                    SetStopword stp = SetStopword.getInstance();
                     stp.saveStopwordsList(filename);
                 } catch (IOException ex) {
                     Logger.getLogger(WordsManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -282,7 +283,7 @@ public class WordsManager extends javax.swing.JDialog {
 
         if (this.stopwordsDialog) {  //Stop words
             try {
-                Stopword stp = Stopword.getInstance();
+                SetStopword stp = SetStopword.getInstance();
 
                 for (int i = 0; i < this.newWordsTableModel.getRowCount(); i++) {
                     String value = (String) this.newWordsTableModel.getValueAt(i, 0);
@@ -299,7 +300,9 @@ public class WordsManager extends javax.swing.JDialog {
                 this.wordsTable.setModel(this.currentWordsTableModel);
                 this.newWordsTable.setModel(this.newWordsTableModel);
 
-                for (String stopword : stp.getStopwordList()) {
+                Iterator<String> i = stp.iterator();
+                while (i.hasNext()) {
+                	String stopword = i.next();
                     String[] row = new String[1];
                     row[0] = stopword;
                     this.currentWordsTableModel.addRow(row);
@@ -362,7 +365,7 @@ public class WordsManager extends javax.swing.JDialog {
                     SystemPropertiesManager m = SystemPropertiesManager.getInstance();
                     m.setProperty("SPW.FILE", filename);
 
-                    Stopword stp = Stopword.getInstance();
+                    SetStopword stp = SetStopword.getInstance();
                     stp.changeStopwordList(filename);
                     this.fileTextField.setText(stp.getFilename().substring(stp.getFilename().lastIndexOf("\\") + 1));
 
@@ -370,7 +373,9 @@ public class WordsManager extends javax.swing.JDialog {
                     this.wordsTable.setModel(this.currentWordsTableModel);
                     this.newWordsTable.setModel(this.newWordsTableModel);
 
-                    for (String stopword : stp.getStopwordList()) {
+                    Iterator<String> i = stp.iterator();
+                    while (i.hasNext()) {
+                    	String stopword = i.next();
                         String[] row = new String[1];
                         row[0] = stopword;
                         this.currentWordsTableModel.addRow(row);
@@ -429,10 +434,12 @@ public class WordsManager extends javax.swing.JDialog {
 
         try {
             if (stopwordsDialog) {
-                Stopword stp = Stopword.getInstance();
+                SetStopword stp = SetStopword.getInstance();
                 this.fileTextField.setText(stp.getFilename().substring(stp.getFilename().lastIndexOf("\\") + 1));
 
-                for (String stopword : stp.getStopwordList()) {
+                Iterator<String> i = stp.iterator();
+                while (i.hasNext()) {
+                	String stopword = i.next();
                     String[] row = new String[1];
                     row[0] = stopword;
                     this.currentWordsTableModel.addRow(row);

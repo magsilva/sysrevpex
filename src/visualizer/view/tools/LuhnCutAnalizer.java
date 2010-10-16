@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,10 +66,11 @@ import visualizer.corpus.Corpus;
 import visualizer.corpus.CorpusFactory;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.Preprocessor;
-import visualizer.textprocessing.Stopword;
 import visualizer.projection.ProjectionData;
 import visualizer.textprocessing.stemmer.StemmerFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
+import visualizer.textprocessing.stopword.SetStopword;
+import visualizer.textprocessing.stopword.StopWord;
 import visualizer.util.SaveDialog;
 import visualizer.util.filefilter.STARTFilter;
 import visualizer.util.filefilter.STOPFilter;
@@ -683,7 +685,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
         Preprocessor pre = new Preprocessor(cp);
         ArrayList<Ngram> res_ngrams = pre.getNgramsAccordingTo(lowercut, uppercut, nrGrams, stemmer, useStopword);
         ArrayList<Ngram> corpus_ngrams = pre.getNgramsAccordingTo(1, -1, nrGrams, StemmerType.NONE, useStopword);
-        List<String> stopwords = Stopword.getInstance().getStopwordList();
+        StopWord stopWords = SetStopword.getInstance();
 
         for (int i = 0; i < corpus_ngrams.size(); i++) {
             boolean contain = false;
@@ -697,18 +699,18 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
                 }
             }
 
-            if (!contain) {
-                stopwords.add(corpus_ngrams.get(i).ngram);
+            if (! contain) {
+                stopWords.addStopword(corpus_ngrams.get(i).ngram);
             }
         }
-
-        Collections.sort(stopwords);
 
         //saving to the file
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(filename));
-            for (String stp : stopwords) {
+            Iterator<String> i = stopWords.iterator();
+            while (i.hasNext()) {
+            	String stp = i.next();
                 out.write(stp);
                 out.write("\n");
             }

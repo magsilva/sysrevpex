@@ -46,7 +46,7 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing;
+package visualizer.textprocessing.stopword;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,11 +54,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import visualizer.util.SystemPropertiesManager;
 
@@ -67,23 +67,23 @@ import visualizer.util.SystemPropertiesManager;
  * 
  * @author Fernando Vieira Paulovich
  */
-public class Stopword
+public class SetStopword implements StopWord
 {
-	private static Stopword instance;
+	private static SetStopword instance;
 	
 	private Set<String> stopwords;
 
 	private File file;
 
-	private Stopword()
+	private SetStopword()
 	{
 		stopwords = new HashSet<String>();
 	}
 
-	public synchronized static Stopword getInstance() throws java.io.IOException
+	public synchronized static SetStopword getInstance() throws java.io.IOException
 	{
 		if (instance == null) {
-			instance = new Stopword();
+			instance = new SetStopword();
 			
 			SystemPropertiesManager m = SystemPropertiesManager.getInstance();
 			String stpFilename = m.getProperty("SPW.FILE");
@@ -93,29 +93,37 @@ public class Stopword
 		return instance;
 	}
 
+	@Override
 	public void changeStopwordList(String stpFilename) throws java.io.IOException
 	{
 		readStopwordList(stpFilename);
 	}
 
-	public List<String> getStopwordList()
+	@Override
+	public Iterator<String> iterator()
 	{
-		List<String>result = new ArrayList<String>(stopwords.size());
-		result.addAll(stopwords);
-		Collections.sort(result);
-		return result;
+		return stopwords.iterator();
 	}
 
+	@Override
+	public void addStopword(String stopword)
+	{
+		this.stopwords.add(stopword);
+	}
+	
+	@Override
 	public void addStopwords(List<String> stopwords)
 	{
 		this.stopwords.addAll(stopwords);
 	}
 
+	@Override
 	public void removeStopword(String stopword)
 	{
 		stopwords.remove(stopword);
 	}
 
+	@Override
 	public void saveStopwordsList(String filename) throws java.io.IOException
 	{
 		File file = new File(filename);
@@ -138,11 +146,13 @@ public class Stopword
 		}
 	}
 
+	@Override
 	public String getFilename()
 	{
 		return file.getAbsolutePath();
 	}
 
+	@Override
 	public boolean isStopWord(String word)
 	{
 		return stopwords.contains(word);

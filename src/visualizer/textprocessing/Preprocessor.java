@@ -61,6 +61,8 @@ import visualizer.matrix.SparseMatrix;
 import visualizer.matrix.SparseVector;
 import visualizer.textprocessing.stemmer.StemmerFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
+import visualizer.textprocessing.stopword.SetStopword;
+import visualizer.textprocessing.stopword.StopWord;
 
 /**
  *
@@ -210,11 +212,11 @@ public class Preprocessor {
     private ArrayList<Ngram> getCorpusNgrams() throws IOException {
         HashMap<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
 
-        Stopword stp = null;
+        StopWord stp = null;
         Startword sta = null;
 
         if (useStopword) {
-            stp = Stopword.getInstance();
+            stp = SetStopword.getInstance();
         } else {
             sta = Startword.getInstance();
         }
@@ -262,11 +264,11 @@ public class Preprocessor {
     private HashMap<String, Integer> getNgrams(String url) throws IOException {
         HashMap<String, Integer> ngrams_aux = new HashMap<String, Integer>();
 
-        Stopword stp = null;
+        StopWord stp = null;
         Startword sta = null;
 
         if (useStopword) {
-            stp = Stopword.getInstance();
+            stp = SetStopword.getInstance();
         } else {
             sta = Startword.getInstance();
         }
