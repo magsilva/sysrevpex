@@ -5,7 +5,7 @@
 
 	<groupId>vicg</groupId>
 	<artifactId>pex</artifactId>
-	<version>1.0.0</version>
+	<version>1.7.0</version>
 	<packaging>jar</packaging>
 
 	<name>Projection Explorer (PEx)</name>
@@ -192,7 +192,22 @@
 					</filesets>
 				</configuration>
 			</plugin>
-		</plugins>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>visualizer.ProjectionExplorer</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>			
 	</build>
 
 	<reporting>

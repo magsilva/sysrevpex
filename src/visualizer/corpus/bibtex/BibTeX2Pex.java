@@ -115,7 +115,7 @@ public class BibTeX2Pex
 	
 	public static void main(String[] args) throws Exception
 	{
-		BibTeX2Pex converter = new BibTeX2Pex(new File("/home/magsilva/tmp/root.bib"));
+		BibTeX2Pex converter = new BibTeX2Pex(new File("/home/magsilva/teste.bib"));
 		converter.convert();
 	}
 }
