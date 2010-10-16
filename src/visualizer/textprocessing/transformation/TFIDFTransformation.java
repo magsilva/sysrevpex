@@ -56,7 +56,6 @@ import visualizer.matrix.SparseVector;
  */
 public class TFIDFTransformation implements MatrixTransformation {
 
-    @Override
     public Matrix tranform(Matrix matrix, Object parameter) {
         //Store the number of documents which the term occur
         float[] docsFreq = new float[matrix.getDimensions()];

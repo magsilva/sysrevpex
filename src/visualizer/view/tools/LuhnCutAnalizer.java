@@ -762,8 +762,6 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
         Preprocessor pre = new Preprocessor(cp);
         ArrayList<Ngram> res_ngrams = pre.getNgramsAccordingTo(lowercut, uppercut, nrGrams, stemmer, useStopword);
         Collections.sort(res_ngrams, new Comparator<Ngram>() {
-
-            @Override
             public int compare(Ngram o1, Ngram o2) {
                 return (o1.ngram.compareTo(o2.ngram));
             }

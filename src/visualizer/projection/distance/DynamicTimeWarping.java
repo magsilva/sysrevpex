@@ -13,7 +13,6 @@ import visualizer.matrix.Vector;
  */
 public class DynamicTimeWarping implements Dissimilarity {
 
-    @Override
     public float calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
 

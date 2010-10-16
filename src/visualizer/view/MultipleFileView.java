@@ -284,8 +284,6 @@ public class MultipleFileView extends javax.swing.JDialog {
             }
 
             this.textArea.addHyperlinkListener(new HyperlinkListener() {
-
-                @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                         BrowserControl.displayURL(e.getURL().toString());
@@ -374,8 +372,6 @@ public class MultipleFileView extends javax.swing.JDialog {
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
             public void run() {
                 new MultipleFileView(null).setVisible(true);
             }

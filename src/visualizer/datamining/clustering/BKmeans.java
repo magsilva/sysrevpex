@@ -315,7 +315,6 @@ public class BKmeans extends Clustering {
             this.id = id;
         }
 
-        @Override
         public int compareTo(Object o) {
             if (o instanceof Pivot) {
                 if (this.distance - ((Pivot) o).distance == EPSILON) {

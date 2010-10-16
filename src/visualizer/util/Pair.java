@@ -58,7 +58,6 @@ public class Pair implements Comparable {
         this.value = value;
     }
 
-    @Override
     public int compareTo(Object o) {
         if (o instanceof Pair) {
             if (this.value - ((Pair) o).value == EPSILON) {

@@ -48,82 +48,83 @@ address = {Washington, DC, USA},
 package visualizer.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author Fernando Vieira Paulovich
  */
-public class SystemPropertiesManager {
+public class SystemPropertiesManager
+{
+	private static final String filename = "system.properties";
 
-    /** Creates a new instance of SystemPropertiesManager */
-    private SystemPropertiesManager() {
-         try {
-            File file = new File(getClass().getClassLoader().getResource(filename).toURI());
+	private Properties properties = null;
 
-            if (file.exists()) {
-                this.properties = new Properties();
-                FileInputStream fis = new FileInputStream(file);
-                this.properties.load(fis);
-                fis.close();
-            }
+	private static SystemPropertiesManager _instance = null;
 
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+	/**
+	 * Creates a new instance of SystemPropertiesManager
+	 */
+	private SystemPropertiesManager()
+	{
+		properties = new Properties();
 
-    public static SystemPropertiesManager getInstance() {
-        if (_instance == null) {
-            _instance = new SystemPropertiesManager();
-        }
-        return _instance;
-    }
+		try {
+			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+			
+			if (is != null) {
+				properties.load(is);
+				is.close();
+			}
+		} catch (FileNotFoundException ex) {
+			Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
-    public String getProperty(String id) {
-        if (this.properties == null) {
-            return "";
-        } else {
-            if (this.properties.containsKey(id)) {
-                return this.properties.getProperty(id);
-            } else {
-                return "";
-            }
-        }
-    }
+	synchronized public static SystemPropertiesManager getInstance()
+	{
+		if (_instance == null) {
+			_instance = new SystemPropertiesManager();
+		}
+		return _instance;
+	}
 
-    public void setProperty(String id, String value) {
-        if (this.properties == null) {
-            this.properties = new Properties();
-        }
-        this.properties.setProperty(id, value);
+	public String getProperty(String id)
+	{
+		if (properties.containsKey(id)) {
+			return properties.getProperty(id);
+		} else {
+			return "";
+		}
+	}
 
-        try {
-            File file = new File(getClass().getClassLoader().getResource(filename).toURI());
-            FileOutputStream out = new FileOutputStream(file);
-            this.properties.store(out, "Recording the system's properties");
-            out.flush();
-            out.close();
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        }
+	public void setProperty(String id, String value)
+	{
+		properties.setProperty(id, value);
 
-    }
-
-    private String filename = "system.properties";
-    private Properties properties = null;
-    private static SystemPropertiesManager _instance = null;
+		try {
+			URL propertiesFilename = Thread.currentThread().getContextClassLoader().getResource(filename);
+			if (propertiesFilename != null) {
+				File file = new File(propertiesFilename.toURI());
+				FileOutputStream out = new FileOutputStream(file);
+				properties.store(out, "Recording the system's properties");
+				out.flush();
+				out.close();
+			}
+		} catch (URISyntaxException ex) {
+			Logger.getLogger(SystemPropertiesManager.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }

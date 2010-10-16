@@ -202,11 +202,6 @@ public class XMLGraphParser extends DefaultHandler {
             String src_file = attributes.getValue(VALUE);
             if (src_file != null) {
                 graph.getProjectionData().setSourceFile(src_file);
-
-                if (src_file.startsWith("google/")) {
-                    Corpus cp = new ZipCorpus(src_file, graph.getProjectionData().getNumberGrams());
-                    graph.setCorpus(cp);
-                }
             }
         } else if (qName.equalsIgnoreCase(NUMBER_ITERATIONS)) {
             String numb_it = attributes.getValue(VALUE);

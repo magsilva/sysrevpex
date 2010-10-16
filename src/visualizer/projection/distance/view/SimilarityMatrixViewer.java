@@ -1107,7 +1107,6 @@ public class SimilarityMatrixViewer extends Viewer {
 
     class Order implements Comparable {
 
-        @Override
         public int compareTo(Object o) {
             if (o instanceof Order) {
                 if (Math.abs(this.value - ((Order) o).value) == EPSILON) {

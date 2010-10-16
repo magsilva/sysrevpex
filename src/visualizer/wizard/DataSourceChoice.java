@@ -51,8 +51,6 @@ package visualizer.wizard;
 import java.io.File;
 import java.util.Arrays;
 import javax.swing.JFileChooser;
-import visualizer.google.GoogleSearchManager;
-import visualizer.google.GoogleView;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.SourceType;
 import visualizer.util.OpenDialog;
@@ -75,6 +73,15 @@ public class DataSourceChoice extends WizardPanel {
         this.pdata = projectionData;
         initComponents();
         this.corporaRadioButtonActionPerformed(null);
+    }
+    
+    private void titlesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titlesButtonActionPerformed
+        int result = OpenDialog.showOpenDialog(new TITLEFilter(), this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            String filename = OpenDialog.getFilename();
+            this.titlesTextField.setText(filename);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -100,9 +107,6 @@ public class DataSourceChoice extends WizardPanel {
         titlesLabel = new javax.swing.JLabel();
         titlesTextField = new javax.swing.JTextField();
         titlesButton = new javax.swing.JButton();
-        googleRadioButton = new javax.swing.JRadioButton();
-        googleButton = new javax.swing.JButton();
-        googleComboBox = new JExtendedComboBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Choose the Data Source"));
         setLayout(new java.awt.GridBagLayout());
@@ -252,78 +256,7 @@ public class DataSourceChoice extends WizardPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 3, 3, 3);
         add(titlesButton, gridBagConstraints);
-
-        sourceButtonGroup.add(googleRadioButton);
-        googleRadioButton.setText("Google");
-        googleRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        googleRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        googleRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                googleRadioButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(googleRadioButton, gridBagConstraints);
-
-        googleButton.setText("New Query");
-        googleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                googleButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(googleButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(googleComboBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-    private void googleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_googleRadioButtonActionPerformed
-        this.corporaButton.setEnabled(false);
-        this.corporaTextField.setEnabled(false);
-
-        this.distanceMatrixButton.setEnabled(false);
-        this.distanceMatrixTextField.setEnabled(false);
-
-        this.pointsButton.setEnabled(false);
-        this.pointsTextField.setEnabled(false);
-
-        this.titlesButton.setEnabled(false);
-        this.titlesTextField.setEnabled(false);
-
-        this.corporaTextField.setText("");
-        this.pointsTextField.setText("");
-        this.distanceMatrixTextField.setText("");
-        this.titlesTextField.setText("");
-
-        this.googleButton.setEnabled(true);
-        this.googleComboBox.setEnabled(true);
-        this.googleComboBox.setSelectedIndex(0);
-    }//GEN-LAST:event_googleRadioButtonActionPerformed
-
-    private void googleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_googleButtonActionPerformed
-        ProjectionWizardView view = (ProjectionWizardView) this.getTopLevelAncestor();
-        GoogleView.getInstance(view).display(this);
-    }//GEN-LAST:event_googleButtonActionPerformed
-
-    private void titlesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titlesButtonActionPerformed
-        int result = OpenDialog.showOpenDialog(new TITLEFilter(), this);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            String filename = OpenDialog.getFilename();
-            this.titlesTextField.setText(filename);
-        }
-}//GEN-LAST:event_titlesButtonActionPerformed
 
     private void pointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pointsButtonActionPerformed
         int result = OpenDialog.showOpenDialog(new DATAFilter(), this);
@@ -367,9 +300,6 @@ public class DataSourceChoice extends WizardPanel {
         this.titlesButton.setEnabled(true);
         this.titlesTextField.setEnabled(true);
 
-        this.googleButton.setEnabled(false);
-        this.googleComboBox.setEnabled(false);
-
         this.corporaTextField.setText("");
         this.distanceMatrixTextField.setText("");
         this.titlesTextField.setText("");
@@ -389,9 +319,6 @@ public class DataSourceChoice extends WizardPanel {
 
         this.titlesButton.setEnabled(true);
         this.titlesTextField.setEnabled(true);
-
-        this.googleButton.setEnabled(false);
-        this.googleComboBox.setEnabled(false);
 
         this.corporaTextField.setText("");
         this.pointsTextField.setText("");
@@ -413,9 +340,6 @@ public class DataSourceChoice extends WizardPanel {
         this.titlesButton.setEnabled(false);
         this.titlesTextField.setEnabled(false);
 
-        this.googleButton.setEnabled(false);
-        this.googleComboBox.setEnabled(false);
-
         this.pointsTextField.setText("");
         this.distanceMatrixTextField.setText("");
         this.titlesTextField.setText("");
@@ -424,16 +348,7 @@ public class DataSourceChoice extends WizardPanel {
     }//GEN-LAST:event_corporaRadioButtonActionPerformed
 
     public DataSourceChoice reset() {
-        GoogleSearchManager manager = GoogleSearchManager.getInstance();
-        String[] queries = manager.getQueries();
-        Arrays.sort(queries);
-
-        this.googleComboBox.removeAllItems();
-        for (String query : queries) {
-            this.googleComboBox.addItem(query);
-        }
-
-        return this;
+       return this;
     }
 
     @Override
@@ -446,15 +361,6 @@ public class DataSourceChoice extends WizardPanel {
         } else if (this.distanceMatrixRadioButton.isSelected()) {
             this.pdata.setSourceFile(this.distanceMatrixTextField.getText());
             this.pdata.setTitlesFile(this.titlesTextField.getText());
-        } else if (this.googleRadioButton.isSelected()) {
-            GoogleSearchManager manager = GoogleSearchManager.getInstance();
-            String query = (String) this.googleComboBox.getSelectedItem();
-
-            if (query != null) {
-                this.pdata.setSourceFile(manager.getCorpus(query));
-            }
-
-            this.pdata.setNumberLines(1);
         }
     }
 
@@ -480,9 +386,6 @@ public class DataSourceChoice extends WizardPanel {
     private javax.swing.JButton distanceMatrixButton;
     private javax.swing.JRadioButton distanceMatrixRadioButton;
     private javax.swing.JTextField distanceMatrixTextField;
-    private javax.swing.JButton googleButton;
-    private javax.swing.JComboBox googleComboBox;
-    private javax.swing.JRadioButton googleRadioButton;
     private javax.swing.JButton pointsButton;
     private javax.swing.ButtonGroup pointsLabelButtonGroup;
     private javax.swing.JRadioButton pointsRadioButton;

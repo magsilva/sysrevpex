@@ -55,7 +55,6 @@ import visualizer.matrix.Matrix;
  */
 public class NoneTransformation implements MatrixTransformation {
 
-    @Override
     public Matrix tranform(Matrix matrix, Object parameter) {
         return matrix;
     }

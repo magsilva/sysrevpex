@@ -78,7 +78,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import visualizer.corpus.Corpus;
-import visualizer.google.GoogleView;
 import visualizer.graph.Graph;
 import visualizer.graph.XMLGraphWriter;
 import visualizer.graph.Connectivity;
@@ -141,8 +140,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         initComponents();
 
         this.fileContentEditorPane.addHyperlinkListener(new HyperlinkListener() {
-
-            @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     BrowserControl.displayURL(e.getURL().toString());
@@ -237,7 +234,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         editDelete = new javax.swing.JMenuItem();
         menuTool = new javax.swing.JMenu();
         memoryCheckMenuItem = new javax.swing.JMenuItem();
-        googleSearchsMenuItem = new javax.swing.JMenuItem();
         stopwordsOption = new javax.swing.JMenuItem();
         separatorOptions1 = new javax.swing.JSeparator();
         connectivityMenu = new javax.swing.JMenu();
@@ -803,16 +799,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         });
         menuTool.add(memoryCheckMenuItem);
 
-        googleSearchsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        googleSearchsMenuItem.setMnemonic('G');
-        googleSearchsMenuItem.setText("Google Searches");
-        googleSearchsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                googleSearchsMenuItemActionPerformed(evt);
-            }
-        });
-        menuTool.add(googleSearchsMenuItem);
-
         stopwordsOption.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
         stopwordsOption.setMnemonic('G');
         stopwordsOption.setText("Manage Stopwords");
@@ -1240,7 +1226,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
             this.windowsButtonGroup.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
 
-                @Override
                 public void actionPerformed(ActionEvent ev) {
                     try {
                         gv.setSelected(true);
@@ -1263,8 +1248,6 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
 
             this.windowsButtonGroup.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
-
-                @Override
                 public void actionPerformed(ActionEvent ev) {
                     try {
                         gv.setSelected(true);
@@ -1756,10 +1739,7 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
         }
 }//GEN-LAST:event_delaunayOptionsActionPerformed
 
-    private void googleSearchsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_googleSearchsMenuItemActionPerformed
-        GoogleView.getInstance(this).display(null);
-    }//GEN-LAST:event_googleSearchsMenuItemActionPerformed
-
+  
     private void knnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_knnOptionsActionPerformed
         Viewer gv = (Viewer) this.desktop.getSelectedFrame();
 
@@ -2380,7 +2360,6 @@ private void silhouetteCoefficientMenuItemActionPerformed(java.awt.event.ActionE
     private javax.swing.JToggleButton findToggleButton;
     private javax.swing.JButton goButton;
     private javax.swing.JButton goToolbarButton;
-    private javax.swing.JMenuItem googleSearchsMenuItem;
     private javax.swing.JToolBar graphToolBar;
     private javax.swing.JToggleButton highlightLabelToggleButton;
     private javax.swing.JMenuItem identityCoordinationMenuItem;

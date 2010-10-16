@@ -51,124 +51,130 @@ package visualizer.textprocessing;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
+
 import visualizer.util.SystemPropertiesManager;
 
 /**
- *
+ *  Note that the words on the stopwords list must be on different lines without spaces.
+ * 
  * @author Fernando Vieira Paulovich
  */
-public class Stopword {
+public class Stopword
+{
+	private static Stopword instance;
+	
+	private Set<String> stopwords;
 
-    /*Note that the words on the stopwords list must be on different lines without spaces*/
-    private Stopword(String filename) throws java.io.IOException {
-        this.readStopwordList(filename);
-    }
+	private File file;
 
-    public static Stopword getInstance() throws java.io.IOException {
-        if (instance == null) {
-            SystemPropertiesManager m = SystemPropertiesManager.getInstance();
-            String stpFilename = m.getProperty("SPW.FILE");
+	private Stopword()
+	{
+		stopwords = new HashSet<String>();
+	}
 
-            //Test if the stowords file exist
-            File f = new File(stpFilename);
-            if (!f.exists() || m.getProperty("SPW.FILE").trim().length() < 1) {
-                stpFilename = "config/stopwords_eng.spw";
-                m.setProperty("SPW.FILE", stpFilename);
-            }
+	public synchronized static Stopword getInstance() throws java.io.IOException
+	{
+		if (instance == null) {
+			instance = new Stopword();
+			
+			SystemPropertiesManager m = SystemPropertiesManager.getInstance();
+			String stpFilename = m.getProperty("SPW.FILE");
+			instance.changeStopwordList(stpFilename);
+		}
+		
+		return instance;
+	}
 
-            instance = new Stopword(stpFilename);
-        }
-        return instance;
-    }
+	public void changeStopwordList(String stpFilename) throws java.io.IOException
+	{
+		readStopwordList(stpFilename);
+	}
 
-    public void changeStopwordList(String stpFilename) throws java.io.IOException {
-        this.readStopwordList(stpFilename);
-    }
+	public List<String> getStopwordList()
+	{
+		List<String>result = new ArrayList<String>(stopwords.size());
+		result.addAll(stopwords);
+		Collections.sort(result);
+		return result;
+	}
 
-    public List<String> getStopwordList() {
-        return this.stopwords;
-    }
+	public void addStopwords(List<String> stopwords)
+	{
+		this.stopwords.addAll(stopwords);
+	}
 
-    public void addStopwords(List<String> stopwords) {
-        for (String stopword : stopwords) {
-            if (!this.stopwords.contains(stopword.toLowerCase())) {
-                this.stopwords.add(stopword.toLowerCase());
-            }
-        }
-        Collections.sort(this.stopwords);
-    }
+	public void removeStopword(String stopword)
+	{
+		stopwords.remove(stopword);
+	}
 
-    public void removeStopword(String stopword) {
-        this.stopwords.remove(stopword);
-    }
+	public void saveStopwordsList(String filename) throws java.io.IOException
+	{
+		File file = new File(filename);
+		
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new FileWriter(file));
+			for (String stopword : stopwords) {
+				out.write(stopword);
+				out.write("\n");
+			}
+		} catch (IOException ex) {
+			throw new java.io.IOException("Problems saving \"" + filename + "\" file!");
+		} finally {
+			this.file = file;
+			if (out != null) {
+				out.flush();
+				out.close();
+			}
+		}
+	}
 
-    public void saveStopwordsList(String filename) throws java.io.IOException {
-        this.filename = filename;
-        BufferedWriter out = null;
+	public String getFilename()
+	{
+		return file.getAbsolutePath();
+	}
 
-        try {
-            out = new BufferedWriter(new java.io.FileWriter(filename));
+	public boolean isStopWord(String word)
+	{
+		return stopwords.contains(word);
+	}
 
-            for (String stopword : this.stopwords) {
-                out.write(stopword);
-                out.write("\n");
-            }
-        } catch (IOException ex) {
-            throw new java.io.IOException("Problems saving \"" + filename + "\" file!");
-        } finally {
-            if (out != null) {
-                out.flush();
-                out.close();
-            }
-        }
-    }
+	private void readStopwordList(String filename) throws IOException
+	{
+		BufferedReader in = null;
+		File file = new File(filename);
+		if (! file.exists()) {
+			throw new java.io.IOException("File \"" + filename + "\" was not found!");
+		}
+		this.file = file;
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public boolean isStopWord(String word) {
-        return (Collections.binarySearch(this.stopwords, word) >= 0);
-    }
-
-    private void readStopwordList(String filename) throws java.io.IOException {
-        this.filename = filename;
-        BufferedReader in = null;
-        this.stopwords = new ArrayList<String>();
-
-        try {
-            in = new BufferedReader(new java.io.FileReader(filename));
-            String line = null; //armazena a linha lida
-
-            while ((line = in.readLine()) != null && line.trim().length() > 0) {
-                this.stopwords.add(line.toLowerCase());
-            }
-
-        } catch (FileNotFoundException e) {
-            throw new java.io.IOException("File \"" + filename + "\" was not found!");
-        } catch (IOException e) {
-            throw new java.io.IOException("Problems reading the file \"" + filename + "\"");
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-
-        Collections.sort(this.stopwords);
-    }
-
-    private List<String> stopwords;
-    private static Stopword instance;
-    private String filename;
+		try {
+			in = new BufferedReader(new FileReader(file));
+			String line = null;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (! line.isEmpty()) {
+					stopwords.add(line.toLowerCase());
+				}
+			}
+		}  catch (IOException e) {
+			throw new IOException("Problems reading the file \"" + filename + "\"");
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException ex) {
+				}
+			}
+		}
+	}
 }

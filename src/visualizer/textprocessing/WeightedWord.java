@@ -63,7 +63,6 @@ public class WeightedWord implements Comparable<WeightedWord> {
         return new WeightedWord(wo, we);
     }
 
-    @Override
     public int compareTo(WeightedWord o) {
         return this.word.compareTo(o.word);
     }

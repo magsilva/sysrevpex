@@ -187,7 +187,6 @@ public class Edge implements Comparable, java.io.Serializable {
         return hash;
     }
 
-    @Override
     public int compareTo(Object o) {
         long source_aux = 0;
         long target_aux = 0;

@@ -585,7 +585,6 @@ public class Vertex implements Comparable, java.io.Serializable {
         image.setRGB(x, y, newrgb);
     }
 
-    @Override
     public int compareTo(Object o) {
         if (o instanceof Vertex) {
             if (Math.abs(this.x - ((Vertex) o).x) == EPSILON) {

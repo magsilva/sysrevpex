@@ -157,7 +157,6 @@ public class IdentityMappingView extends javax.swing.JDialog {
             this.to = to;
         }
 
-        @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() instanceof JCheckBox &&
                     ((JCheckBox) e.getSource()).isSelected()) {

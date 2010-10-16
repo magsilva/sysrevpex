@@ -63,7 +63,16 @@ import org.h2.tools.Script;
  *
  * @author Fernando Vieira Paulovich
  */
-public class ConnectionManager {
+public class ConnectionManager
+{
+    private final String temp = "./data_base/temp.sql";
+    
+    private final String properties = "./config/database.properties";
+    
+    private java.sql.Connection conn;
+    
+    private static ConnectionManager _instance;
+
 
     private ConnectionManager() throws IOException {
         try {
@@ -143,9 +152,4 @@ public class ConnectionManager {
             throw new IOException(ex.getMessage());
         }
     }
-
-    private final String temp = "./data_base/temp.sql";
-    private final String properties = "./config/database.properties";
-    private java.sql.Connection conn;
-    private static ConnectionManager _instance;
 }

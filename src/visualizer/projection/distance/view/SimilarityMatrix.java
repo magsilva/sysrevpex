@@ -419,7 +419,6 @@ public class SimilarityMatrix extends javax.swing.JDialog {
 
         class Order implements Comparable {
 
-            @Override
             public int compareTo(Object o) {
                 if (o instanceof Order) {
                     if (this.value - ((Order) o).value == EPSILON) {

@@ -330,7 +330,6 @@ public class DistanceHistogramView extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            @Override
             public void run() {
                 DistanceHistogramView dialog = new DistanceHistogramView(new javax.swing.JFrame());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

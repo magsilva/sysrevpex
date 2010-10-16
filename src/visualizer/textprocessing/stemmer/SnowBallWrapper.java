@@ -70,7 +70,6 @@ public class SnowBallWrapper implements Stemmer {
         }
     }
 
-    @Override
     public String stem(String word) {
         stemmer.setCurrent(word);
         stemmer.stem();

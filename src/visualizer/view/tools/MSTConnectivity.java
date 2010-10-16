@@ -359,8 +359,6 @@ public class MSTConnectivity extends javax.swing.JDialog {
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
             public void run() {
                 MSTConnectivity dialog = new MSTConnectivity(new javax.swing.JFrame());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

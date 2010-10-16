@@ -56,7 +56,6 @@ package visualizer.textprocessing.stemmer;
  */
 public class NullStemmer implements Stemmer {
 
-    @Override
     public String stem(String word) {
         return word;
     }

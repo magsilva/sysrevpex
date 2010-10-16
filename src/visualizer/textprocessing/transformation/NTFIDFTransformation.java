@@ -55,7 +55,6 @@ import visualizer.matrix.Matrix;
  */
 public class NTFIDFTransformation implements MatrixTransformation {
 
-    @Override
     public Matrix tranform(Matrix matrix, Object parameter) {
         NTFTransformation ntf = new NTFTransformation();
         TFIDFTransformation tfidf = new TFIDFTransformation();

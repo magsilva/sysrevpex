@@ -54,7 +54,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lspsolver.Solver;
+
+import org.ujmp.core.doublematrix.calculation.general.decomposition.Solve;
+
 import visualizer.datamining.clustering.BKmeans;
 import visualizer.graph.Graph;
 import visualizer.graph.Scalar;
@@ -212,18 +214,16 @@ public class PLSPProjection2D extends Projection {
 
         int nRows = cluster.size() + cpoints.size();
         int nColumns = cluster.size();
-
-        Solver solver = new Solver(nRows, nColumns);
-
+        
+        Solve<org.ujmp.core.Matrix> solver = Solve.MATRIXSQUARELARGEMULTITHREADED;
+        org.ujmp.core.Matrix solverMatrixA = org.ujmp.core.MatrixFactory.sparse(nRows, nColumns);
+        org.ujmp.core.Matrix solverMatrixB = org.ujmp.core.MatrixFactory.dense(nRows, 2);
+        
         ////////////////////////////////////////////
         //creating matrix A
         for (int i = 0; i < cluster.size(); i++) {
             //new approach to increase the neighborhood precision
-            solver.addToA(i, i, 1.0f);
-
-//            for (int j = 0; j < neighbors[i].length; j++) {
-//                solver.addToA(i, neighbors[i][j].index, (-(1.0f / neighbors[i].length)));
-//            }
+            solverMatrixA.setAsFloat(1.0f, i, i);
 
             float max = Float.NEGATIVE_INFINITY;
             float min = Float.POSITIVE_INFINITY;
@@ -249,9 +249,9 @@ public class PLSPProjection2D extends Projection {
             for (int j = 0; j < neighbors[i].length; j++) {
                 if (max > min) {
                     float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
-                    solver.addToA(i, neighbors[i][j].index, (-((1 / dist) / sum)));
+                    solverMatrixA.setAsFloat(-((1 / dist) / sum), i, neighbors[i][j].index);
                 } else {
-                    solver.addToA(i, neighbors[i][j].index, (-(1.0f / neighbors[i].length)));
+                    solverMatrixA.setAsFloat((-(1.0f / neighbors[i].length)), i, neighbors[i][j].index);
                 }
             }
         }
@@ -259,25 +259,25 @@ public class PLSPProjection2D extends Projection {
         float w = 1.0f; //weigthing the control points
 
         for (int i = 0; i < cpoints.size(); i++) {
-            solver.addToA((cluster.size() + i), indexes.get(cpoints.get(i)), w);
+            solverMatrixA.setAsFloat(w, cluster.size() + i, indexes.get(cpoints.get(i)));
         }
 
         ////////////////////////////////////////////
         //creating matrix B
         for (int i = 0; i < cpoints.size(); i++) {
-            solver.addToB((cluster.size() + i), 0, cpointsproj.get(i)[0] * w);
-            solver.addToB((cluster.size() + i), 1, cpointsproj.get(i)[1] * w);
+            solverMatrixB.setAsFloat(cpointsproj.get(i)[0] * w, cluster.size() + i, 0);
+            solverMatrixB.setAsFloat(cpointsproj.get(i)[1] * w, cluster.size() + i, 1);
         }
 
         ///////////////////////////////////////////
         //soling the system
         float[][] projection = new float[cluster.size()][];
 
-        float[] result = solver.solve();
-        for (int i = 0; i < result.length; i += 2) {
-            projection[i / 2] = new float[2];
-            projection[i / 2][0] = result[i];
-            projection[i / 2][1] = result[i + 1];
+        org.ujmp.core.Matrix result = solver.calc(solverMatrixA, solverMatrixB);
+        for (int i = 0; i < projection.length; i++) {
+            projection[i] = new float[2];
+            projection[i][0] = result.getAsFloat(i, 0);
+            projection[i][1] = result.getAsFloat(i, 1);
         }
 
         long finish = System.currentTimeMillis();

@@ -64,8 +64,10 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JTextArea;
-import org.pdfbox.pdmodel.PDDocument;
-import org.pdfbox.util.PDFTextStripper;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
+
 
 /**
  *
@@ -196,7 +198,6 @@ public class TextFromPDF {
             super.start();
         }
 
-        @Override
         public void actionPerformed(ActionEvent e) {
             this.status.append("Time exceeded: " + this.pdfFile + "\n");
             if (this.timer != null) {

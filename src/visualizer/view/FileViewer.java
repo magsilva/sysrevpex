@@ -147,7 +147,7 @@ public class FileViewer extends javax.swing.JDialog {
                     textArea.append(line + "\n");
                 }
 
-                //Posiciona no início da área de texto
+                //Posiciona no inï¿½cio da ï¿½rea de texto
                 textArea.setCaretPosition(0);
                 this.pack();
                 this.setLocationRelativeTo(this.getParent());
@@ -172,7 +172,6 @@ public class FileViewer extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            @Override
             public void run() {
                 new FileViewer(null).setVisible(true);
             }

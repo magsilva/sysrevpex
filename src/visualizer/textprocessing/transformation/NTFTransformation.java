@@ -56,7 +56,6 @@ import visualizer.matrix.SparseVector;
  */
 public class NTFTransformation implements MatrixTransformation {
 
-    @Override
     public Matrix tranform(Matrix matrix, Object parameter) {
         for (int lin = 0; lin < matrix.getRowCount(); lin++) {
             SparseVector sv = (SparseVector) matrix.getRow(lin);
