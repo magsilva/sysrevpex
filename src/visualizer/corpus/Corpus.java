@@ -58,14 +58,25 @@ import visualizer.textprocessing.Ngram;
  * 
  * @author Fernando Vieira Paulovich, Roberto Pinho
  */
-public abstract class Corpus {
-
+public abstract class Corpus
+{
+    protected float[] cdata;
+    
+    protected ArrayList<String> ids;
+    
+    protected String url;
+    
+    protected int nrGrams;
+    
+    protected static Encoding encoding = Encoding.ASCII;
+    
     /**
      * Creates a new instance of Corpus
      * @param url
      * @param nrGrams 
      */
-    public Corpus(String url, int nrGrams) {
+    public Corpus(String url, int nrGrams)
+    {
         this.url = url;
         this.nrGrams = nrGrams;
     }
@@ -121,7 +132,7 @@ public abstract class Corpus {
      * This method must be implemented to fill all attributes (urls, and 
      * cdata) of a corpus.
      */
-    protected abstract void run();
+    protected abstract void initializeCorpus();
 
     /**
      * Get the corpus url.
@@ -170,28 +181,32 @@ public abstract class Corpus {
      * @return The title of a documents.
      * @throws java.io.IOException 
      */
-    public String getTitle(int nrLines, String id) throws IOException {
-        String title = "";
-
-        if (nrLines > 0) {
-            String content = this.getFullContent(id);
-            StringTokenizer tokenizer = new StringTokenizer(content, "\r\n");
-
-            int i = 0;
-            while (i < nrLines && tokenizer.hasMoreTokens()) {
-                String line = tokenizer.nextToken();
-                line = line.replaceAll("<.*?>", "");
-
-                if (line.trim().length() > 0) {
-                    title += line.trim() + " ";
-                    i++;
-                }
-            }
-
-            title = title.trim();
+    public String getTitle(int nrLines, String id) throws IOException
+    {       
+        if (nrLines <= 0) {
+        	throw new IllegalArgumentException("Number of lines must be greater than zero");
         }
 
-        return title;
+        String content = getFullContent(id);
+        StringTokenizer tokenizer = new StringTokenizer(content, "\r\n");
+        StringBuilder title = new StringBuilder();
+
+        for (int i = 0; i < nrLines && tokenizer.hasMoreTokens();) {
+        	String line = tokenizer.nextToken();
+        	line = line.replaceAll("<.*?>", "");
+        	line = line.trim();
+        	if (! line.isEmpty()) {
+        		title.append(line);
+        		title.append(" ");
+        		i++;
+        	}
+        }
+
+        if (title.length() != 0) {
+        	title.deleteCharAt(title.length() - 1);
+        }
+
+        return title.toString();
     }
 
     /**
@@ -202,9 +217,4 @@ public abstract class Corpus {
         encoding = aEncoding;
     }
 
-    protected float[] cdata;
-    protected ArrayList<String> ids;
-    protected String url;
-    protected int nrGrams;
-    protected static Encoding encoding = Encoding.ASCII;
 }

@@ -75,8 +75,12 @@ import visualizer.textprocessing.TermExtractor;
  *
  * @author Fernando Vieira Paulovich
  */
-public class ZipFileImporter {
+public class ZipFileImporter
+{
+    private String filename;
 
+    private ArrayList<String> klasses;
+	
     /** Creates a new instance of CreateDatabase
      * 
      * @param filename The zip file containing the documents.
@@ -476,7 +480,4 @@ public class ZipFileImporter {
             Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    private String filename;
-    private ArrayList<String> klasses;
 }

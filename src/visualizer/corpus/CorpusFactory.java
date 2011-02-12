@@ -56,10 +56,9 @@ import visualizer.projection.ProjectionData;
  */
 public class CorpusFactory {
 
-    public static Corpus getInstance(String filename, ProjectionData pdata) {
+    public static Corpus getInstance(String filename, ProjectionData pdata)
+    {
         ZipCorpus corpus = new ZipCorpus(filename, pdata.getNumberGrams());
-//        DataBaseCorpus corpus = new DataBaseCorpus(filename);
         return corpus;
     }
-
 }

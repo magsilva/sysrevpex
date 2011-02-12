@@ -50,16 +50,22 @@ package visualizer.projection;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+// @TODO: Convert this to an Enum
+
 /**
  *
  * @author Fernando Vieira Paulovich
  */
 public class ProjectionType implements Serializable {
 
-    static {
-        ProjectionType.types = new ArrayList<ProjectionType>();
-    }
+    public static final long serialVersionUID = 1L;
     
+    private static ArrayList<ProjectionType> types = new ArrayList<ProjectionType>();
+    private String name;
+    private boolean distanceBased;
+    private boolean generateDistanceMatrix;
+    private boolean attributesNeeded;
+	
     public static final ProjectionType IDMAP = new ProjectionType("Interactive Document Map (IDMAP)", true, true, false);
     public static final ProjectionType LSP = new ProjectionType("Least Square Projection (LSP)", true, false, false);
     public static final ProjectionType PLSP = new ProjectionType("Piecewise Least Square Projection (P-LSP)", true, false, true);
@@ -76,8 +82,7 @@ public class ProjectionType implements Serializable {
     /** 
      * Creates a new instance of Encoding 
      */
-    private ProjectionType(String name, boolean distanceBased, 
-            boolean generateDistanceMatrix, boolean attributesNeeded) {
+    private ProjectionType(String name, boolean distanceBased, boolean generateDistanceMatrix, boolean attributesNeeded) {
         this.name = name;
         this.distanceBased = distanceBased;
         this.generateDistanceMatrix = generateDistanceMatrix;
@@ -131,11 +136,4 @@ public class ProjectionType implements Serializable {
     public int hashCode() {
         return 29 + (this.name != null ? this.name.hashCode() : 0);
     }
-    public static final long serialVersionUID = 1L;
-    
-    private static ArrayList<ProjectionType> types;
-    private String name;
-    private boolean distanceBased;
-    private boolean generateDistanceMatrix;
-    private boolean attributesNeeded;
 }

@@ -56,10 +56,18 @@ import java.util.ArrayList;
  */
 public class SourceType implements Serializable {
 
+    public static final long serialVersionUID = 1L;
+
+    private static ArrayList<SourceType> types;
+
+    private String name;
+
+
     static {
         SourceType.types = new ArrayList<SourceType>();
     }
 
+    public static final SourceType BIBTEX = new SourceType("Bibtex");
     public static final SourceType CORPUS = new SourceType("Corpus");
     public static final SourceType POINTS = new SourceType("Points");
     public static final SourceType DISTANCE_MATRIX = new SourceType("Distance Matrix");
@@ -106,8 +114,4 @@ public class SourceType implements Serializable {
     public int hashCode() {
         return 29 + (this.name != null ? this.name.hashCode() : 0);
     }
-
-    public static final long serialVersionUID = 1L;
-    private static ArrayList<SourceType> types;
-    private String name;
 }

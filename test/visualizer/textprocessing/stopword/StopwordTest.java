@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import visualizer.textprocessing.stopword.StopWord;
 
-public class StopwordTest
+public abstract class StopwordTest
 {
 	protected StopWord stopWord;
 

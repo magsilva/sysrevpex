@@ -47,12 +47,13 @@ address = {Washington, DC, USA},
 
 package visualizer.wizard;
 
+import javax.swing.JPanel;
+
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public abstract class WizardPanel extends javax.swing.JPanel {
-
-    public abstract void refreshData();
-
+public abstract class WizardPanel extends JPanel
+{
+	public abstract void refreshData();
 }

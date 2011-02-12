@@ -73,7 +73,7 @@ public class DataBaseCorpus extends Corpus {
         try {
             this.retrieveCollectionId();
 
-            this.run();
+            this.initializeCorpus();
 
             Logger.getLogger(DataBaseCorpus.class.getName()).
                     log(Level.INFO, "Collection name: " + this.url);
@@ -323,7 +323,8 @@ public class DataBaseCorpus extends Corpus {
     }
 
     @Override
-    protected void run() {
+    protected void initializeCorpus()
+    {
         this.createFilenames();
         this.createCdata();
     }

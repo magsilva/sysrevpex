@@ -34,8 +34,7 @@ public class BibTeX2Pex
 
 	private File scalarFile;
 
-	private String[] fieldsToImport = { "title", "author", "abstract", "keywords", "references",
-					"year" };
+	private String[] fieldsToImport = { "title", "author", "abstract", "keywords", "references", "year" };
 
 	public BibTeX2Pex(File file)
 	{
@@ -111,11 +110,5 @@ public class BibTeX2Pex
 		
 		zipfile.close();
 		scalarwriter.close();
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		BibTeX2Pex converter = new BibTeX2Pex(new File("/home/magsilva/teste.bib"));
-		converter.convert();
 	}
 }

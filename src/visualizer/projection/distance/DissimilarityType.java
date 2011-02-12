@@ -50,16 +50,20 @@ package visualizer.projection.distance;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+// TODO: refactor this to an enumeration.
+
 /**
- *
+ * 
  * @author Fernando Vieira Paulovich
  */
 public class DissimilarityType implements Serializable {
 
-    static {
-        DissimilarityType.types = new ArrayList<DissimilarityType>();
-    }
-
+    public static final long serialVersionUID = 1L;
+    
+    private static ArrayList<DissimilarityType> types = new ArrayList<DissimilarityType>();
+    
+    private String name;
+	
     public static final DissimilarityType EUCLIDEAN = new DissimilarityType("Euclidean");
     public static final DissimilarityType COSINE_BASED = new DissimilarityType("Cosine-based");
     public static final DissimilarityType CITY_BLOCK = new DissimilarityType("City block");
@@ -111,7 +115,4 @@ public class DissimilarityType implements Serializable {
         return 29 + (this.name != null ? this.name.hashCode() : 0);
     }
 
-    public static final long serialVersionUID = 1L;
-    private static ArrayList<DissimilarityType> types;
-    private String name;
 }

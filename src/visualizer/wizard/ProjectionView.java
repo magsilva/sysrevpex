@@ -51,34 +51,36 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import visualizer.projection.*;
+
+import visualizer.projection.ProjectionData;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public abstract class ProjectionView extends WizardPanel {
-
-    /** Creates a new instance of ProjectionView */
+public abstract class ProjectionView extends WizardPanel
+{
+    protected ProjectionData pdata;
+    
+    /**
+     * Creates a new instance of ProjectionView.
+     */
     public ProjectionView(ProjectionData pdata) {
         this.pdata = pdata;
     }
 
     public abstract void setStatus(String status, int value);
 
-    public void finished(IOException ex) {
+    public void finished(IOException ex)
+    {
         if (ex != null) {
-            Logger.getLogger(ProjectionView.class.getName()).log(Level.SEVERE, null, ex);
-
-            JOptionPane.showMessageDialog(this.getTopLevelAncestor(),
-                    ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this.getTopLevelAncestor(), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        this.getTopLevelAncestor().setVisible(false);
+        getTopLevelAncestor().setVisible(false);
     }
 
-    public void reset() {
+    public void reset()
+    {
     }
-
-    protected ProjectionData pdata;
 }

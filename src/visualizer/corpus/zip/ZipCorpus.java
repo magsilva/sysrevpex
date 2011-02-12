@@ -66,20 +66,34 @@ import visualizer.textprocessing.Ngram;
  *
  * @author Fernando Vieira Paulovich
  */
-public class ZipCorpus extends Corpus {
+public class ZipCorpus extends Corpus
+{
+	public static final String INVERTED_CORPUS_EXTENSION = ".inv";
 
+    private InvertedZipCorpus invertedCorpus;
+	
     /**
      * Creates a new instance of ZipCorpora
      * @param url
      * @param nrGrams
      */
-    public ZipCorpus(String url, int nrGrams) {
+    public ZipCorpus(String url, int nrGrams)
+    {
         super(url, nrGrams);
-        this.run();
-
-        //the inverted corpus must be on the same place of corpus
-        String invCorpFilename = this.url.substring(0, this.url.length() - 4) + ".inv";
-        this.invCorpus = new InvertedZipCorpus(this, nrGrams, invCorpFilename);
+        initializeCorpus();
+        initializeInvertedCorpus();
+    }
+     
+    protected void initializeCorpus() {
+        createFilenames();
+        createCdata();
+    }
+   
+    private void initializeInvertedCorpus()
+    {
+        // The inverted corpus must be on the same place of corpus
+        String invCorpFilename = url.substring(0, url.lastIndexOf(".")) + INVERTED_CORPUS_EXTENSION;
+        invertedCorpus = new InvertedZipCorpus(this, nrGrams, invCorpFilename);
     }
 
     @Override
@@ -132,20 +146,15 @@ public class ZipCorpus extends Corpus {
 
     @Override
     public ArrayList<Ngram> getCorpusNgrams() throws IOException {
-        return this.invCorpus.getCorpusNgrams();
+        return this.invertedCorpus.getCorpusNgrams();
     }
 
     @Override
     public ArrayList<Ngram> getNgrams(String filename) throws IOException {
-        return this.invCorpus.getNgrams(filename);
+        return this.invertedCorpus.getNgrams(filename);
     }
 
-    @Override
-    protected void run() {
-        this.createFilenames();
-        this.createCdata();
-    }
-
+   
     private void createCdata() {
         if (this.url != null && this.ids != null) {
             //Capturing the initials
@@ -263,6 +272,4 @@ public class ZipCorpus extends Corpus {
             }
         }
     }
-
-    private InvertedZipCorpus invCorpus;
 }

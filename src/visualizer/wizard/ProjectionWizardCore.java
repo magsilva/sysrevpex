@@ -61,133 +61,12 @@ import visualizer.projection.distance.DissimilarityType;
  */
 public class ProjectionWizardCore {
 
-    public ProjectionWizardCore(Graph graph) {
-        this.graph = graph;
+	private Graph graph;
+    private GraphBuilder builder;
 
-        this.preprocessView = new Preprocessing(this.graph.getProjectionData());
-        this.projDistView = new ProjectionDistanceChoice(this.graph.getProjectionData());
-        this.sourceView = new DataSourceChoice(this.graph.getProjectionData());
-        this.generalParametersView = new GeneralParameters(this.graph.getProjectionData());
-        this.dimensionReductionView = new DimensionReduction(this.graph.getProjectionData());
-    }
-
-    public WizardPanel getNextPanel(int direction) {
-        ProjectionData pdata = this.graph.getProjectionData();
-
-        switch (this.currentState) {
-            case ProjectionWizardCore.INITIAL_STATE:
-                //initial -> source
-                this.currentState = ProjectionWizardCore.SOURCE_STATE;
-                return this.sourceView.reset();
-
-            case ProjectionWizardCore.SOURCE_STATE:
-                //source -> projection+distance
-                if (direction == ProjectionWizardCore.NEXT_STATE) {
-                    this.currentState = ProjectionWizardCore.PROJ_DIST_STATE;
-                    return this.projDistView.reset();
-                }
-                break;
-
-            case ProjectionWizardCore.PROJ_DIST_STATE:
-                //projection+distance -> source
-                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
-                    this.currentState = ProjectionWizardCore.SOURCE_STATE;
-                    return this.sourceView.reset();
-                } else {
-                    if (pdata.getSourceType() == SourceType.CORPUS &&
-                            pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) {
-                        //projection+distance -> pre-processing
-                        this.currentState = ProjectionWizardCore.PRE_PROC_STATE;
-                        return this.preprocessView;
-                    }
-
-                    if (pdata.getSourceType() == SourceType.POINTS) {
-                        //projection+distance -> dimension reduction
-                        this.currentState = ProjectionWizardCore.DIMEN_RED_STATE;
-                        return this.dimensionReductionView.reset();
-                    } else {
-                        //projection+distance -> general parameters
-                        this.currentState = ProjectionWizardCore.GEN_PARAM_STATE;
-                        return this.generalParametersView.reset();
-                    }
-                }
-
-            case ProjectionWizardCore.PRE_PROC_STATE:
-                //pre-processing -> projection+distance
-                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
-                    this.currentState = ProjectionWizardCore.PROJ_DIST_STATE;
-                    return this.projDistView.reset();
-                } else {
-                    //pre-processing -> dimension reduction
-                    this.currentState = ProjectionWizardCore.DIMEN_RED_STATE;
-                    return this.dimensionReductionView.reset();
-                }
-
-            case ProjectionWizardCore.DIMEN_RED_STATE:
-                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
-                    if (pdata.getSourceType() == SourceType.CORPUS &&
-                            pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) {
-                        //dimension reduction -> pre-processing
-                        this.currentState = ProjectionWizardCore.PRE_PROC_STATE;
-                        return this.preprocessView;
-                    } else {
-                        //dimension reduction -> projection+distance
-                        this.currentState = ProjectionWizardCore.PROJ_DIST_STATE;
-                        return this.projDistView.reset();
-                    }
-                } else {
-                    //dimension reduction -> general parameters
-                    this.currentState = ProjectionWizardCore.GEN_PARAM_STATE;
-                    return this.generalParametersView.reset();
-                }
-
-            case ProjectionWizardCore.GEN_PARAM_STATE:
-                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
-
-                    if ((pdata.getSourceType() == SourceType.CORPUS &&
-                            pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) ||
-                            pdata.getSourceType() == SourceType.POINTS) {
-                        //general parameters -> dimension reduction
-                        this.currentState = ProjectionWizardCore.DIMEN_RED_STATE;
-                        return this.dimensionReductionView.reset();
-                    } else {
-                        //general parameters -> projection+distance
-                        this.currentState = ProjectionWizardCore.PROJ_DIST_STATE;
-                        return this.projDistView.reset();
-                    }
-
-                } else {
-                    projView = ProjectionFactory.getInstance(pdata.getProjectionType()).getProjectionView(pdata);
-                    projView.reset();
-
-                    this.currentState = ProjectionWizardCore.PROJECT_STATE;
-
-                    return projView;
-                }
-
-            case ProjectionWizardCore.PROJECT_STATE:
-                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
-                    //idmap -> general parameters
-                    this.currentState = ProjectionWizardCore.GEN_PARAM_STATE;
-                    return this.generalParametersView.reset();
-                } else {
-                    if (projView != null) {
-                        builder = new GraphBuilder(projView, this.graph);
-                        builder.start();
-                    }
-                }
-                break;
-        }
-
-        return null;
-    }
-
-    public void stopProcess() {
-        if (this.builder != null) {
-            this.builder.stop();
-        }
-    }
-
+	
+	//Current state of wizard
+    private int currentState = INITIAL_STATE;
     //Possible directions to follow in the wizard
     public static final int NEXT_STATE = 0;
     public static final int PREVIOUS_STATE = 1;
@@ -199,6 +78,7 @@ public class ProjectionWizardCore {
     private static final int DIMEN_RED_STATE = 4;
     private static final int GEN_PARAM_STATE = 5;
     private static final int PROJECT_STATE = 6;
+    
     //Views of each state
     private ProjectionDistanceChoice projDistView;
     private DataSourceChoice sourceView;
@@ -206,8 +86,170 @@ public class ProjectionWizardCore {
     private Preprocessing preprocessView;
     private GeneralParameters generalParametersView;
     private DimensionReduction dimensionReductionView;
-    //Current state of wizard
-    private int currentState = INITIAL_STATE;
-    private Graph graph;
-    private GraphBuilder builder;
+	
+    public ProjectionWizardCore(Graph graph) {
+        this.graph = graph;
+        initViews();
+    }
+
+    private void initViews()
+    {
+    	sourceView = new DataSourceChoice(graph.getProjectionData());
+    	projDistView = new ProjectionDistanceChoice(graph.getProjectionData());
+    	preprocessView = new Preprocessing(graph.getProjectionData());
+    	generalParametersView = new GeneralParameters(graph.getProjectionData());
+    	dimensionReductionView = new DimensionReduction(graph.getProjectionData());
+    }
+    
+    public WizardPanel getNextPanel(int direction) {
+        ProjectionData pdata = graph.getProjectionData();
+        WizardPanel nextWizard = null;
+        
+        if (currentState != ProjectionWizardCore.INITIAL_STATE) {
+        	if (direction != ProjectionWizardCore.NEXT_STATE && direction != ProjectionWizardCore.PREVIOUS_STATE) {
+        		throw new IllegalArgumentException("Invalid direction.");
+        	}
+        }
+
+        switch (currentState) {
+            case ProjectionWizardCore.INITIAL_STATE:
+                // Initial -> source
+                currentState = ProjectionWizardCore.SOURCE_STATE;
+                sourceView.reset();
+                nextWizard = sourceView;
+                break;
+
+            case ProjectionWizardCore.SOURCE_STATE:
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                	assert false;
+                }
+
+            	// Source -> projection+distance
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    currentState = ProjectionWizardCore.PROJ_DIST_STATE;
+                    projDistView.reset();
+                    nextWizard = projDistView;
+                }
+                break;
+
+            case ProjectionWizardCore.PROJ_DIST_STATE:
+                // Projection+distance -> source
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                    currentState = ProjectionWizardCore.SOURCE_STATE;
+                    sourceView.reset();
+                    nextWizard = sourceView;
+                }
+                
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    if ((pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType() == SourceType.BIBTEX) && pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) {
+                        // Projection+distance -> pre-processing
+                        currentState = ProjectionWizardCore.PRE_PROC_STATE;
+                        nextWizard = preprocessView;
+                    }
+
+                    if (pdata.getSourceType() == SourceType.POINTS) {
+                        // projection+distance -> dimension reduction
+                        currentState = ProjectionWizardCore.DIMEN_RED_STATE;
+                        dimensionReductionView.reset();
+                        nextWizard = dimensionReductionView;
+                    }
+                    
+                    if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX) {
+                        // projection+distance -> general parameters
+                        currentState = ProjectionWizardCore.GEN_PARAM_STATE;
+                        generalParametersView.reset();
+                        nextWizard = generalParametersView;
+                    }
+                }
+                break;
+
+            case ProjectionWizardCore.PRE_PROC_STATE:
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                    // pre-processing -> projection+distance
+                    currentState = ProjectionWizardCore.PROJ_DIST_STATE;
+                    projDistView.reset();
+                    nextWizard = projDistView;
+                }
+                
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    // pre-processing -> dimension reduction
+                    currentState = ProjectionWizardCore.DIMEN_RED_STATE;
+                    dimensionReductionView.reset();
+                    nextWizard = dimensionReductionView;
+                }
+                break;
+
+            case ProjectionWizardCore.DIMEN_RED_STATE:
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                    if ((pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType() == SourceType.BIBTEX) && pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) {
+                        //dimension reduction -> pre-processing
+                        currentState = ProjectionWizardCore.PRE_PROC_STATE;
+                        nextWizard = preprocessView;
+                    } else {
+                        // dimension reduction -> projection+distance
+                        currentState = ProjectionWizardCore.PROJ_DIST_STATE;
+                        projDistView.reset();
+                        nextWizard = projDistView;
+                    }
+                }
+                
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    //dimension reduction -> general parameters
+                    currentState = ProjectionWizardCore.GEN_PARAM_STATE;
+                    generalParametersView.reset();
+                    nextWizard = generalParametersView;
+                }
+                
+                break;
+
+            case ProjectionWizardCore.GEN_PARAM_STATE:
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                    if (((pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType() == SourceType.BIBTEX) && pdata.getDissimilarityType() != DissimilarityType.KOLMOGOROV) || pdata.getSourceType() == SourceType.POINTS) {
+                        //general parameters -> dimension reduction
+                        currentState = ProjectionWizardCore.DIMEN_RED_STATE;
+                        dimensionReductionView.reset();
+                        nextWizard = dimensionReductionView;
+                    } else {
+                        //general parameters -> projection+distance
+                        currentState = ProjectionWizardCore.PROJ_DIST_STATE;
+                        projDistView.reset();
+                        nextWizard = projDistView;
+                    }
+                }
+                
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    projView = ProjectionFactory.getInstance(pdata.getProjectionType()).getProjectionView(pdata);
+                    currentState = ProjectionWizardCore.PROJECT_STATE;
+                    projView.reset();
+                    nextWizard = projView;
+                }
+                
+                break;
+
+            case ProjectionWizardCore.PROJECT_STATE:
+                if (direction == ProjectionWizardCore.PREVIOUS_STATE) {
+                    // idmap -> general parameters
+                    currentState = ProjectionWizardCore.GEN_PARAM_STATE;
+                    generalParametersView.reset();
+                    nextWizard = generalParametersView;
+                }
+                
+                if (direction == ProjectionWizardCore.NEXT_STATE) {
+                    if (projView != null) {
+                        builder = new GraphBuilder(projView, graph);
+                        builder.start();
+                    }
+                }
+                
+                break;
+        }
+
+        return nextWizard;
+    }
+
+    public void stopProcess() {
+        if (builder != null) {
+            builder.stop();
+        }
+    }
 }

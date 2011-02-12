@@ -164,7 +164,7 @@
 
 		<testResources>
 			<testResource>
-				<directory>${project.basedir}/test-resource</directory>
+				<directory>${project.basedir}/resource</directory>
 				<filtering>false</filtering>
 			</testResource>
 		</testResources>
