@@ -34,7 +34,7 @@ public class BibTeX2Pex
 
 	private File scalarFile;
 
-	private String[] fieldsToImport = { "title", "author", "abstract", "keywords", "references", "year" };
+	private String[] fieldsToImport = { "title", "abstract"};
 
 	public BibTeX2Pex(File file)
 	{
@@ -76,9 +76,10 @@ public class BibTeX2Pex
 		ParserResult result = BibtexParser.parse(new FileReader(bibtexFile));
 		Collection<BibtexEntry> entries = result.getDatabase().getEntries();
 		Iterator<BibtexEntry> iterator = entries.iterator();
+		int i = 0;
 		while (iterator.hasNext()) {
 			BibtexEntry bibtexEntry = iterator.next();
-			String fileName = bibtexEntry.toString().substring(bibtexEntry.toString().indexOf(":") + 1).concat(".txt");
+			String fileName = Integer.toString(i++).concat(".txt");
 			StringWriter writer = new StringWriter();
 			BufferedWriter buffer = new BufferedWriter(writer);
 			for (String field : fieldsToImport) {
