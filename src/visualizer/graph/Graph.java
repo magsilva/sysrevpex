@@ -52,11 +52,14 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.graph.scalar.QuerySolver;
+import visualizer.graph.scalar.Scalar;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -77,6 +80,17 @@ import visualizer.topic.TopicData;
  */
 public class Graph implements java.io.Serializable {
 
+    protected Corpus corpus;
+    protected TopicData tdata = new TopicData(this);
+    protected boolean isEdgeVisible = true;
+    protected ProjectionData pData = new ProjectionData();
+    protected ArrayList<Scalar> scalars = new ArrayList<Scalar>();
+    protected ArrayList<String> titles = new ArrayList<String>();
+    protected String description = ""; //A description of this graph
+    protected ArrayList<Vertex> vertex = new ArrayList<Vertex>();
+    protected ArrayList<Connectivity> connectivities = new ArrayList<Connectivity>();
+
+	
     private static final long serialVersionUID = 1L;
 
     /**
@@ -134,6 +148,23 @@ public class Graph implements java.io.Serializable {
         return null;
     }
 
+    /**
+     * Returns the vertex which has a given id.
+     * 
+     * @param id Vertex name.
+     * 
+     * @return The vertex found or null if none was found.
+     */
+    public Vertex getVertexByURL(String url) {
+        for (Vertex v : this.vertex) {
+            if (v.getUrl().equals(url)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    
     /**
      * Draw the graph on a graphical device. 
      * @param connectivity The connectivity to be drawn
@@ -372,22 +403,31 @@ public class Graph implements java.io.Serializable {
 
     public Scalar addScalar(String name) {
         Scalar scalar = new Scalar(name);
-
-        if (!this.scalars.contains(scalar)) {
-            this.scalars.add(scalar);
+        return addScalar(scalar);
+    }
+    
+    public Scalar addScalar(Scalar scalar) {
+        if (! scalars.contains(scalar)) {
+            scalars.add(scalar);
+        } else {
+        	Iterator<Scalar> i = scalars.iterator();
+        	while (i.hasNext()) {
+        		Scalar definedScalar = i.next();
+        		if (definedScalar.equals(scalar)) {
+        			return definedScalar;
+        		}
+        	}
         }
-
-        scalar.setIndex(this.scalars.indexOf(scalar));
-
-        return this.scalars.get(scalar.getIndex());
+        
+        return scalar;
     }
 
     public ArrayList<Scalar> getScalars() {
-        return this.scalars;
+        return scalars;
     }
 
     public Scalar getScalarByName(String name) {
-        for (Scalar s : this.scalars) {
+        for (Scalar s : scalars) {
             if (s.getName().equals(name)) {
                 return s;
             }
@@ -396,16 +436,13 @@ public class Graph implements java.io.Serializable {
     }
 
     public void removeScalar(Scalar scalar) {
-        //removing the scalar from the vertex
+        //removing the scalar from the vertices
         for (Vertex v : this.vertex) {
             v.removeScalar(scalar);
         }
 
         //removing the scalar from the graph and update the indexes
-        this.scalars.remove(scalar);
-        for (int i = 0; i < this.scalars.size(); i++) {
-            this.scalars.get(i).setIndex(i);
-        }
+        scalars.remove(scalar);
     }
 
     public int getTitleIndex(String name) {
@@ -481,12 +518,12 @@ public class Graph implements java.io.Serializable {
     }
 
     public void exportCorpus(String newCorpusName, Scalar scalar, boolean reverse) {
-        if (this.corpus != null) {
+        if (corpus != null) {
             ArrayList<Vertex> newvertex = new ArrayList<Vertex>();
 
             for (Vertex v : this.vertex) {
-                if (scalar == null || scalar.getIndex() == -1 ||
-                        ((reverse && v.getNormalizedScalar(scalar) <= 0.1f) ||
+                if (scalar == null || ! scalars.contains(scalar) ||
+                		((reverse && v.getNormalizedScalar(scalar) <= 0.1f) ||
                         (!reverse && v.getNormalizedScalar(scalar) >= 0.1f))) {
                     newvertex.add(v);
                 }
@@ -734,13 +771,5 @@ public class Graph implements java.io.Serializable {
             vertex.get(i).setY(vertex.get(i).getY() + diffy * rand.nextFloat());
         }
     }
-    protected Corpus corpus;
-    protected TopicData tdata = new TopicData(this);
-    protected boolean isEdgeVisible = true;
-    protected ProjectionData pData = new ProjectionData();
-    protected ArrayList<Scalar> scalars = new ArrayList<Scalar>();
-    protected ArrayList<String> titles = new ArrayList<String>();
-    protected String description = ""; //A description of this graph
-    protected ArrayList<Vertex> vertex = new ArrayList<Vertex>();
-    protected ArrayList<Connectivity> connectivities = new ArrayList<Connectivity>();
+
 }

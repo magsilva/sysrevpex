@@ -49,6 +49,7 @@ package visualizer.graph.listeners;
 
 import java.util.ArrayList;
 import visualizer.graph.*;
+import visualizer.graph.scalar.Scalar;
 import visualizer.view.Viewer;
 
 /**

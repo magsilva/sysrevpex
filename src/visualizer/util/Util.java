@@ -68,8 +68,8 @@ import java.util.zip.ZipFile;
 import visualizer.graph.Edge;
 import visualizer.graph.Graph;
 import visualizer.graph.Connectivity;
-import visualizer.graph.Scalar;
 import visualizer.graph.Vertex;
+import visualizer.graph.scalar.Scalar;
 import visualizer.matrix.DenseMatrix;
 import visualizer.matrix.DenseVector;
 import visualizer.matrix.Matrix;
@@ -200,142 +200,6 @@ public class Util {
                 out.write(Float.toString(e.getLength()));
                 out.write("\r\n");
             }
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-
-    //cdata;year
-    //filename1.txt;1.3;0.70
-    //filename2.txt;4.0;0.06
-    //filename3.txt;6.7;0.40
-    //filename4.txt;3.0;0.12
-    //filename5.txt;8.9;0.11
-    public static void importScalars(Graph graph, String filename) throws IOException {
-        BufferedReader in = null;
-
-        try {
-            in = new BufferedReader(new java.io.FileReader(filename));
-            ArrayList<String> scalars = new ArrayList<String>();
-
-            //Capturing the scalar names
-            int linenumber = 0;
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                linenumber++;
-
-                //ignore comments
-                if (line.trim().length() > 0 && line.lastIndexOf('#') == -1) {
-                    StringTokenizer t = new StringTokenizer(line, ";");
-
-                    while (t.hasMoreTokens()) {
-                        scalars.add(t.nextToken().trim());
-                    }
-
-                    break;
-                }
-            }
-
-            //index for the vertex
-            HashMap<String, Vertex> index = new HashMap<String, Vertex>();
-            for (Vertex v : graph.getVertex()) {
-                index.put(v.getUrl().trim(), v);
-            }
-
-            //reading the scalars
-            while ((line = in.readLine()) != null) {
-                linenumber++;
-                ArrayList<Float> values = new ArrayList<Float>();
-
-                //ignore comments
-                if (line.trim().length() > 0 && line.lastIndexOf('#') == -1) {
-                    StringTokenizer t = new StringTokenizer(line, ";", false);
-
-                    //Capturing the filename
-                    String fname = t.nextToken().trim();
-
-                    //Capturing the scalar values
-                    while (t.hasMoreTokens()) {
-                        float value = Float.parseFloat(t.nextToken().trim());
-                        values.add(value);
-                    }
-
-                    //checking the data
-                    if (scalars.size() != values.size()) {
-                        throw new IOException("The number of values for one scalar " +
-                                "does not match with the number of declared scalars.\r\n" +
-                                "Check line " + linenumber + " of the file.");
-                    }
-
-                    //Adding the scalar values to the vertex
-                    Vertex v = index.get(fname);
-                    
-                    if (v != null) {
-                        for (int i = 0; i < scalars.size(); i++) {
-                            Scalar s = graph.addScalar(scalars.get(i));
-                            v.setScalar(s, values.get(i));
-                        }
-                    }
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            throw new IOException(ex.getMessage());
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-
-    public static void exportScalars(Graph graph, String filename) throws IOException {
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(filename));
-
-            //writing the scalar names
-            for (int i = 0; i < graph.getScalars().size(); i++) {
-                if (!graph.getScalars().get(i).getName().equals(PExConstants.DOTS)) {
-                    out.write(graph.getScalars().get(i).getName().replaceAll(";", "_"));
-                    if (i < graph.getScalars().size() - 1) {
-                        out.write(";");
-                    }
-                }
-            }
-
-            out.write("\r\n");
-
-            //writing the scalar values
-            for (Vertex v : graph.getVertex()) {
-                if (v.isValid()) {
-                    out.write(v.getUrl() + ";");
-
-                    for (int i = 0; i < graph.getScalars().size(); i++) {
-                        if (!graph.getScalars().get(i).getName().equals(PExConstants.DOTS)) {
-                            float scalar = v.getScalar(graph.getScalars().get(i));
-                            out.write(Float.toString(scalar).replaceAll(";", "_"));
-                            if (i < graph.getScalars().size() - 1) {
-                                out.write(";");
-                            }
-                        }
-                    }
-
-                    out.write("\r\n");
-                }
-            }
-
         } catch (IOException e) {
             throw new IOException(e.getMessage());
         } finally {

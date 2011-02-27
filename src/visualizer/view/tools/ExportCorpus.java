@@ -49,7 +49,7 @@ package visualizer.view.tools;
 
 import javax.swing.JOptionPane;
 import visualizer.graph.Graph;
-import visualizer.graph.Scalar;
+import visualizer.graph.scalar.Scalar;
 import visualizer.util.SaveDialog;
 import visualizer.util.filefilter.ZIPFilter;
 

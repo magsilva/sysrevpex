@@ -63,7 +63,6 @@ import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.ui.RefineryUtilities;
 import visualizer.graph.Graph;
-import visualizer.graph.Scalar;
 import visualizer.graph.Vertex;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.MatrixFactory;

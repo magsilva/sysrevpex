@@ -87,8 +87,9 @@ import visualizer.graph.coodination.DistanceMappingView;
 import visualizer.graph.coodination.IdentityMappingView;
 import visualizer.graph.coodination.TopicMappingView;
 import visualizer.graph.listeners.VertexSelectionFactory;
+import visualizer.graph.scalar.Scalar;
+import visualizer.graph.scalar.ScalarDAO;
 import visualizer.util.Delaunay;
-import visualizer.graph.Scalar;
 import visualizer.graph.XMLGraphParser;
 import visualizer.graph.coodination.Mapping;
 import visualizer.projection.distance.view.SimilarityMatrixView;
@@ -1638,12 +1639,9 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
             int result = SaveDialog.showSaveDialog(new SCALARFilter(), this, filename);
 
             if (result == JFileChooser.APPROVE_OPTION) {
-                try {
-                    filename = SaveDialog.getFilename();
-                    Util.exportScalars(gv.getGraph(), filename);
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
+            	filename = SaveDialog.getFilename();
+            	ScalarDAO dao = new ScalarDAO();
+            	dao.exportScalars(gv.getGraph(), filename);
             }
         }
     }//GEN-LAST:event_exportScalarsOptionActionPerformed
@@ -1655,13 +1653,10 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
             int result = OpenDialog.showOpenDialog(new SCALARFilter(), this);
 
             if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
-                try {
-                    String filename = OpenDialog.getFilename();
-                    Util.importScalars(gv.getGraph(), filename);
-                    gv.updateScalars(null);
-                } catch (IOException ex) {
-                    Logger.getLogger(ProjectionExplorerView.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            	String filename = OpenDialog.getFilename();
+            	ScalarDAO dao = new ScalarDAO();
+            	dao.importScalars(gv.getGraph(), filename);
+            	gv.updateScalars(null);
             }
         }
     }//GEN-LAST:event_importScalarsOptionActionPerformed

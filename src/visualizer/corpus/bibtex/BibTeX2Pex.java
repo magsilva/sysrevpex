@@ -8,7 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -18,6 +21,10 @@ import net.sf.jabref.imports.ParserResult;
 
 public class BibTeX2Pex
 {
+	private HashMap<String, BibtexEntry> cache;
+	
+	private Set<Integer> numbers;
+	
 	private static final String BIBTEX_EXTENSION = ".bib";
 
 	private static final String PEX_DOCUMENT_EXTENSION = ".zip";
@@ -36,12 +43,21 @@ public class BibTeX2Pex
 
 	private String[] fieldsToImport = { "title", "abstract"};
 
-	public BibTeX2Pex(File file)
+	private int i = 0;
+
+	
+	public BibTeX2Pex()
+	{
+		cache = new HashMap<String, BibtexEntry>();
+	}
+	
+	public void setBibtexFile(File file)
 	{
 		if (file == null || !file.exists()) {
 			throw new IllegalArgumentException("Invalid BibTeX file");
 		}
 
+		numbers = new HashSet<Integer>();
 		baseDir = file.getParent();
 		name = file.getName();
 		name = name.substring(0, name.lastIndexOf("."));
@@ -50,6 +66,7 @@ public class BibTeX2Pex
 		this.pexFile = new File(baseDir, name + PEX_DOCUMENT_EXTENSION);
 		this.scalarFile = new File(baseDir, name + PEX_SCALAR_EXTENSION);
 	}
+	
 
 	public File getBibtexFile()
 	{
@@ -65,6 +82,26 @@ public class BibTeX2Pex
 	{
 		return scalarFile;
 	}
+	
+	private BibtexEntry findInCache(BibtexEntry bibtexEntry)
+	{
+		String title = bibtexEntry.getField("title").toLowerCase();
+		String doi = bibtexEntry.getField("doi");
+		String key = title;
+		if (doi != null) {
+			key += doi.toLowerCase();
+		}
+
+		if (cache.containsKey(key)) {
+			bibtexEntry = cache.get(key);
+		} else {
+			bibtexEntry.setField("pexid", Integer.toString(i++));
+			cache.put(key, bibtexEntry);
+			numbers.add(i);
+		}
+	
+		return bibtexEntry;
+	}
 
 	public void convert() throws IOException
 	{
@@ -76,10 +113,10 @@ public class BibTeX2Pex
 		ParserResult result = BibtexParser.parse(new FileReader(bibtexFile));
 		Collection<BibtexEntry> entries = result.getDatabase().getEntries();
 		Iterator<BibtexEntry> iterator = entries.iterator();
-		int i = 0;
 		while (iterator.hasNext()) {
 			BibtexEntry bibtexEntry = iterator.next();
-			String fileName = Integer.toString(i++).concat(".txt");
+			bibtexEntry = findInCache(bibtexEntry);
+			String fileName = bibtexEntry.getField("pexid").concat(".txt");
 			StringWriter writer = new StringWriter();
 			BufferedWriter buffer = new BufferedWriter(writer);
 			for (String field : fieldsToImport) {
@@ -96,8 +133,10 @@ public class BibTeX2Pex
 			}
 			buffer.flush();
 			buffer.close();
+			
 			writer.flush();
 			writer.close();
+			
 			ZipEntry entry = new ZipEntry(fileName);
 			zipfile.putNextEntry(entry);
 			byte[] data = writer.toString().getBytes();
@@ -106,10 +145,12 @@ public class BibTeX2Pex
 			String year = bibtexEntry.getField("year");
 			scalarwriter.write(fileName + ";" + year);
 			scalarwriter.newLine();
-			scalarwriter.flush();
 		}
-		
+
+		zipfile.flush();
 		zipfile.close();
+		
+		scalarwriter.flush();
 		scalarwriter.close();
 	}
 }

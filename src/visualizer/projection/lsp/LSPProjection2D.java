@@ -67,7 +67,7 @@ import visualizer.projection.Projector;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.distance.Dissimilarity;
 import visualizer.util.KNN;
-import visualizer.graph.Scalar;
+import visualizer.graph.scalar.Scalar;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.MatrixFactory;
 import visualizer.util.Pair;

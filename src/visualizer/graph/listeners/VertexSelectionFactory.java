@@ -55,7 +55,7 @@ address = {Washington, DC, USA},
  */
 package visualizer.graph.listeners;
 
-import visualizer.graph.Scalar;
+import visualizer.graph.scalar.Scalar;
 import visualizer.view.Viewer;
 
 /**

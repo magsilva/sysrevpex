@@ -54,7 +54,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import visualizer.forcelayout.ForceData;
+import visualizer.graph.scalar.Scalar;
 import visualizer.view.color.ColorTable;
 
 /**
@@ -63,6 +67,47 @@ import visualizer.view.color.ColorTable;
  * @author Fernando Vieira Paulovich
  */
 public class Vertex implements Comparable, java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private static final float EPSILON = 0.00001f;
+    private long id = 0; //The vertex identification
+
+    /**
+     * The scalars associated with this vertex.
+     */
+    private Map<Scalar, Float> scalars = new HashMap<Scalar, Float>();
+    
+    private ArrayList<String> titles = new ArrayList<String>();  //The titles associated with this vertex
+    
+    private int indexTitle;
+    
+    private boolean showLabel = false;
+    
+    private String url = "";  //The item url which the vertex represents
+    
+    private static Font font = new Font("Verdana", Font.BOLD, 9);
+    
+    private Color color = Color.BLACK; //The vertex color
+    
+    private float x = 0; //The x-coodinate of the vertex
+    
+    private float y = 0;  //The y-coodinate of the vertex
+    
+    private static int rayBase = 4; //The rayFactor of the vertex
+    
+    private float rayFactor = 0;  //The size of vertex ray (it must stay between 0.0 and 1.0)
+    
+    public ForceData fdata; //Use to repositioning the points
+    
+    private boolean valid = true; //identifies if a vertex is valid
+    
+    private boolean selected = false;
+    
+    private static boolean showNonValid = true;
+    
+    private static boolean drawAsCircles = true;
+    
+    private static float alpha = 1.0f;
 
     /**
      * A vertex constructor
@@ -457,55 +502,54 @@ public class Vertex implements Comparable, java.io.Serializable {
     }
 
     public void setScalar(Scalar scalar, float value) {
-        assert (scalar.getIndex() >= 0) : "Error scalar created outside " +
-                "the method Graph.addScalar(...).";
+    	if (scalar == null) {
+    		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
+    	}
 
-        if (scalar != null) {
-            if (this.scalars.size() > scalar.getIndex()) {
-                this.scalars.set(scalar.getIndex(), value);
-            } else {
-                int size = this.scalars.size();
-                for (int i = 0; i < scalar.getIndex() - size; i++) {
-                    this.scalars.add(0.0f);
-                }
-                this.scalars.add(value);
-            }
+    	scalars.put(scalar, value);
 
-            if (scalar.getMin() > value) {
-                scalar.setMin(value);
-            }
+    	if (value < scalar.getMin()) {
+            scalar.setMin(value);
+        }
 
-            if (scalar.getMax() < value) {
-                scalar.setMax(value);
-            }
+        if (value > scalar.getMax()) {
+            scalar.setMax(value);
         }
     }
-
+    
     public float getScalar(Scalar scalar) {
-        if (scalar != null && this.scalars.size() > scalar.getIndex() && scalar.getIndex() > -1) {
-            return this.scalars.get(scalar.getIndex());
-        } else {
-            return 0.0f;
-        }
+    	if (scalar == null) {
+    		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
+    	}
+
+    	if (! scalars.containsKey(scalar)) {
+    		return 0.0f;
+    	} else {
+    		return scalars.get(scalar);
+    	}
     }
 
     public float getNormalizedScalar(Scalar scalar) {
-        if (scalar != null && this.scalars.size() > scalar.getIndex() && scalar.getIndex() > -1) {
-            if (scalar.getMax() > scalar.getMin()) {
-                float value = this.scalars.get(scalar.getIndex());
+    	if (scalar == null) {
+    		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
+    	}
+
+    	if (! scalars.containsKey(scalar)) {
+    		return 0.0f;
+    	} else {
+           if (scalar.getMax() > scalar.getMin()) {
+                float value = scalars.get(scalar);
                 return (value - scalar.getMin()) / (scalar.getMax() - scalar.getMin());
-            } else {
+           } else {
                 return 0.0f;
-            }
-        } else {
-            return 0.0f;
+           }
         }
     }
 
     public void removeScalar(Scalar scalar) {
-        if (scalar != null && this.scalars.size() > scalar.getIndex()) {
-            this.scalars.remove(scalar.getIndex());
-        }
+    	if (scalar != null && scalars.containsKey(scalar)) {
+    		scalars.remove(scalar);
+    	}
     }
 
     public boolean isValid() {
@@ -604,24 +648,4 @@ public class Vertex implements Comparable, java.io.Serializable {
             return -1;
         }
     }
-    private static final long serialVersionUID = 1L;
-    private static final float EPSILON = 0.00001f;
-    private long id = 0; //The vertex identification
-    private ArrayList<Float> scalars = new ArrayList<Float>();  //The scalars associated with this vertex
-    private ArrayList<String> titles = new ArrayList<String>();  //The titles associated with this vertex
-    private int indexTitle;
-    private boolean showLabel = false;
-    private String url = "";  //The item url which the vertex represents
-    private static Font font = new Font("Verdana", Font.BOLD, 9);
-    private Color color = Color.BLACK; //The vertex color
-    private float x = 0; //The x-coodinate of the vertex
-    private float y = 0;  //The y-coodinate of the vertex
-    private static int rayBase = 4; //The rayFactor of the vertex
-    private float rayFactor = 0;  //The size of vertex ray (it must stay between 0.0 and 1.0)
-    public ForceData fdata; //Use to repositioning the points
-    private boolean valid = true; //identifies if a vertex is valid
-    private boolean selected = false;
-    private static boolean showNonValid = true;
-    private static boolean drawAsCircles = true;
-    private static float alpha = 1.0f;
 }

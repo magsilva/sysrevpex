@@ -64,6 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import visualizer.corpus.Corpus;
 import visualizer.corpus.zip.ZipCorpus;
 import visualizer.dimensionreduction.DimensionalityReductionType;
+import visualizer.graph.scalar.Scalar;
 import visualizer.projection.ProjectionType;
 import visualizer.projection.ProjectorType;
 import visualizer.projection.SourceType;

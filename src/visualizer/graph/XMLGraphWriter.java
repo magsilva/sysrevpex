@@ -55,6 +55,8 @@ import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import visualizer.graph.scalar.Scalar;
+
 /**
  *
  * @author Fernando Vieira Paulovich

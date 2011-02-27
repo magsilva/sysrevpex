@@ -51,8 +51,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import visualizer.graph.Scalar;
 import visualizer.graph.Vertex;
+import visualizer.graph.scalar.Scalar;
 import visualizer.view.Viewer;
 
 /**

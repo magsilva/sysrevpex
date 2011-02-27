@@ -59,7 +59,7 @@ import org.ujmp.core.doublematrix.calculation.general.decomposition.Solve;
 
 import visualizer.datamining.clustering.BKmeans;
 import visualizer.graph.Graph;
-import visualizer.graph.Scalar;
+import visualizer.graph.scalar.Scalar;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.MatrixFactory;
 import visualizer.projection.Projection;

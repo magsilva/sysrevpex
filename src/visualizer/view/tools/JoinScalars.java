@@ -53,8 +53,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import visualizer.graph.Graph;
-import visualizer.graph.Scalar;
 import visualizer.graph.Vertex;
+import visualizer.graph.scalar.Scalar;
 import visualizer.util.PExConstants;
 import visualizer.view.Viewer;
 

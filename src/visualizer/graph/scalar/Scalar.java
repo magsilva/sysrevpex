@@ -46,7 +46,7 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.graph;
+package visualizer.graph.scalar;
 
 /**
  *
@@ -54,6 +54,18 @@ package visualizer.graph;
  */
 public class Scalar {
 
+    private String name;
+    
+    /**
+     * Max value set for a vertex using this scalar.
+     */
+    private float max = Float.NEGATIVE_INFINITY;
+
+    /**
+     * Min value set for a vertex using this scalar.
+     */
+    private float min = Float.POSITIVE_INFINITY;
+    
     public Scalar(String name) {
         this.name = name;
     }
@@ -78,39 +90,30 @@ public class Scalar {
         this.min = min;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int id) {
-        this.index = id;
-    }
-
     @Override
     public boolean equals(Object obj) {
+    	if (obj == null) {
+    		return false;
+    	}
+    	
         if (obj instanceof Scalar) {
-            if (this.name != null && obj != null) {
-                return this.name.equals(((Scalar) obj).name);
+            if (name != null) {
+                return name.equals(((Scalar) obj).name);
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+        
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return this.name.hashCode();
+        return name.hashCode();
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
-
-    private String name = "";
-    private float max = Float.NEGATIVE_INFINITY;
-    private float min = Float.POSITIVE_INFINITY;
-    private int index = 0;
 }
