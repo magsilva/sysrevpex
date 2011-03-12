@@ -139,8 +139,19 @@
 			<groupId>net.sf.jabref</groupId>
 			<artifactId>jabref</artifactId>
 			<version>2.6</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>looks</artifactId>
+					<groupId>com.jgoodies</groupId>
+				</exclusion>
+			</exclusions>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>labes</groupId>
+			<artifactId>lode</artifactId>
+			<version>[0.1.0,)</version>
 		</dependency>
 	</dependencies>
 

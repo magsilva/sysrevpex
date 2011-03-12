@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import visualizer.tools.TestConnectivity;
 import visualizer.util.solver.Matrix;
 import visualizer.util.solver.Solver;
 
