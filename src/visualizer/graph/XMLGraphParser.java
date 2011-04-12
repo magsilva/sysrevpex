@@ -61,7 +61,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import visualizer.corpus.Corpus;
+import visualizer.corpus.BaseCorpus;
 import visualizer.corpus.zip.ZipCorpus;
 import visualizer.dimensionreduction.DimensionalityReductionType;
 import visualizer.graph.scalar.Scalar;

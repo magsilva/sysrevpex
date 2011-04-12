@@ -58,6 +58,7 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import visualizer.corpus.Corpus;
 
 /**

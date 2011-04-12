@@ -50,6 +50,7 @@ package visualizer.projection.distance.kolmogorov;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import visualizer.corpus.Corpus;
 import visualizer.corpus.zip.ZipCorpus;
 import visualizer.wizard.ProjectionView;
@@ -63,7 +64,7 @@ public class NcdDistanceMatrixFactory {
 
     public static DistanceMatrix getInstance(ProjectionView view, CompressorType compType, Corpus corpus) {
         if (view != null) {
-            view.setStatus("Calculating distances using NCD..." + corpus.getUrl(), 6);
+            view.setStatus("Calculating distances using NCD...", 6);
         }
 
         int size = corpus.getIds().size();

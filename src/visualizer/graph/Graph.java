@@ -63,6 +63,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import visualizer.corpus.Corpus;
 import visualizer.matrix.DenseMatrix;
 import visualizer.matrix.DenseVector;

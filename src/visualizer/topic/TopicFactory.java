@@ -49,6 +49,7 @@ address = {Washington, DC, USA},
 package visualizer.topic;
 
 import java.util.ArrayList;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.Graph;
 import visualizer.graph.Vertex;

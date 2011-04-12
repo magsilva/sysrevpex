@@ -90,10 +90,10 @@ public class InvertedZipCorpus {
 
         if (!(new File(this.invFilename).exists()) ||
                 corpus.getNumberGrams() != this.getNumberGrams() ||
-                !Corpus.getEncoding().toString().equals(this.getEncoding())) {
+                !BaseCorpus.getEncoding().toString().equals(this.getEncoding())) {
             try {
                 this.removeFile();
-                this.processCorpus(corpus, nrGrams, Corpus.getEncoding());
+                this.processCorpus(corpus, nrGrams, BaseCorpus.getEncoding());
                 this.dispose();
             } catch (IOException ex) {
                 Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);

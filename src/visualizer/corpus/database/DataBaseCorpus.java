@@ -58,14 +58,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import visualizer.corpus.Corpus;
+import visualizer.corpus.BaseCorpus;
 import visualizer.textprocessing.Ngram;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class DataBaseCorpus extends Corpus {
+public class DataBaseCorpus extends BaseCorpus {
 
     public DataBaseCorpus(String url, int nrGrams) {
         super(url, nrGrams);

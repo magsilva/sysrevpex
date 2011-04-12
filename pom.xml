@@ -148,11 +148,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>labes</groupId>
-			<artifactId>lode</artifactId>
-			<version>[0.1.0,)</version>
-		</dependency>
 	</dependencies>
 
 	<build>

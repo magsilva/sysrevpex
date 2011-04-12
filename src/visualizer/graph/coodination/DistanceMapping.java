@@ -50,6 +50,7 @@ package visualizer.graph.coodination;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.coodination.Mapping.Map;
 import visualizer.matrix.Matrix;

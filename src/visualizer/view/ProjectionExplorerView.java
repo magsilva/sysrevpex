@@ -77,6 +77,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.Graph;
 import visualizer.graph.XMLGraphWriter;

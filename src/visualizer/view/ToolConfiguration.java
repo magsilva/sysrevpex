@@ -48,7 +48,7 @@ address = {Washington, DC, USA},
 
 package visualizer.view;
 
-import visualizer.corpus.Corpus;
+import visualizer.corpus.BaseCorpus;
 import visualizer.corpus.Encoding;
 import visualizer.graph.Edge;
 import visualizer.graph.Graph;
@@ -612,7 +612,7 @@ public class ToolConfiguration extends javax.swing.JDialog {
     private void encodingsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encodingsComboBoxActionPerformed
         Encoding encoding = (Encoding) encodingsComboBox.getSelectedItem();
         if (encoding != null) {
-            Corpus.setEncoding(encoding);
+            BaseCorpus.setEncoding(encoding);
         }
     }//GEN-LAST:event_encodingsComboBoxActionPerformed
 

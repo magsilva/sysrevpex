@@ -66,7 +66,7 @@ import visualizer.textprocessing.Ngram;
  *
  * @author Fernando Vieira Paulovich
  */
-public class ZipCorpus extends Corpus
+public class ZipCorpus extends BaseCorpus
 {
 	public static final String INVERTED_CORPUS_EXTENSION = ".inv";
 
@@ -114,7 +114,7 @@ public class ZipCorpus extends Corpus
             ZipEntry entry = zip.getEntry(itemUrl);
             if (entry != null) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(zip.getInputStream(entry),
-                        Corpus.getEncoding().toString()));
+                        BaseCorpus.getEncoding().toString()));
 
                 String line;
                 StringBuffer text = new StringBuffer();

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.Vertex;
 import visualizer.topic.TopicData;

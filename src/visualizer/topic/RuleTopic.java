@@ -61,6 +61,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.Vertex;
 import visualizer.matrix.Matrix;

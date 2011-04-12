@@ -60,6 +60,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
+
 import visualizer.corpus.Corpus;
 import visualizer.graph.Graph;
 import visualizer.graph.Vertex;
