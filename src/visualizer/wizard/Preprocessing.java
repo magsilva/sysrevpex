@@ -48,6 +48,20 @@ address = {Washington, DC, USA},
 
 package visualizer.wizard;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.JCheckBox;
+
 import visualizer.projection.ProjectionData;
 import visualizer.textprocessing.transformation.MatrixTransformationType;
 import visualizer.textprocessing.stemmer.StemmerType;
@@ -57,21 +71,43 @@ import visualizer.view.tools.LuhnCutAnalizer;
  *
  * @author  Fernando Vieira Paulovich
  */
-public class Preprocessing extends WizardPanel {
+public class Preprocessing extends WizardPanel
+{
+	private ProjectionData pdata;
+    
+	private JButton analyzeButton;
+    private JComboBox gramsComboBox;
+    private JLabel gramsLabel;
+    private JLabel luhnLabel;
+    private JTextField luhnLowerTextField;
+    private JLabel luhnUpperLabel;
+    private JTextField luhnUpperTextField;
+    private JPanel matrixTypePanel;
+    private JComboBox matrixtransfComboBox;
+    private JPanel preProcessingPanel;
+    private JComboBox stemmerComboBox;
+    private JCheckBox stopwordCheckBox;
+    private JCheckBox startwordCheckBox;
+    private JCheckBox useWeightCheckBox;
+    private JPanel wordListTypePanel;
+    // End of variables declaration//GEN-END:variables
 
-    /** Creates new form Preprocessing
-     * @param pdata
+    /**
+     * Creates new form Preprocessing.
+     * 
+     * @param pdata Projection data.
      */
-    public Preprocessing(ProjectionData pdata) {
+    public Preprocessing(ProjectionData pdata)
+    {
         this.pdata = pdata;
         initComponents();
 
         for (StemmerType st : StemmerType.getTypes()) {
-            this.stemmerComboBox.addItem(st);
+            stemmerComboBox.addItem(st);
         }
 
         for (MatrixTransformationType mtt : MatrixTransformationType.getTypes()) {
-            this.matrixtransfComboBox.addItem(mtt);
+            matrixtransfComboBox.addItem(mtt);
         }
     }
 
@@ -82,198 +118,180 @@ public class Preprocessing extends WizardPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+        GridBagConstraints gridBagConstraints;
 
-        wordListTypeButtonGroup = new javax.swing.ButtonGroup();
-        preProcessingPanel = new javax.swing.JPanel();
-        luhnLabel = new javax.swing.JLabel();
-        gramsComboBox = new javax.swing.JComboBox();
-        gramsLabel = new javax.swing.JLabel();
-        luhnLowerTextField = new javax.swing.JTextField();
-        analyzeButton = new javax.swing.JButton();
-        luhnUpperLabel = new javax.swing.JLabel();
-        luhnUpperTextField = new javax.swing.JTextField();
-        stemmerComboBox = new javax.swing.JComboBox();
-        matrixTypePanel = new javax.swing.JPanel();
-        matrixtransfComboBox = new javax.swing.JComboBox();
-        wordListTypePanel = new javax.swing.JPanel();
-        stopwordRadioButton = new javax.swing.JRadioButton();
-        startwordRadioButton = new javax.swing.JRadioButton();
-        useWeightCheckBox = new javax.swing.JCheckBox();
+        preProcessingPanel = new JPanel();
+        luhnLabel = new JLabel();
+        gramsComboBox = new JComboBox();
+        gramsLabel = new JLabel();
+        luhnLowerTextField = new JTextField();
+        analyzeButton = new JButton();
+        luhnUpperLabel = new JLabel();
+        luhnUpperTextField = new JTextField();
+        stemmerComboBox = new JComboBox();
+        matrixTypePanel = new JPanel();
+        matrixtransfComboBox = new JComboBox();
+        wordListTypePanel = new JPanel();
+        stopwordCheckBox = new JCheckBox();
+        startwordCheckBox = new JCheckBox();
+        useWeightCheckBox = new JCheckBox();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Corpus Pre-processing"));
-        setLayout(new java.awt.GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder("Corpus Pre-processing"));
+        setLayout(new GridBagLayout());
 
-        preProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        preProcessingPanel.setLayout(new java.awt.GridBagLayout());
+        preProcessingPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
+        preProcessingPanel.setLayout(new GridBagLayout());
 
         luhnLabel.setText("Luhn's lower cut");
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(luhnLabel, gridBagConstraints);
 
         gramsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(gramsComboBox, gridBagConstraints);
 
         gramsLabel.setText("Number of grams");
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(gramsLabel, gridBagConstraints);
 
         luhnLowerTextField.setColumns(5);
         luhnLowerTextField.setText("10");
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(luhnLowerTextField, gridBagConstraints);
 
         analyzeButton.setText("Analyze");
-        analyzeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        analyzeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 analyzeButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(analyzeButton, gridBagConstraints);
 
         luhnUpperLabel.setText("Luhn's upper cut");
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(luhnUpperLabel, gridBagConstraints);
 
         luhnUpperTextField.setColumns(5);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(luhnUpperTextField, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         preProcessingPanel.add(stemmerComboBox, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
         add(preProcessingPanel, gridBagConstraints);
 
-        matrixTypePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Matrix Transformation"));
-        matrixTypePanel.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        matrixTypePanel.setBorder(BorderFactory.createTitledBorder("Matrix Transformation"));
+        matrixTypePanel.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         matrixTypePanel.add(matrixtransfComboBox, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(matrixTypePanel, gridBagConstraints);
 
-        wordListTypePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Word List Type"));
-        wordListTypePanel.setLayout(new java.awt.GridBagLayout());
+        wordListTypePanel.setBorder(BorderFactory.createTitledBorder("Word List Type"));
+        wordListTypePanel.setLayout(new GridBagLayout());
 
-        wordListTypeButtonGroup.add(stopwordRadioButton);
-        stopwordRadioButton.setSelected(true);
-        stopwordRadioButton.setText("Stop Words");
-        stopwordRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        stopwordRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        wordListTypePanel.add(stopwordRadioButton, gridBagConstraints);
-
-        wordListTypeButtonGroup.add(startwordRadioButton);
-        startwordRadioButton.setText("Start Words");
-        startwordRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        startwordRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        stopwordCheckBox.setText("Stop Words");
+        stopwordCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        stopwordCheckBox.setMargin(new Insets(0, 0, 0, 0));
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        wordListTypePanel.add(startwordRadioButton, gridBagConstraints);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        wordListTypePanel.add(stopwordCheckBox, gridBagConstraints);
+
+        startwordCheckBox.setText("Start Words");
+        startwordCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        startwordCheckBox.setMargin(new Insets(0, 0, 0, 0));
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        wordListTypePanel.add(startwordCheckBox, gridBagConstraints);
 
         useWeightCheckBox.setText("Use weights");
-        useWeightCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        useWeightCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        useWeightCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        useWeightCheckBox.setMargin(new Insets(0, 0, 0, 0));
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         wordListTypePanel.add(useWeightCheckBox, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(wordListTypePanel, gridBagConstraints);
-    }// </editor-fold>//GEN-END:initComponents
-    private void analyzeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeButtonActionPerformed
-        this.refreshData();
-        ProjectionWizardView view = (ProjectionWizardView) this.getTopLevelAncestor();
-        LuhnCutAnalizer.getInstance(view).display(this.pdata);
-        this.luhnLowerTextField.setText(Integer.toString(this.pdata.getLunhLowerCut()));
-        this.luhnUpperTextField.setText(Integer.toString(this.pdata.getLunhUpperCut()));
-    }//GEN-LAST:event_analyzeButtonActionPerformed
-
-    @Override
-    public void refreshData() {
-        this.pdata.setStemmer((StemmerType) this.stemmerComboBox.getSelectedItem());
-        this.pdata.setUseStopword(this.stopwordRadioButton.isSelected());
-        this.pdata.setUseWeight(this.useWeightCheckBox.isSelected());
-        this.pdata.setMatrixTransformationType((MatrixTransformationType) this.matrixtransfComboBox.getSelectedItem());
-        this.pdata.setNumberGrams(this.gramsComboBox.getSelectedIndex() + 1);
-
-        if (this.luhnLowerTextField.getText().trim().length() > 0) {
-            this.pdata.setLunhLowerCut(Integer.parseInt(this.luhnLowerTextField.getText()));
-        } else {
-            this.pdata.setLunhLowerCut(1);
-        }
-
-        if (this.luhnUpperTextField.getText().trim().length() > 0) {
-            this.pdata.setLunhUpperCut(Integer.parseInt(this.luhnUpperTextField.getText()));
-        } else {
-            this.pdata.setLunhUpperCut(-1);
-        }
+    }
+    
+    private void analyzeButtonActionPerformed(ActionEvent evt)
+    {
+        refreshData();
+        ProjectionWizardView view = (ProjectionWizardView) getTopLevelAncestor();
+        LuhnCutAnalizer.getInstance(view).display(pdata);
+        luhnLowerTextField.setText(Integer.toString(pdata.getLunhLowerCut()));
+        luhnUpperTextField.setText(Integer.toString(pdata.getLunhUpperCut()));
     }
 
-    private ProjectionData pdata;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyzeButton;
-    private javax.swing.JComboBox gramsComboBox;
-    private javax.swing.JLabel gramsLabel;
-    private javax.swing.JLabel luhnLabel;
-    private javax.swing.JTextField luhnLowerTextField;
-    private javax.swing.JLabel luhnUpperLabel;
-    private javax.swing.JTextField luhnUpperTextField;
-    private javax.swing.JPanel matrixTypePanel;
-    private javax.swing.JComboBox matrixtransfComboBox;
-    private javax.swing.JPanel preProcessingPanel;
-    private javax.swing.JRadioButton startwordRadioButton;
-    private javax.swing.JComboBox stemmerComboBox;
-    private javax.swing.JRadioButton stopwordRadioButton;
-    private javax.swing.JCheckBox useWeightCheckBox;
-    private javax.swing.ButtonGroup wordListTypeButtonGroup;
-    private javax.swing.JPanel wordListTypePanel;
-    // End of variables declaration//GEN-END:variables
+    @Override
+    public void refreshData()
+    {
+        pdata.setStemmer((StemmerType) stemmerComboBox.getSelectedItem());
+        pdata.setUseStopword(stopwordCheckBox.isSelected());
+        pdata.setUseStartword(startwordCheckBox.isSelected());
+        pdata.setUseWeight(useWeightCheckBox.isSelected());
+        pdata.setMatrixTransformationType((MatrixTransformationType) matrixtransfComboBox.getSelectedItem());
+        pdata.setNumberGrams(gramsComboBox.getSelectedIndex() + 1);
+
+        if (luhnLowerTextField.getText().trim().length() > 0) {
+            pdata.setLunhLowerCut(Integer.parseInt(luhnLowerTextField.getText()));
+        } else {
+            pdata.setLunhLowerCut(1);
+        }
+
+        if (luhnUpperTextField.getText().trim().length() > 0) {
+            pdata.setLunhUpperCut(Integer.parseInt(luhnUpperTextField.getText()));
+        } else {
+            pdata.setLunhUpperCut(-1);
+        }
+    }
 }

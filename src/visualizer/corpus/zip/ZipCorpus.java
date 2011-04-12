@@ -97,12 +97,12 @@ public class ZipCorpus extends BaseCorpus
     }
 
     @Override
-    public String getViewContent(String itemUrl) throws IOException {
+    public String getViewContent(String itemUrl)  {
         return this.getFullContent(itemUrl);
     }
 
     @Override
-    public String getFullContent(String itemUrl) throws IOException {
+    public String getFullContent(String itemUrl) {
         ZipFile zip = null;
         try {
             zip = new ZipFile(this.url);
@@ -120,7 +120,7 @@ public class ZipCorpus extends BaseCorpus
                 return text.toString();
             }
         } catch (IOException e) {
-            throw new IOException("File " + itemUrl + " does not exist.");
+            throw new IllegalArgumentException("File " + itemUrl + " does not exist.", e);
         } finally {
             if (zip != null) {
                 try {
@@ -135,13 +135,13 @@ public class ZipCorpus extends BaseCorpus
     }
 
     @Override
-    public ArrayList<Ngram> getCorpusNgrams() throws IOException {
-        return this.invertedCorpus.getCorpusNgrams();
+    public ArrayList<Ngram> getCorpusNgrams() {
+        return invertedCorpus.getCorpusNgrams();
     }
 
     @Override
-    public ArrayList<Ngram> getNgrams(String filename) throws IOException {
-        return this.invertedCorpus.getNgrams(filename);
+    public ArrayList<Ngram> getNgrams(String filename)  {
+        return invertedCorpus.getNgrams(filename);
     }
 
    

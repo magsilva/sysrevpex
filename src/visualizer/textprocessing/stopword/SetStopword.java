@@ -79,7 +79,7 @@ public class SetStopword implements StopWord
 		stopwords = new HashSet<String>();
 	}
 
-	public synchronized static SetStopword getInstance() throws java.io.IOException
+	public synchronized static SetStopword getInstance() throws IOException 
 	{
 		if (instance == null) {
 			instance = new SetStopword();
@@ -93,7 +93,7 @@ public class SetStopword implements StopWord
 	}
 
 	@Override
-	public void changeStopwordList(String stpFilename) throws java.io.IOException
+	public void changeStopwordList(String stpFilename) throws IOException 
 	{
 		readStopwordList(stpFilename);
 	}
@@ -123,7 +123,7 @@ public class SetStopword implements StopWord
 	}
 
 	@Override
-	public void saveStopwordsList(String filename) throws java.io.IOException
+	public void saveStopwordsList(String filename) throws IOException
 	{
 		File file = new File(filename);
 		
@@ -135,7 +135,7 @@ public class SetStopword implements StopWord
 				out.write("\n");
 			}
 		} catch (IOException ex) {
-			throw new java.io.IOException("Problems saving \"" + filename + "\" file!");
+			throw new IOException("Problems saving \"" + filename + "\" file!");
 		} finally {
 			this.file = file;
 			if (out != null) {
@@ -162,7 +162,7 @@ public class SetStopword implements StopWord
 		BufferedReader in = null;
 		File file = new File(filename);
 		if (! file.exists()) {
-			throw new java.io.IOException("File \"" + filename + "\" was not found!");
+			throw new IllegalArgumentException("File \"" + filename + "\" was not found!");
 		}
 		this.file = file;
 
@@ -176,7 +176,7 @@ public class SetStopword implements StopWord
 				}
 			}
 		}  catch (IOException e) {
-			throw new IOException("Problems reading the file \"" + filename + "\"");
+			throw new IOException("Problems reading the file \"" + filename + "\"", e);
 		} finally {
 			if (in != null) {
 				try {

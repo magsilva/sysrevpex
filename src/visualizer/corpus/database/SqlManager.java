@@ -61,10 +61,18 @@ import java.util.logging.Logger;
  *
  * @author Fernando Vieira Paulovich
  */
-public class SqlManager {
+public class SqlManager
+{
+    private final String sqlfilename = "./config/sql.properties";
+    
+    private Properties properties;
+    
+    private static SqlManager _instance;
+    
+    private boolean commit = false;
 
     /** Creates a new instance of SqlManager */
-    private SqlManager() throws IOException {
+    private SqlManager() {
         try {
             //read the file containing the sql statements
             this.properties = new Properties();
@@ -72,50 +80,52 @@ public class SqlManager {
             this.properties.load(file);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
         } catch (IOException ex) {
             Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
         }
     }
 
-    public static SqlManager getInstance() throws IOException {
+    public static SqlManager getInstance() {
         if (_instance == null) {
             _instance = new SqlManager();
         }
         return _instance;
     }
 
-    public PreparedStatement getSqlStatement(String id) throws IOException {
+    public PreparedStatement getSqlStatement(String id) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             return conn.prepareStatement(properties.getProperty(id));
         } catch (SQLException ex) {
             Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
-        }
+        } catch (IOException e) {
+            Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, e);
+		}
+        return null;
     }
 
-    public void beginTransaction() throws IOException {
+    public void beginTransaction() {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             this.commit = conn.getAutoCommit();
             conn.setAutoCommit(false);
         } catch (SQLException ex) {
             Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
-        }
+        } catch (IOException e) {
+            Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, e);
+		}
     }
 
-    public void endTransaction() throws IOException {
+    public void endTransaction()  {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             conn.commit();
             conn.setAutoCommit(this.commit);
         } catch (SQLException ex) {
             Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
-        }
+        } catch (IOException e) {
+            Logger.getLogger(SqlManager.class.getName()).log(Level.SEVERE, null, e);
+		}
     }
 
     public void rollBackTransaction() throws IOException {
@@ -128,8 +138,4 @@ public class SqlManager {
         }
     }
 
-    private final String sqlfilename = "./config/sql.properties";
-    private Properties properties;
-    private static SqlManager _instance;
-    private boolean commit = false;
 }

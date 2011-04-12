@@ -2212,12 +2212,8 @@ private void silhouetteCoefficientMenuItemActionPerformed(java.awt.event.ActionE
             this.fileTitleTextField.setText(v.toString());
             this.fileTitleTextField.setCaretPosition(0);
 
-            try {
-                this.fileContentEditorPane.setText(corpus.getViewContent(filename));
-                this.fileContentEditorPane.setCaretPosition(0);
-            } catch (IOException ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            }
+            this.fileContentEditorPane.setText(corpus.getViewContent(filename));
+            this.fileContentEditorPane.setCaretPosition(0);
         }
     }
 

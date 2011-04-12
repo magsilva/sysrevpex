@@ -303,12 +303,8 @@ public class MultipleFileView extends javax.swing.JDialog {
             this.filelabelField.setText(label);
             this.filelabelField.setCaretPosition(0);
 
-            try {
-                this.textArea.setText(datasource.getViewContent(filename));
-                this.textArea.setCaretPosition(0);
-            } catch (IOException ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-            }
+            this.textArea.setText(datasource.getViewContent(filename));
+            this.textArea.setCaretPosition(0);
         }
 
         // Creates highlights around all occurrences of pattern in textComp

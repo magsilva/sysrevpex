@@ -51,6 +51,8 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +62,7 @@ import visualizer.graph.Vertex;
 import visualizer.graph.scalar.Scalar;
 import visualizer.matrix.Matrix;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.Preprocessor;
+import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.util.PExConstants;
 
@@ -109,10 +111,16 @@ public class CovarianceTopic extends Topic {
                 lowercut = 20;
             }
 
-            Preprocessor pp = new Preprocessor(corpus);
-            Matrix matrix = pp.getMatrixSelected(lowercut, uppercut, ngrams,
-                    StemmerType.NONE, true, vertex);
-            ArrayList<Ngram> cpNgrams = pp.getNgrams();
+            MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            pp.setCorpus(corpus);
+            pp.setLowerCut(lowercut);
+            pp.setUpperCut(uppercut);
+            pp.setNumberGrams(ngrams);
+            pp.setStemmer(StemmerType.NONE);
+            pp.setStopword(true);
+            pp.setStartword(false);
+            Matrix matrix = pp.getMatrixForSelection(vertex);
+            Collection<Ngram> cpNgrams = pp.getNgrams();
 
             //Reducing the points and creating an index
             if (matrix.getRowCount() > 0 && matrix.getDimensions() > 0) {
@@ -237,8 +245,8 @@ public class CovarianceTopic extends Topic {
         return null;
     }
 
-    private float[][] cutDimensions(Matrix matrix, ArrayList<Ngram> cpNgrams,
-            ArrayList<String> indexGrams) {
+    private float[][] cutDimensions(Matrix matrix, Collection<Ngram> cpNgrams, ArrayList<String> indexGrams)
+    {
         //keep on the new points matrix no more than 200 dimensions
         float[][] newpoints = new float[matrix.getRowCount()][];
 
@@ -251,8 +259,9 @@ public class CovarianceTopic extends Topic {
         }
 
         indexGrams.clear();
+        Iterator<Ngram> ngramsI = cpNgrams.iterator();
         for (int i = 0; i < newpoints[0].length; i++) {
-            indexGrams.add(cpNgrams.get(i).ngram);
+            indexGrams.add(ngramsI.next().ngram);
         }
 
         return newpoints;

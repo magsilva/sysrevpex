@@ -8,28 +8,21 @@ import visualizer.textprocessing.Ngram;
 public class IroniaCorpus implements Corpus
 {
 	@Override
-	public String getFullContent(String id) throws IOException
+	public String getFullContent(String id)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getViewContent(String id) throws IOException
+	public String getViewContent(String id)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Ngram> getNgrams(String id) throws IOException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Ngram> getCorpusNgrams() throws IOException
+	public ArrayList<Ngram> getNgrams(String id) 
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -57,7 +50,14 @@ public class IroniaCorpus implements Corpus
 	}
 
 	@Override
-	public String getTitle(int nrLines, String id) throws IOException
+	public String getTitle(int nrLines, String id)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Ngram> getCorpusNgrams()
 	{
 		// TODO Auto-generated method stub
 		return null;

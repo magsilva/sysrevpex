@@ -85,7 +85,7 @@ public class DataBaseCorpus extends BaseCorpus {
     }
 
     @Override
-    public String getFullContent(String id) throws IOException {
+    public String getFullContent(String id){
         String content = "";
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -102,14 +102,12 @@ public class DataBaseCorpus extends BaseCorpus {
             }
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
 
@@ -118,7 +116,6 @@ public class DataBaseCorpus extends BaseCorpus {
                     stmt.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
         }
@@ -128,12 +125,12 @@ public class DataBaseCorpus extends BaseCorpus {
 
 
     @Override
-    public String getViewContent(String id) throws IOException {
+    public String getViewContent(String id) {
         return this.getFullContent(id);
     }
 
     @Override
-    public ArrayList<Ngram> getNgrams(String id) throws IOException {
+    public ArrayList<Ngram> getNgrams(String id) {
         ArrayList<Ngram> ngrams = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -153,17 +150,16 @@ public class DataBaseCorpus extends BaseCorpus {
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
 
@@ -172,7 +168,6 @@ public class DataBaseCorpus extends BaseCorpus {
                     stmt.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
         }
@@ -181,7 +176,7 @@ public class DataBaseCorpus extends BaseCorpus {
     }
 
     @Override
-    public ArrayList<Ngram> getCorpusNgrams() throws IOException {
+    public ArrayList<Ngram> getCorpusNgrams() {
         ArrayList<Ngram> ngrams = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -200,17 +195,16 @@ public class DataBaseCorpus extends BaseCorpus {
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IOException(ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
 
@@ -219,7 +213,6 @@ public class DataBaseCorpus extends BaseCorpus {
                     stmt.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new IOException(ex.getMessage());
                 }
             }
         }
@@ -336,8 +329,6 @@ public class DataBaseCorpus extends BaseCorpus {
                     int id = rs.getInt("id");
                     this.ids.add(Integer.toString(id));
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -378,8 +369,6 @@ public class DataBaseCorpus extends BaseCorpus {
                     String id = Integer.toString(rs.getInt("id"));
                     cdata[this.ids.indexOf(id)] = value;
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
             } finally {

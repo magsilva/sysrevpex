@@ -65,6 +65,46 @@ import visualizer.textprocessing.stemmer.StemmerType;
  */
 public class TopicData {
 
+    //Settings for rule topic creation
+    private float percentageTopics = 0.75f;
+    private float percentageTerms = 0.5f;
+    private int lowerCut = 2;
+    private int upperCut = 150;
+    private int numberGrams = 1;
+    private MatrixTransformationType matrixType = MatrixTransformationType.TF_IDF;
+    private Matrix matrix;
+    private ArrayList<Ngram> corporaNgrams = null;
+    private Float weightBeta = 1.0f;
+    private StemmerType stemmer = StemmerType.NONE;
+    private boolean useStopword = true;
+    private boolean useStartword = false;
+    private boolean groupTopics = false;
+    private float minSup = 40.0f;
+    private int minSupAbs = 5;
+    private SupportType supportType = SupportType.RELATIVE;
+    //Multiple re-start statistics data
+    private int currentRun = 0,  currentSelection = 0;
+    //type of wieght to use on topics
+    private WeightType weightType = WeightType.LOCAL;
+    //The type of topic to create
+    private TopicType topicType = TopicType.COVARIANCE;
+    //Type of clustering used to generate vs
+    private ClusteringType clusteringType = ClusteringType.KMEANS;
+    //TermSet from rules for Session
+    private Set<String> termSetAccum = new HashSet<String>();
+    //TermSet from rules for last Iteraction run
+    private Set<String> termSetRun = new HashSet<String>();
+    //TermSet from rules for Session with Weight
+    private Set<String> termSetAccumW = new HashSet<String>();
+    //TermSet from rules for last Iteraction run with Weight
+    private Set<String> termSetRunW = new HashSet<String>();
+    private Corpus corpus = null;
+    private boolean ruleTopic = true;
+    private boolean phrase = false;
+    private boolean shortPhrase = false;
+    private String csvFileName = null;
+    private Graph graph;
+	
     public enum SupportType {
 
         RELATIVE, ABSOLUTE;
@@ -240,6 +280,18 @@ public class TopicData {
         this.useStopword = useStopword;
     }
 
+    public boolean isUseStartword() {
+        return useStartword;
+    }
+
+    public void setUseStartword(boolean useStartword) {
+        if (this.useStartword != useStartword) {
+            this.setMatrix(null);
+        }
+        this.useStartword = useStartword;
+    }
+
+    
     public boolean isGroupTopics() {
         return groupTopics;
     }
@@ -371,42 +423,4 @@ public class TopicData {
         return clone;
     }
 
-    //Settings for rule topic creation
-    private float percentageTopics = 0.75f;
-    private float percentageTerms = 0.5f;
-    private int lowerCut = 2;
-    private int upperCut = 150;
-    private int numberGrams = 1;
-    private MatrixTransformationType matrixType = MatrixTransformationType.TF_IDF;
-    private Matrix matrix;
-    private ArrayList<Ngram> corporaNgrams = null;
-    private Float weightBeta = 1.0f;
-    private StemmerType stemmer = StemmerType.NONE;
-    private boolean useStopword = true;
-    private boolean groupTopics = false;
-    private float minSup = 40.0f;
-    private int minSupAbs = 5;
-    private SupportType supportType = SupportType.RELATIVE;
-    //Multiple re-start statistics data
-    private int currentRun = 0,  currentSelection = 0;
-    //type of wieght to use on topics
-    private WeightType weightType = WeightType.LOCAL;
-    //The type of topic to create
-    private TopicType topicType = TopicType.COVARIANCE;
-    //Type of clustering used to generate vs
-    private ClusteringType clusteringType = ClusteringType.KMEANS;
-    //TermSet from rules for Session
-    private Set<String> termSetAccum = new HashSet<String>();
-    //TermSet from rules for last Iteraction run
-    private Set<String> termSetRun = new HashSet<String>();
-    //TermSet from rules for Session with Weight
-    private Set<String> termSetAccumW = new HashSet<String>();
-    //TermSet from rules for last Iteraction run with Weight
-    private Set<String> termSetRunW = new HashSet<String>();
-    private Corpus corpus = null;
-    private boolean ruleTopic = true;
-    private boolean phrase = false;
-    private boolean shortPhrase = false;
-    private String csvFileName = null;
-    private Graph graph;
 }

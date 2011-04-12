@@ -13,7 +13,7 @@ public interface Corpus
 	 * @return File content
 	 * @throws IOException 
 	 */
-	public abstract String getFullContent(String id) throws IOException;
+	public abstract String getFullContent(String id);
 
 	/**
 	 * Return the modified file content - Custom for viewing
@@ -21,7 +21,7 @@ public interface Corpus
 	 * @return File content
 	 * @throws IOException 
 	 */
-	public abstract String getViewContent(String id) throws IOException;
+	public abstract String getViewContent(String id);
 
 	/**
 	 * Return the ngrams associated with a file
@@ -29,14 +29,14 @@ public interface Corpus
 	 * @throws IOException Throws an exception with a problem occurs
 	 * @return Return a list with the ngrams
 	 */
-	public abstract ArrayList<Ngram> getNgrams(String id) throws IOException;
+	public abstract ArrayList<Ngram> getNgrams(String id);
 
 	/**
 	 * Return the ngrams of this corpus
 	 * @return
 	 * @throws IOException
 	 */
-	public abstract ArrayList<Ngram> getCorpusNgrams() throws IOException;
+	public abstract ArrayList<Ngram> getCorpusNgrams();
 
 	/**
 	 * Get the cdata of the documents belonging to this corpus.
@@ -63,5 +63,5 @@ public interface Corpus
 	 * @return The title of a documents.
 	 * @throws java.io.IOException 
 	 */
-	public abstract String getTitle(int nrLines, String id) throws IOException;
+	public abstract String getTitle(int nrLines, String id);
 }

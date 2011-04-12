@@ -53,8 +53,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -65,8 +65,9 @@ import javax.swing.table.DefaultTableModel;
 import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.Preprocessor;
+import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.projection.ProjectionData;
+import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.textprocessing.stopword.SetStopword;
@@ -80,9 +81,53 @@ import visualizer.topic.TopicData;
  *
  * @author  Fernando Vieira Paulovich
  */
-public class LuhnCutAnalizer extends javax.swing.JDialog {
+public class LuhnCutAnalizer extends javax.swing.JDialog
+{
 
-    /** Creates new form LuhnCutAnalizer
+    private ProjectionData pdata;
+    private TopicData tdata;
+    private static LuhnCutAnalizer instance;
+    private DefaultTableModel tableModel;
+    private Corpus corpus;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton analyzeButton;
+    private javax.swing.JPanel buttonPanel;
+    private javax.swing.JButton changeStartwordsButton;
+    private javax.swing.JButton changeStopwordsButton;
+    protected javax.swing.JButton closeButton;
+    private javax.swing.JPanel cutConfigurationPanel;
+    private javax.swing.JButton exportStartwordsButton;
+    private javax.swing.JButton exportStopwordsButton;
+    private javax.swing.JButton loerCutMinusButton;
+    private javax.swing.JPanel lowerCutButtonPanel;
+    private javax.swing.JLabel lowerCutLabel;
+    private javax.swing.JPanel lowerCutPanel;
+    private javax.swing.JButton lowerCutPlusButton;
+    protected javax.swing.JSlider lowerCutSlider;
+    protected javax.swing.JTextField lowerCutTextField;
+    private javax.swing.JPanel luhnPanel;
+    private javax.swing.JLabel ngramsLabel;
+    private javax.swing.JPanel ngramsPanel;
+    private javax.swing.JScrollPane ngramsScrollPane;
+    protected javax.swing.JTable ngramsTable;
+    protected javax.swing.JTextField ngramsTextField;
+    private javax.swing.JPanel numberGramsPanel;
+    private javax.swing.JPanel upperCutButtonPanel;
+    private javax.swing.JLabel upperCutLabel;
+    private javax.swing.JButton upperCutMinusButton;
+    private javax.swing.JPanel upperCutPanel;
+    private javax.swing.JButton upperCutPlusButton;
+    protected javax.swing.JSlider upperCutSlider;
+    protected javax.swing.JTextField upperCutTextField;
+    protected javax.swing.JPanel zipfCurvePanel;
+    private javax.swing.JPanel zipfPanel;
+    // End of variables declaration//GEN-END:variables
+
+    private boolean useStartword = false;
+    
+	/**
+	 * Creates new form LuhnCutAnalizer
+	 * 
      * @param parent 
      */
     protected LuhnCutAnalizer(javax.swing.JDialog parent) {
@@ -641,8 +686,15 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
             nrGrams = tdata.getNumberGrams();
         }
 
-        Preprocessor pre = new Preprocessor(corpus);
-        ArrayList<Ngram> ngrams = pre.getNgramsAccordingTo(lowercut, -1, nrGrams, stemmer, useStopword);
+        MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        pre.setCorpus(corpus);
+        pre.setLowerCut(lowercut);
+        pre.setUpperCut(-1);
+        pre.setStemmer(stemmer);
+        pre.setStopword(useStopword);
+        pre.setStartword(useStartword);
+        pre.setNumberGrams(nrGrams);
+        Collection<Ngram> ngrams = pre.getNgrams();
 
         for (Ngram n : ngrams) {
             corporaNgrams.put(n.ngram, n);
@@ -682,25 +734,38 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
             uppercut = Integer.parseInt(this.upperCutTextField.getText());
         }
 
-        Preprocessor pre = new Preprocessor(cp);
-        ArrayList<Ngram> res_ngrams = pre.getNgramsAccordingTo(lowercut, uppercut, nrGrams, stemmer, useStopword);
-        ArrayList<Ngram> corpus_ngrams = pre.getNgramsAccordingTo(1, -1, nrGrams, StemmerType.NONE, useStopword);
+        MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        pre.setCorpus(cp);
+        pre.setLowerCut(lowercut);
+        pre.setUpperCut(uppercut);
+        pre.setStemmer(stemmer);
+        pre.setStopword(useStopword);
+        pre.setStartword(useStartword);
+        pre.setNumberGrams(nrGrams);
+        pre.run();
+        Collection<Ngram> res_ngrams = pre.getNgrams();
+        
+        pre.setLowerCut(1);
+        pre.setUpperCut(-1);
+        pre.setStemmer(StemmerType.NONE);
+        pre.run();
+        Collection<Ngram> corpus_ngrams = pre.getNgrams();
         StopWord stopWords = SetStopword.getInstance();
-
-        for (int i = 0; i < corpus_ngrams.size(); i++) {
+        Stemmer stemmerInstance = StemmerFactory.getInstance(stemmer);
+        
+        for (Ngram ngram : corpus_ngrams) {
             boolean contain = false;
-            for (int j = 0; j < res_ngrams.size(); j++) {
-                String corpus_ngram = corpus_ngrams.get(i).ngram;
-                corpus_ngram = StemmerFactory.getInstance(stemmer).stem(corpus_ngram);
-
-                if (corpus_ngram.equals(res_ngrams.get(j).ngram)) {
+            String corpus_ngram = ngram.ngram;
+            String corpus_ngram_stem = stemmerInstance.stem(corpus_ngram);
+            for (Ngram res_ngram : res_ngrams) {
+                if (corpus_ngram_stem.equals(res_ngram.ngram)) {
                     contain = true;
                     break;
                 }
             }
 
             if (! contain) {
-                stopWords.addStopword(corpus_ngrams.get(i).ngram);
+                stopWords.addStopword(corpus_ngram);
             }
         }
 
@@ -761,15 +826,17 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
             uppercut = Integer.parseInt(this.upperCutTextField.getText());
         }
 
-        Preprocessor pre = new Preprocessor(cp);
-        ArrayList<Ngram> res_ngrams = pre.getNgramsAccordingTo(lowercut, uppercut, nrGrams, stemmer, useStopword);
-        Collections.sort(res_ngrams, new Comparator<Ngram>() {
-            public int compare(Ngram o1, Ngram o2) {
-                return (o1.ngram.compareTo(o2.ngram));
-            }
-
-        });
-
+        MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        pre.setCorpus(cp);
+        pre.setLowerCut(lowercut);
+        pre.setUpperCut(uppercut);
+        pre.setStemmer(stemmer);
+        pre.setStopword(useStopword);
+        pre.setStartword(useStartword);
+        pre.setNumberGrams(nrGrams);
+        pre.run();
+        Collection<Ngram> res_ngrams = pre.getNgrams();
+   
         //saving to the file
         BufferedWriter out = null;
         try {
@@ -796,43 +863,4 @@ public class LuhnCutAnalizer extends javax.swing.JDialog {
         String[] titulos = new String[]{"Ngram", "Frequency"};
         this.tableModel = new DefaultTableModel(null, titulos);
     }
-
-    private ProjectionData pdata;
-    private TopicData tdata;
-    private static LuhnCutAnalizer instance;
-    private DefaultTableModel tableModel;
-    private Corpus corpus;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyzeButton;
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton changeStartwordsButton;
-    private javax.swing.JButton changeStopwordsButton;
-    protected javax.swing.JButton closeButton;
-    private javax.swing.JPanel cutConfigurationPanel;
-    private javax.swing.JButton exportStartwordsButton;
-    private javax.swing.JButton exportStopwordsButton;
-    private javax.swing.JButton loerCutMinusButton;
-    private javax.swing.JPanel lowerCutButtonPanel;
-    private javax.swing.JLabel lowerCutLabel;
-    private javax.swing.JPanel lowerCutPanel;
-    private javax.swing.JButton lowerCutPlusButton;
-    protected javax.swing.JSlider lowerCutSlider;
-    protected javax.swing.JTextField lowerCutTextField;
-    private javax.swing.JPanel luhnPanel;
-    private javax.swing.JLabel ngramsLabel;
-    private javax.swing.JPanel ngramsPanel;
-    private javax.swing.JScrollPane ngramsScrollPane;
-    protected javax.swing.JTable ngramsTable;
-    protected javax.swing.JTextField ngramsTextField;
-    private javax.swing.JPanel numberGramsPanel;
-    private javax.swing.JPanel upperCutButtonPanel;
-    private javax.swing.JLabel upperCutLabel;
-    private javax.swing.JButton upperCutMinusButton;
-    private javax.swing.JPanel upperCutPanel;
-    private javax.swing.JButton upperCutPlusButton;
-    protected javax.swing.JSlider upperCutSlider;
-    protected javax.swing.JTextField upperCutTextField;
-    protected javax.swing.JPanel zipfCurvePanel;
-    private javax.swing.JPanel zipfPanel;
-    // End of variables declaration//GEN-END:variables
 }

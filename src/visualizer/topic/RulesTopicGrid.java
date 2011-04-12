@@ -69,7 +69,7 @@ import visualizer.matrix.Matrix;
 import visualizer.projection.distance.Euclidean;
 import visualizer.textprocessing.transformation.MatrixTransformation;
 import visualizer.textprocessing.transformation.MatrixTransformationFactory;
-import visualizer.textprocessing.Preprocessor;
+import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.tools.apriori.ItemSet;
 import visualizer.tools.apriori.ItemSetsWriter;
 import visualizer.tools.apriori.RuleSet;
@@ -122,20 +122,19 @@ public class RulesTopicGrid {
             //build VSM
             Corpus corpora = panel.getGraph().getCorpus();
             if (tdata.getMatrix() == null) {
-                Preprocessor pp = new Preprocessor(corpora);
-                try {
-                    Matrix matrix = pp.getMatrix(tdata.getLunhLowerCut(),
-                            tdata.getLunhUpperCut(), tdata.getNumberGrams(),
-                            tdata.getStemmer(), tdata.isUseStopword());
-
-                    MatrixTransformation transf = MatrixTransformationFactory.getInstance(tdata.getMatrixTransformationType());
-                    matrix = transf.tranform(matrix, null);
-
-                    tdata.setMatrix(matrix);
-                    tdata.setCorporaNgrams(pp.getNgrams());
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
+                MonoliticPreprocessor pp = new MonoliticPreprocessor();
+                pp.setCorpus(corpora);
+                pp.setLowerCut(tdata.getLunhLowerCut());
+                pp.setUpperCut(tdata.getLunhUpperCut());
+                pp.setNumberGrams(tdata.getNumberGrams());
+                pp.setStemmer(tdata.getStemmer());
+                pp.setStopword(tdata.isUseStopword());
+                pp.setStartword(tdata.isUseStartword());
+                Matrix matrix = pp.getMatrix();
+                MatrixTransformation transf = MatrixTransformationFactory.getInstance(tdata.getMatrixTransformationType());
+                matrix = transf.tranform(matrix, null);
+                tdata.setMatrix(matrix);
+                tdata.setCorporaNgrams(pp.getNgrams());
             }
 
             try {

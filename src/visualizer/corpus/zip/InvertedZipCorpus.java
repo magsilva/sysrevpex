@@ -59,6 +59,8 @@ import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.corpus.*;
+import visualizer.corpus.database.DataBaseCorpus;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -110,7 +112,7 @@ public class InvertedZipCorpus {
         }
     }
 
-    public ArrayList<Ngram> getNgrams(String filename) throws IOException {
+    public ArrayList<Ngram> getNgrams(String filename) {
         ArrayList<Ngram> ngrams = null;
         BufferedInputStream bis = null;
         ObjectInputStream ois = null;
@@ -130,23 +132,26 @@ public class InvertedZipCorpus {
         } catch (InvalidClassException ex) {
             Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
             this.dispose();
-            this.removeFile();
+            this.removeFile();          
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            if (bis != null) {
-                bis.close();
-            }
-
-            if (ois != null) {
-                ois.close();
-            }
+        	try {
+	            if (bis != null) {
+	                bis.close();
+	            }
+	            if (ois != null) {
+	                ois.close();
+	            }
+        	} catch (IOException e) {}
         }
 
         return ngrams;
     }
 
-    public ArrayList<Ngram> getCorpusNgrams() throws IOException {
+    public ArrayList<Ngram> getCorpusNgrams()  {
         ArrayList<Ngram> ngrams = null;
         BufferedInputStream bis = null;
         ObjectInputStream ois = null;
@@ -170,14 +175,17 @@ public class InvertedZipCorpus {
             this.removeFile();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            if (bis != null) {
-                bis.close();
-            }
-
-            if (ois != null) {
-                ois.close();
-            }
+        	try {
+	            if (bis != null) {
+	                bis.close();
+	            }
+	            if (ois != null) {
+	                ois.close();
+	            }
+        	} catch (IOException e){}
         }
 
         return ngrams;

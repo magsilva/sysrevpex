@@ -52,12 +52,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import visualizer.corpus.Corpus;
-import visualizer.graph.coodination.Mapping.Map;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.SparseMatrix;
 import visualizer.matrix.SparseVector;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.Preprocessor;
+import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
@@ -113,10 +112,14 @@ public class DistanceMapping extends Mapping {
             //processing local corpus
             Corpus local_cp = local.getGraph().getCorpus();
 
-            Preprocessor local_pp = new Preprocessor(local_cp);
-            Matrix local_points = local_pp.getMatrix(this.localPData.getLunhLowerCut(),
-                    this.localPData.getLunhUpperCut(), this.localPData.getNumberGrams(),
-                    this.localPData.getStemmer(), this.localPData.isUseStopword());
+            MonoliticPreprocessor local_pp = new MonoliticPreprocessor();
+            local_pp.setCorpus(local_cp);
+            local_pp.setLowerCut(localPData.getLunhLowerCut());
+            local_pp.setUpperCut(localPData.getLunhUpperCut());
+            local_pp.setStopword(localPData.isUseStopword());
+            local_pp.setStartword(false);
+            local_pp.setStemmer(localPData.getStemmer());
+            Matrix local_points = local_pp.getMatrix();
             ArrayList<Ngram> local_ngrams = local_pp.getNgrams();
 
             MatrixTransformation transf1 = MatrixTransformationFactory.getInstance(this.localPData.getMatrixTransformationType());
@@ -125,10 +128,14 @@ public class DistanceMapping extends Mapping {
             //processing outer corpus
             Corpus outer_cp = outer.getGraph().getCorpus();
 
-            Preprocessor outer_pp = new Preprocessor(outer_cp);
-            Matrix outer_points = outer_pp.getMatrix(this.outerPData.getLunhLowerCut(),
-                    this.outerPData.getLunhUpperCut(), this.outerPData.getNumberGrams(),
-                    this.outerPData.getStemmer(), this.outerPData.isUseStopword());
+            MonoliticPreprocessor outer_pp = new MonoliticPreprocessor();
+            outer_pp.setCorpus(outer_cp);
+            outer_pp.setLowerCut(outerPData.getLunhLowerCut());
+            outer_pp.setUpperCut(outerPData.getLunhUpperCut());
+            outer_pp.setStopword(outerPData.isUseStopword());
+            outer_pp.setStartword(false);
+            outer_pp.setStemmer(outerPData.getStemmer());
+            Matrix outer_points = outer_pp.getMatrix();
             ArrayList<Ngram> outer_ngrams = outer_pp.getNgrams();
 
             MatrixTransformation transf2 = MatrixTransformationFactory.getInstance(this.outerPData.getMatrixTransformationType());

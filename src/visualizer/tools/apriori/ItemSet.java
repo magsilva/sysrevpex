@@ -253,15 +253,9 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
                 //find Phrase
                 String fullText = "error";
                 Integer hitCount = 0;
-                try {
-                    fullText = datasource.getFullContent(datasource.getIds().get(i));
-                    phrase = extractShortestPhraseFuzzy(fullText, ngramList);
-                    hitCount = phraseWeight(phrase, ngramList);
-
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
-
+                fullText = datasource.getFullContent(datasource.getIds().get(i));
+                phrase = extractShortestPhraseFuzzy(fullText, ngramList);
+                hitCount = phraseWeight(phrase, ngramList);
 
                 if (phrase != null && hitCount >= minHitCount) {
                     if (hitCount > minHitCount || phrase.length() < shortestLength) {
@@ -316,14 +310,8 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
             if (sR != 0) { //Current line supports the Item Set
                 //find Phrase
                 String fullText = "error";
-                try {
-                    fullText = datasource.getFullContent(datasource.getIds().get(i));
-                    phrase = extractPhrase(fullText, ngramList);
-
-
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
+                fullText = datasource.getFullContent(datasource.getIds().get(i));
+                phrase = extractPhrase(fullText, ngramList);
 
                 if (phrase != null) {
                     System.out.println(phrase + "\t" + fullText);

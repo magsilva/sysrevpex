@@ -140,14 +140,9 @@ public class RuleSet implements TopicInterface {
             if (coveredPoints[i]) { //Current line supports 
                 //find Phrase
                 String fullText = "error";
-                try {
-                    fullText = datasource.getFullContent(datasource.getIds().get(i));
-                    phrase = extractStrongestPhrase(fullText, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
+                fullText = datasource.getFullContent(datasource.getIds().get(i));
+                phrase = extractStrongestPhrase(fullText, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
 
-
-                } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                }
 
                 float phraseWeight = phraseWeight(phrase, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
                 if (phrase != null && phraseWeight > strongestWeight) {

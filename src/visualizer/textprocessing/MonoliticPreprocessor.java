@@ -50,6 +50,7 @@ package visualizer.textprocessing;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -69,37 +70,111 @@ import visualizer.textprocessing.stopword.StopWord;
  *
  * @author Fernando Vieira Paulovich
  */
-public class Preprocessor {
+public class MonoliticPreprocessor implements PreProcessor
+{
+    private Corpus corpus;
 
-    public Preprocessor(Corpus corpus) {
-        this.corpus = corpus;
+    private ArrayList<Ngram> ngrams;
+    
+    private StemmerType stemmer;
+    
+    private boolean useStopword;
+    
+    private boolean useStartword;
+    
+    private int numberGrams;
+    
+    private int lowerCut;
+    
+    private int upperCut;
+    
+    public Corpus getCorpus()
+	{
+		return corpus;
+	}
+
+	public void setCorpus(Corpus corpus)
+	{
+		this.corpus = corpus;
+	}
+
+	public StemmerType getStemmer()
+	{
+		return stemmer;
+	}
+
+	public void setStemmer(StemmerType stemmer)
+	{
+		this.stemmer = stemmer;
+	}
+
+	public boolean getStopword()
+	{
+		return useStopword;
+	}
+
+	public void setStopword(boolean useStopword)
+	{
+		this.useStopword = useStopword;
+	}
+	
+	public boolean getStartword()
+	{
+		return useStartword;
+	}
+	
+	public void setStartword(boolean useStartword)
+	{
+		this.useStartword = useStartword;
+	}
+
+	public int getNumberGrams()
+	{
+		return numberGrams;
+	}
+
+	public void setNumberGrams(int numberGrams)
+	{
+		this.numberGrams = numberGrams;
+	}
+
+	public int getLowerCut()
+	{
+		return lowerCut;
+	}
+
+	public void setLowerCut(int lowerCut)
+	{
+		this.lowerCut = lowerCut;
+	}
+
+	public int getUpperCut()
+	{
+		return upperCut;
+	}
+
+	public void setUpperCut(int upperCut)
+	{
+		this.upperCut = upperCut;
+	}
+
+	public void run()
+	{
+		// Store the ngrams present on the corpus
+        ngrams = getCorpusNgrams();
+	}
+	
+    public Matrix getMatrix()
+    {
+    	if (ngrams == null) {
+    		run();
+    	}
+        return getMatrix(corpus.getIds());
     }
 
-    public Matrix getMatrix(int lowerCut, int upperCut, int numberGrams,
-            StemmerType stemmer, boolean useStopword) throws IOException {
-
-        this.lowerCut = lowerCut;
-        this.upperCut = upperCut;
-        this.numberGrams = numberGrams;
-        this.stemmer = stemmer;
-        this.useStopword = useStopword;
-
-        //store the ngrams present on the corpus
-        this.ngrams = this.getCorpusNgrams();
-
-        return this.getMatrix(this.corpus.getIds());
-    }
-
-    public Matrix getMatrixSelected(int lowerCut, int upperCut, int numberGrams,
-            StemmerType stemmer, boolean useStopword, ArrayList<Vertex> selected) throws IOException {
-
-        this.lowerCut = lowerCut;
-        this.upperCut = upperCut;
-        this.numberGrams = numberGrams;
-        this.stemmer = stemmer;
-        this.useStopword = useStopword;
-
-        ArrayList<String> urls = new ArrayList<String>();
+    public Matrix getMatrixForSelection(Collection<Vertex> selected)
+    {
+    	ArrayList<String> urls = new ArrayList<String>();
         for (Vertex v : selected) {
             if (v.isValid()) {
                 urls.add(v.getUrl());
@@ -107,30 +182,20 @@ public class Preprocessor {
         }
 
         //store the ngrams present on the selected corpus
-        this.ngrams = this.getCorpusNgrams(urls);
+        ngrams = getCorpusNgrams(urls);
 
-        return this.getMatrix(urls);
+        return getMatrix(urls);
     }
 
     public ArrayList<Ngram> getNgrams() {
+    	if (ngrams == null) {
+    		run();
+    	}
         return ngrams;
     }
 
     //If upperCut == -1 ths Luhn's upper cut-off will be ignored
-    public ArrayList<Ngram> getNgramsAccordingTo(int lowerCut, int upperCut, int numberGrams,
-            StemmerType stemmer, boolean useStopword) throws IOException {
-
-        this.lowerCut = lowerCut;
-        this.upperCut = upperCut;
-        this.numberGrams = numberGrams;
-        this.stemmer = stemmer;
-        this.useStopword = useStopword;
-
-        return this.getCorpusNgrams();
-    }
-
-    //If upperCut == -1 ths Luhn's upper cut-off will be ignored
-    private Matrix getMatrix(ArrayList<String> urls) throws IOException {
+    private Matrix getMatrix(ArrayList<String> urls)  {
         long start = System.currentTimeMillis();
 
         Matrix matrix = new SparseMatrix();
@@ -174,7 +239,7 @@ public class Preprocessor {
         return matrix;
     }
 
-    private ArrayList<Ngram> getCorpusNgrams(ArrayList<String> urls) throws IOException {
+    private ArrayList<Ngram> getCorpusNgrams(ArrayList<String> urls)  {
         HashMap<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
 
         for (String url : urls) {
@@ -210,16 +275,21 @@ public class Preprocessor {
         return ngrams_aux;
     }
 
-    private ArrayList<Ngram> getCorpusNgrams() throws IOException {
+    private ArrayList<Ngram> getCorpusNgrams()  {
         HashMap<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
 
         StopWord stp = null;
         Startword sta = null;
 
-        if (useStopword) {
-            stp = SetStopword.getInstance();
-        } else {
-            sta = Startword.getInstance();
+        try {
+        	if (useStopword) {
+        		stp = SetStopword.getInstance();
+        	}
+        	if (useStartword) {
+        		sta = Startword.getInstance();
+        	}
+        } catch (IOException e) {
+        	throw new UnsupportedOperationException(e);
         }
 
         //For each ngram in the corpus
@@ -262,16 +332,21 @@ public class Preprocessor {
         return ngrams_aux;
     }
 
-    private HashMap<String, Integer> getNgrams(String url) throws IOException {
+    private HashMap<String, Integer> getNgrams(String url)
+    {
         HashMap<String, Integer> ngrams_aux = new HashMap<String, Integer>();
-
         StopWord stp = null;
         Startword sta = null;
 
-        if (useStopword) {
-            stp = SetStopword.getInstance();
-        } else {
-            sta = Startword.getInstance();
+        try {
+        	if (useStopword) {
+        		stp = SetStopword.getInstance();
+        	}
+        	if (useStartword) {
+        		sta = Startword.getInstance();
+        	}
+        } catch (IOException e) {
+        	throw new UnsupportedOperationException(e);
         }
 
         ArrayList<Ngram> fngrams = this.corpus.getNgrams(url);
@@ -297,12 +372,4 @@ public class Preprocessor {
 
         return ngrams_aux;
     }
-
-    private Corpus corpus;
-    private ArrayList<Ngram> ngrams;
-    private StemmerType stemmer;
-    private boolean useStopword;
-    private int numberGrams;
-    private int lowerCut;
-    private int upperCut;
 }

@@ -68,7 +68,7 @@ import visualizer.matrix.Matrix;
 import visualizer.textprocessing.transformation.MatrixTransformation;
 import visualizer.textprocessing.transformation.MatrixTransformationFactory;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.Preprocessor;
+import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.tools.apriori.ItemSet;
 import visualizer.tools.apriori.RuleSet;
@@ -106,179 +106,175 @@ public class RuleTopic extends Topic {
         float[][] selectedPoints;
         ArrayList<Ngram> corporaNgrams = null;
 
-        try {
-            //Get Matrix
-            //should change to use inverted files
-            if (tdata.getMatrix() == null) {
-                Preprocessor pp = new Preprocessor(corpus);
-                Matrix matrix = pp.getMatrix(tdata.getLunhLowerCut(),
-                        tdata.getLunhUpperCut(), tdata.getNumberGrams(),
-                        tdata.getStemmer(), tdata.isUseStopword());
+         //Get Matrix
+        //should change to use inverted files
+        if (tdata.getMatrix() == null) {
+            MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            pp.setCorpus(corpus);
+            pp.setLowerCut(tdata.getLunhLowerCut());
+            pp.setUpperCut(tdata.getLunhUpperCut());
+            pp.setNumberGrams(tdata.getNumberGrams());
+            pp.setStemmer(tdata.getStemmer());
+            pp.setStopword(tdata.isUseStopword());
+            pp.setStartword(tdata.isUseStartword());
+            Matrix matrix = pp.getMatrix();
 
-                MatrixTransformation transf = MatrixTransformationFactory.getInstance(tdata.getMatrixTransformationType());
-                matrix = transf.tranform(matrix, null);
+            MatrixTransformation transf = MatrixTransformationFactory.getInstance(tdata.getMatrixTransformationType());
+            matrix = transf.tranform(matrix, null);
 
-                corporaNgrams = pp.getNgrams();
-                points = matrix.toMatrix();
-                tdata.setMatrix(matrix);
-                tdata.setCorporaNgrams(corporaNgrams);
-            } else {
-                points = tdata.getMatrix().toMatrix();
-                corporaNgrams = tdata.getCorporaNgrams();
-            }
-
-            tdata.setCorpus(corpus);
-
-
-            ruleSetList = null;
-            if (tdata.isGroupTopics()) {
-                ruleSetList = new ArrayList<RuleSet>();
-            }
-
-            //Loop for Remainder Covering
-            ArrayList<Vertex> vertexUsed = new ArrayList<Vertex>();
-            ArrayList<Vertex> relatedVertex = new ArrayList<Vertex>();
-
-            this.itemSets = new ArrayList<ItemSet>();
-            this.selectedItemSets = new ArrayList<ItemSet>();
-            System.out.println("**********Vertex: " + vertex.size());
-            while (vertex != null && vertex.size() > 0) {
-
-                selectedPoints = new float[vertex.size()][];
-                int[] vertexIndex = new int[vertex.size()];
-
-                //For each vertex
-                // Find line in Matrix for each Vertex
-                int i = 0;
-                for (int j = 0; j < vertex.size(); j++) {
-                    Vertex v = vertex.get(j);
-
-                    if (corpus.getIds().get((int) v.getId()).equals(v.getUrl())) {
-                        selectedPoints[i] = points[(int) v.getId()];
-                        vertexIndex[i] = j;
-                    } else {
-                        System.err.println("Vertex not alligned to points matrix");
-                        for (int k = 0; k < corpus.getIds().size(); k++) {
-                            if (corpus.getIds().get(k).equals(v.getUrl())) {
-                                selectedPoints[i] = points[k];
-                                vertexIndex[i] = j;
-                                break;
-                            }
-                        }
-                    }
-                    i++;
-                }
-
-                Object[] ngrams = new Object[corporaNgrams.size()];
-                for (int k = 0; k < corporaNgrams.size(); k++) {
-                    ngrams[k] = corporaNgrams.get(k).ngram;
-                }
-
-                SelectedApriori sApriori = new SelectedApriori(selectedPoints, points, ngrams);
-                sApriori.setRuleSetList(ruleSetList);
-                //sApriori.setMinSup(tdata.getMinSup());
-                sApriori.setMinConf(90.0f);
-                sApriori.setBeta(tdata.getWeightBeta().floatValue());
-                sApriori.setLdata(this.tdata);
-                sApriori.run();
-                //Accumulates TermSet
-                tdata.getTermSetAccum().addAll(sApriori.getTermSet());
-                tdata.getTermSetRun().addAll(sApriori.getTermSet());
-                tdata.getTermSetAccumW().addAll(sApriori.getTermSetW());
-                tdata.getTermSetRunW().addAll(sApriori.getTermSetW());
-
-                //build Remainder vertex list
-                vertexRemainder = new ArrayList<Vertex>();
-                this.itemSets.addAll(sApriori.getItemSets());
-                this.selectedItemSets.addAll(sApriori.getSelectedItemSets());
-                this.ruleDump = sApriori.ruleDump;
-
-                for (int j = 0; j < sApriori.coveredPoints.length; j++) {
-                    if (!sApriori.coveredPoints[j]) {
-                        vertexRemainder.add(vertex.get(vertexIndex[j]));
-                    } else {
-                        vertexUsed.add(vertex.get(vertexIndex[j]));
-
-                    }
-                }
-
-
-
-
-                if (sApriori.getSelectedItemSets().size() > 0) {
-                    vertex = vertexRemainder;
-                    System.out.println("**********Remainder: " + vertexRemainder.size());
-                } else {
-                    vertex = null;
-                }
-            }
-
-
-            //Select Topic type
-            if (!tdata.isGroupTopics()) {
-                this.setRuleGroup(false);
-                //Normal Topic
-                for (int k = 0; k < this.selectedItemSets.size(); k++) {
-                    String msg = this.selectedItemSets.get(k).getTopic(tdata);
-
-                    ArrayList<Vertex> relatedVertices = new ArrayList<Vertex>();
-
-                    for (Integer index : this.selectedItemSets.get(k).getGlobalCoveredAllPoints()) {
-                        relatedVertices.add(getVertexbyId(index));
-
-                    }
-                    this.selectedItemSets.get(k).setRelatedVertices(relatedVertices);
-                    if (tdata.getStemmer() != StemmerType.NONE) {
-                        msg = msg.replaceAll("<>", "");
-                    }
-                    StringBox box = new StringBox(msg, relatedVertices, this.selectedItemSets.get(k));
-
-                    this.boxes.add(box);
-                    relatedVertex.addAll(relatedVertices);
-
-                }
-            } else {
-
-                this.setRuleGroup(true);
-                //RuleSet Topic
-                for (int k = 0; k < ruleSetList.size(); k++) {
-                    //if(tdata.isPhrase()|| tdata.isShortPhrase()){
-                    ruleSetList.get(k).computeStrongPhrase(points, tdata, true);
-                    ruleSetList.get(k).computeStrongPhrase(points, tdata, false);
-                    //}
-
-
-
-                    String msg = ruleSetList.get(k).getTopic(tdata);
-
-                    ArrayList<Vertex> relatedVertices = new ArrayList<Vertex>();
-
-                    for (int i = 0; i < ruleSetList.get(k).coveredPoints.length; i++) {
-                        if (ruleSetList.get(k).coveredPoints[i]) {
-                            relatedVertices.add(getVertexbyId(i));
-                        }
-                    }
-
-                    ruleSetList.get(k).setRelatedVertices(relatedVertices);
-
-                    if (tdata.getStemmer() != StemmerType.NONE) {
-                        msg = msg.replaceAll("<>", "");
-                    }
-                    StringBox box = new StringBox(msg, relatedVertices, ruleSetList.get(k));
-                    this.boxes.add(box);
-                    relatedVertex.addAll(relatedVertices);
-                //tdata.getTermSetAccum().addAll(ruleSetList.get(k).getTermSet());
-                }
-            }
-
-
-
-        //this.calculateRectangle(relatedVertex);
-
-
-        } catch (IOException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            corporaNgrams = pp.getNgrams();
+            points = matrix.toMatrix();
+            tdata.setMatrix(matrix);
+            tdata.setCorporaNgrams(corporaNgrams);
+        } else {
+            points = tdata.getMatrix().toMatrix();
+            corporaNgrams = tdata.getCorporaNgrams();
         }
+
+        tdata.setCorpus(corpus);
+
+
+        ruleSetList = null;
+        if (tdata.isGroupTopics()) {
+            ruleSetList = new ArrayList<RuleSet>();
+        }
+
+        //Loop for Remainder Covering
+        ArrayList<Vertex> vertexUsed = new ArrayList<Vertex>();
+        ArrayList<Vertex> relatedVertex = new ArrayList<Vertex>();
+
+        this.itemSets = new ArrayList<ItemSet>();
+        this.selectedItemSets = new ArrayList<ItemSet>();
+        System.out.println("**********Vertex: " + vertex.size());
+        while (vertex != null && vertex.size() > 0) {
+
+            selectedPoints = new float[vertex.size()][];
+            int[] vertexIndex = new int[vertex.size()];
+
+            //For each vertex
+            // Find line in Matrix for each Vertex
+            int i = 0;
+            for (int j = 0; j < vertex.size(); j++) {
+                Vertex v = vertex.get(j);
+
+                if (corpus.getIds().get((int) v.getId()).equals(v.getUrl())) {
+                    selectedPoints[i] = points[(int) v.getId()];
+                    vertexIndex[i] = j;
+                } else {
+                    System.err.println("Vertex not alligned to points matrix");
+                    for (int k = 0; k < corpus.getIds().size(); k++) {
+                        if (corpus.getIds().get(k).equals(v.getUrl())) {
+                            selectedPoints[i] = points[k];
+                            vertexIndex[i] = j;
+                            break;
+                        }
+                    }
+                }
+                i++;
+            }
+
+            Object[] ngrams = new Object[corporaNgrams.size()];
+            for (int k = 0; k < corporaNgrams.size(); k++) {
+                ngrams[k] = corporaNgrams.get(k).ngram;
+            }
+
+            SelectedApriori sApriori = new SelectedApriori(selectedPoints, points, ngrams);
+            sApriori.setRuleSetList(ruleSetList);
+            //sApriori.setMinSup(tdata.getMinSup());
+            sApriori.setMinConf(90.0f);
+            sApriori.setBeta(tdata.getWeightBeta().floatValue());
+            sApriori.setLdata(this.tdata);
+            sApriori.run();
+            //Accumulates TermSet
+            tdata.getTermSetAccum().addAll(sApriori.getTermSet());
+            tdata.getTermSetRun().addAll(sApriori.getTermSet());
+            tdata.getTermSetAccumW().addAll(sApriori.getTermSetW());
+            tdata.getTermSetRunW().addAll(sApriori.getTermSetW());
+
+            //build Remainder vertex list
+            vertexRemainder = new ArrayList<Vertex>();
+            this.itemSets.addAll(sApriori.getItemSets());
+            this.selectedItemSets.addAll(sApriori.getSelectedItemSets());
+            this.ruleDump = sApriori.ruleDump;
+
+            for (int j = 0; j < sApriori.coveredPoints.length; j++) {
+                if (!sApriori.coveredPoints[j]) {
+                    vertexRemainder.add(vertex.get(vertexIndex[j]));
+                } else {
+                    vertexUsed.add(vertex.get(vertexIndex[j]));
+
+                }
+            }
+
+
+
+
+            if (sApriori.getSelectedItemSets().size() > 0) {
+                vertex = vertexRemainder;
+                System.out.println("**********Remainder: " + vertexRemainder.size());
+            } else {
+                vertex = null;
+            }
+        }
+
+
+        //Select Topic type
+        if (!tdata.isGroupTopics()) {
+            this.setRuleGroup(false);
+            //Normal Topic
+            for (int k = 0; k < this.selectedItemSets.size(); k++) {
+                String msg = this.selectedItemSets.get(k).getTopic(tdata);
+
+                ArrayList<Vertex> relatedVertices = new ArrayList<Vertex>();
+
+                for (Integer index : this.selectedItemSets.get(k).getGlobalCoveredAllPoints()) {
+                    relatedVertices.add(getVertexbyId(index));
+
+                }
+                this.selectedItemSets.get(k).setRelatedVertices(relatedVertices);
+                if (tdata.getStemmer() != StemmerType.NONE) {
+                    msg = msg.replaceAll("<>", "");
+                }
+                StringBox box = new StringBox(msg, relatedVertices, this.selectedItemSets.get(k));
+
+                this.boxes.add(box);
+                relatedVertex.addAll(relatedVertices);
+
+            }
+        } else {
+
+            this.setRuleGroup(true);
+            //RuleSet Topic
+            for (int k = 0; k < ruleSetList.size(); k++) {
+                //if(tdata.isPhrase()|| tdata.isShortPhrase()){
+                ruleSetList.get(k).computeStrongPhrase(points, tdata, true);
+                ruleSetList.get(k).computeStrongPhrase(points, tdata, false);
+                //}
+
+
+
+                String msg = ruleSetList.get(k).getTopic(tdata);
+
+                ArrayList<Vertex> relatedVertices = new ArrayList<Vertex>();
+
+                for (int i = 0; i < ruleSetList.get(k).coveredPoints.length; i++) {
+                    if (ruleSetList.get(k).coveredPoints[i]) {
+                        relatedVertices.add(getVertexbyId(i));
+                    }
+                }
+
+                ruleSetList.get(k).setRelatedVertices(relatedVertices);
+
+                if (tdata.getStemmer() != StemmerType.NONE) {
+                    msg = msg.replaceAll("<>", "");
+                }
+                StringBox box = new StringBox(msg, relatedVertices, ruleSetList.get(k));
+                this.boxes.add(box);
+                relatedVertex.addAll(relatedVertices);
+            //tdata.getTermSetAccum().addAll(ruleSetList.get(k).getTermSet());
+            }
+        }
+        //this.calculateRectangle(relatedVertex);
     }
 
     @Override

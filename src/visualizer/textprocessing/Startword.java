@@ -66,6 +66,10 @@ import visualizer.util.SystemPropertiesManager;
  */
 public class Startword {
 
+    private List<WeightedWord> startwords;
+    private static Startword instance;
+    private String filename;
+    
     /*Note that the words on the startwords list must be on different lines without spaces*/
     private Startword(String filename) throws java.io.IOException {
         this.readStartwordList(filename);
@@ -195,8 +199,4 @@ public class Startword {
 
         Collections.sort(this.startwords);
     }
-
-    private List<WeightedWord> startwords;
-    private static Startword instance;
-    private String filename;
 }

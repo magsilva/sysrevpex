@@ -48,7 +48,6 @@ address = {Washington, DC, USA},
 
 package visualizer.corpus;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import visualizer.textprocessing.Ngram;
@@ -85,26 +84,26 @@ public abstract class BaseCorpus implements Corpus
 	 * @see visualizer.corpus.ICorpus#getFullContent(java.lang.String)
 	 */
     @Override
-	public abstract String getFullContent(String id) throws IOException;
+	public abstract String getFullContent(String id);
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getViewContent(java.lang.String)
 	 */
     @Override
-	public abstract String getViewContent(String id) throws IOException;
+	public abstract String getViewContent(String id);
 
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getNgrams(java.lang.String)
 	 */
     @Override
-	public abstract ArrayList<Ngram> getNgrams(String id) throws IOException;
+	public abstract ArrayList<Ngram> getNgrams(String id);
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getCorpusNgrams()
 	 */
     @Override
-	public abstract ArrayList<Ngram> getCorpusNgrams() throws IOException;
+	public abstract ArrayList<Ngram> getCorpusNgrams();
 
     /**
      * This method must be implemented to fill all attributes (urls, and 
@@ -148,7 +147,7 @@ public abstract class BaseCorpus implements Corpus
 	 * @see visualizer.corpus.ICorpus#getTitle(int, java.lang.String)
 	 */
     @Override
-	public String getTitle(int nrLines, String id) throws IOException
+	public String getTitle(int nrLines, String id)
     {       
         if (nrLines <= 0) {
         	throw new IllegalArgumentException("Number of lines must be greater than zero");

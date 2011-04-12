@@ -60,8 +60,54 @@ import visualizer.datamining.clustering.HierarchicalClusteringType;
  *
  * @author Fernando Vieira Paulovich
  */
-public class ProjectionData {
-
+public class ProjectionData
+{
+    //indicates the type of data used to create the projection
+    private SourceType source = SourceType.NONE;
+    //diss used to calculate distances over ArrayLists
+    private DissimilarityType distanceType = DissimilarityType.NONE;
+    //projection techqnique used
+    private ProjectionType projTech = ProjectionType.NONE;
+    //General use
+    private String sourceFile = "";
+    private String titlesFile = "";
+    //Used to indicate the names of distance matrix/documents x terms matrix
+    private String dmatFilename = "";
+    private String docsTermsFilename = "";
+    private int numberIterations = 50;
+    private float fractionDelta = 8.0f;
+    private ProjectorType projector = ProjectorType.NONE;
+    private int knnNumberNeighbors = 2;
+    private boolean createDelaunay = true;
+    private String description = "";
+    private HierarchicalClusteringType hierarchicalClusteringType = HierarchicalClusteringType.NONE;
+    //Used only by the corpora pre-processing
+    private int lunhLowerCut = 10;
+    private int lunhUpperCut = -1;
+    private int numberLines = 0;
+    private int numberGrams = 1;
+    private MatrixTransformationType mattype = MatrixTransformationType.TF_IDF;
+    private StemmerType stemmer = StemmerType.PORTER;
+    private boolean useStopword = true;
+    private boolean useStartword = false;
+    private boolean useWeight = false;
+    //Used only when NCD is used
+    private CompressorType comptype = CompressorType.BZIP2;
+    //Used only by projCus projectionTechnique
+    private float clusterFactor = 4.5f;
+    //Used only by LSP
+    private int numberNeighborsConnection = 10;
+    private int numberControlPoint = 10;
+    private ControlPointsType controlPointsChoice = ControlPointsType.KMEDOIDS;
+    //Extra information
+    private int numberObjects = 0;
+    private int numberDimensions = 0;
+    //dimensionality reduction parameters
+    private int targetDimension = 0; //target dimension to reduce
+    private DimensionalityReductionType dimenType = DimensionalityReductionType.NONE;
+    //normalization
+    private NormalizationType normalization = NormalizationType.NONE;
+	
     public SourceType getSourceType() {
         return source;
     }
@@ -274,6 +320,10 @@ public class ProjectionData {
         return useStopword;
     }
 
+    public boolean isUseStartword() {
+        return useStartword;
+    }
+    
     public boolean isUseWeight() {
         return useWeight;
     }
@@ -286,6 +336,10 @@ public class ProjectionData {
         this.useStopword = useStopword;
     }
 
+    public void setUseStartword(boolean useStartword) {
+        this.useStartword = useStartword;
+    }
+    
     public int getTargetDimension() {
         return targetDimension;
     }
@@ -356,49 +410,4 @@ public class ProjectionData {
 
         return pdata;
     }
-
-    //indicates the type of data used to create the projection
-    private SourceType source = SourceType.NONE;
-    //diss used to calculate distances over ArrayLists
-    private DissimilarityType distanceType = DissimilarityType.NONE;
-    //projection techqnique used
-    private ProjectionType projTech = ProjectionType.NONE;
-    //General use
-    private String sourceFile = "";
-    private String titlesFile = "";
-    //Used to indicate the names of distance matrix/documents x terms matrix
-    private String dmatFilename = "";
-    private String docsTermsFilename = "";
-    private int numberIterations = 50;
-    private float fractionDelta = 8.0f;
-    private ProjectorType projector = ProjectorType.NONE;
-    private int knnNumberNeighbors = 2;
-    private boolean createDelaunay = true;
-    private String description = "";
-    private HierarchicalClusteringType hierarchicalClusteringType = HierarchicalClusteringType.NONE;
-    //Used only by the corpora pre-processing
-    private int lunhLowerCut = 10;
-    private int lunhUpperCut = -1;
-    private int numberLines = 0;
-    private int numberGrams = 1;
-    private MatrixTransformationType mattype = MatrixTransformationType.TF_IDF;
-    private StemmerType stemmer = StemmerType.PORTER;
-    private boolean useStopword = true;
-    private boolean useWeight = false;
-    //Used only when NCD is used
-    private CompressorType comptype = CompressorType.BZIP2;
-    //Used only by projCus projectionTechnique
-    private float clusterFactor = 4.5f;
-    //Used only by LSP
-    private int numberNeighborsConnection = 10;
-    private int numberControlPoint = 10;
-    private ControlPointsType controlPointsChoice = ControlPointsType.KMEDOIDS;
-    //Extra information
-    private int numberObjects = 0;
-    private int numberDimensions = 0;
-    //dimensionality reduction parameters
-    private int targetDimension = 0; //target dimension to reduce
-    private DimensionalityReductionType dimenType = DimensionalityReductionType.NONE;
-    //normalization
-    private NormalizationType normalization = NormalizationType.NONE;
 }
