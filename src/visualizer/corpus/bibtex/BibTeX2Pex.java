@@ -1,36 +1,26 @@
 package visualizer.corpus.bibtex;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
-import com.ironiacorp.features.library.Publication;
-
-import visualizer.graph.Vertex;
-import visualizer.graph.scalar.Scalar;
-import visualizer.graph.scalar.ScalarDAO;
-import visualizer.util.PExConstants;
+import com.ironiacorp.sysrev.selection.Argument;
+import com.ironiacorp.sysrev.selection.PublicationSelectionStatus;
+import com.ironiacorp.sysrev.selection.Reason;
+import com.ironiacorp.sysrev.selection.Status;
 
 import net.sf.jabref.BibtexEntry;
 import net.sf.jabref.imports.BibtexParser;
@@ -122,10 +112,11 @@ public class BibTeX2Pex
 
 	public void convert() throws IOException
 	{
+		// Write scalar names
 		BufferedWriter scalarwriter = new BufferedWriter(new FileWriter(scalarFile));
-		scalarwriter.write("year");
-		scalarwriter.newLine();
-
+      	scalarwriter.append("year;status;selected;excluded");
+        scalarwriter.newLine();
+        
 		ZipOutputStream zipfile = new ZipOutputStream(new FileOutputStream(pexFile));
 		ParserResult result = BibtexParser.parse(new FileReader(bibtexFile));
 		Collection<BibtexEntry> entries = result.getDatabase().getEntries();
@@ -154,14 +145,64 @@ public class BibTeX2Pex
 			writer.flush();
 			writer.close();
 			
-			ZipEntry entry = new ZipEntry(fileName);
-			zipfile.putNextEntry(entry);
-			byte[] data = writer.toString().getBytes();
-			zipfile.write(data, 0, data.length);
+			try {
+				ZipEntry entry = new ZipEntry(fileName);
+				zipfile.putNextEntry(entry);
+				byte[] data = writer.toString().getBytes();
+				zipfile.write(data, 0, data.length);
+			} catch (ZipException e) {
+				System.err.println(bibtexEntry.getField("title"));
+			}
 
-			String year = bibtexEntry.getField("year");
-			scalarwriter.write(fileName + ";" + year);
-			scalarwriter.newLine();
+			scalarwriter.write(fileName);
+			scalarwriter.write(";");
+			scalarwriter.write(bibtexEntry.getField("year"));
+			scalarwriter.write(";");
+			if (bibtexEntry.getField("status") != null) {
+				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
+				List<Argument> arguments = status.getArguments();
+				Reason reason = arguments.get(arguments.size() - 1).getReason(); 
+				switch (status.getDecision()) {
+					case SELECTED:
+						switch (reason) {
+							case FULL_TEXT:
+								scalarwriter.write("1.0");
+								break;
+							default:
+								scalarwriter.write("0.5");
+						}
+						break;
+					case EXCLUDED:
+						scalarwriter.write("0.0");
+						break;
+					default:
+						scalarwriter.write("0.2");
+				}
+			} else {
+				scalarwriter.write("0");
+			}
+			scalarwriter.write(";");
+			if (bibtexEntry.getField("status") != null) {
+				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
+				if (status.getDecision() == Status.SELECTED) {
+					scalarwriter.write("1");
+				} else {
+					scalarwriter.write("0");
+				}
+			} else {
+				scalarwriter.write("0");
+			}
+			scalarwriter.write(";");
+			if (bibtexEntry.getField("status") != null) {
+				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
+				if (status.getDecision() == Status.EXCLUDED) {
+					scalarwriter.write("1");
+				} else {
+					scalarwriter.write("0");
+				}
+			} else {
+				scalarwriter.write("0");
+			}
 			scalarwriter.newLine();
 		}
 
@@ -173,6 +214,7 @@ public class BibTeX2Pex
 	}
 
 	
+	/*
 	public void removeExcludedArticles(String zipFile, String scalarsFile) {
 		removeExcludedArticles(new File(zipFile), new File(scalarsFile));
 	}
@@ -264,7 +306,7 @@ public class BibTeX2Pex
 					values.add(value);
 
 					// Adding the scalar values to the vertex
-					Vertex vertex = index.get(vertexId);
+					Vertex vertex = graph.get(vertexId);
 					if (vertex != null) {
 						Iterator<String> iScalar = scalars.iterator();
 						for (int iValue = 0; iScalar.hasNext(); iValue++) {
@@ -273,9 +315,7 @@ public class BibTeX2Pex
 							vertex.setScalar(scalar, values.get(iValue));
 						}
 					} else {
-						System.err
-								.println("Scalar assigned to an inexistent vertex: "
-										+ vertexId);
+						System.err.println("Scalar assigned to an inexistent vertex: " + vertexId);
 					}
 				}
 			}
@@ -290,66 +330,5 @@ public class BibTeX2Pex
 			}
 		}
 	}
-	
-
-	// TODO: call export scalars and set a reasonable outputstreamwriter
-	public void exportScalars(com.ironiacorp.features.library.Collection collection, OutputStreamWriter osw) {
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(osw);
-            
-            // Write scalar names
-            List<String> scalars = new ArrayList<String>();
-            scalars.add("status");
-            Iterator<String> iScalar = scalars.iterator();
-            while (iScalar.hasNext()) {
-            	String scalar = iScalar.next();
-            	if (scalar.equals(PExConstants.DOTS)) {
-            		continue;
-            	}
-            	// Quietly replace all ';' by '_' (as the values are separated by ';').
-                out.write(name.replaceAll(ScalarDAO.SEPARATOR, ScalarDAO.REPLACEMENT));
-                if (i.hasNext()) {
-                	out.write(";");
-                }
-            }
-            out.newLine();
-            
-            // Write the scalar values for each vertex
-            Iterator<Publication> i = collection.iterator();
-            while (i.hasNext()) {
-            	Publication pub = i.next();
-                String id = // TODO: usar fórmula do title+doi
-            	
-                out.write(id);
-                out.write(ScalarDAO.SEPARATOR);
-                iScalar = scalars.iterator();
-            	for (int iValue = 0; iScalar.hasNext(); iValue++) {
-            		String scalar = iScalar.next();
-                	if (scalar.equals(PExConstants.DOTS)) {
-                		continue;
-                	}
-                	float scalarValue = 0.0f;
-                	if () {// TODO: selected
-                		scalarValue = 1;
-                	}
-                	out.write(Float.toString(scalarValue));
-                    if (i.hasNext()) {
-                        out.write(";");
-                    }
-                }
-            	out.newLine();
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException ex) {
-                }
-            }
-        }
-    }
+	*/
 }

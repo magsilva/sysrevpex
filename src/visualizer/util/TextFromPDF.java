@@ -64,6 +64,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JTextArea;
+import javax.swing.Timer;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
@@ -73,9 +74,10 @@ import org.apache.pdfbox.util.PDFTextStripper;
  *
  * @author Fernando Vieira Paulovich
  */
-public class TextFromPDF {
-
-    public void extract(JTextArea status, String directory, String corpus) throws IOException {
+public class TextFromPDF
+{
+    public void extract(JTextArea status, String directory, String corpus) throws IOException
+    {
         ProcessAll process = new ProcessAll(status, directory, corpus);
 
         if (process.getPdfFiles(directory).size() > 0) {
@@ -85,7 +87,13 @@ public class TextFromPDF {
         }
     }
 
-    class ProcessAll extends Thread {
+    class ProcessAll extends Thread
+    {
+        private JTextArea status;
+        
+        private String directory;
+        
+        private String corpus;
 
         public ProcessAll(JTextArea status, String directory, String corpus) {
             this.status = status;
@@ -148,21 +156,29 @@ public class TextFromPDF {
             }
         }
 
-        private JTextArea status;
-        private String directory;
-        private String corpus;
     }
 
-    class PDFProcessor extends Thread implements ActionListener {
-
-        public PDFProcessor(JTextArea status, String pdfFile, ZipOutputStream zout) {
+    class PDFProcessor extends Thread implements ActionListener
+    {
+        public static final int time = 15000;
+        
+        private String pdfFile;
+        
+        private javax.swing.Timer timer;
+        
+        private ZipOutputStream zout;
+        
+        private JTextArea status;
+    	
+    	public PDFProcessor(JTextArea status, String pdfFile, ZipOutputStream zout) {
             this.pdfFile = pdfFile;
             this.zout = zout;
             this.status = status;
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
             PDDocument doc = null;
 
             try {
@@ -180,33 +196,32 @@ public class TextFromPDF {
                 if (this.timer != null) {
                     timer.stop();
                 }
-
                 try {
                     if (doc != null) {
                         doc.close();
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
 
         @Override
         public void start() {
-            this.timer = new javax.swing.Timer(PDFProcessor.time, this);
-            this.timer.start();
+            timer = new Timer(PDFProcessor.time, this);
+            timer.start();
             super.start();
         }
 
         public void actionPerformed(ActionEvent e) {
-            this.status.append("Time exceeded: " + this.pdfFile + "\n");
-            if (this.timer != null) {
+            status.append("Time exceeded: " + this.pdfFile + "\n");
+            if (timer != null) {
                 timer.stop();
             }
-            this.interrupt();
+            interrupt();
         }
 
-        private String extract(PDDocument doc, int startPage, int endPage) throws java.io.IOException {
+        private String extract(PDDocument doc, int startPage, int endPage) throws IOException
+        {
             PDFTextStripper stripper = new PDFTextStripper();
             if (startPage != 0 && endPage != 0) {
                 stripper.setStartPage(startPage);
@@ -215,12 +230,5 @@ public class TextFromPDF {
 
             return stripper.getText(doc);
         }
-
-        public static final int time = 15000;
-        private String pdfFile;
-        private javax.swing.Timer timer;
-        private ZipOutputStream zout;
-        private JTextArea status;
     }
-
 }

@@ -331,12 +331,13 @@ public class Vertex implements Comparable, java.io.Serializable {
      * @param scalar The scalar.
      * @param colorTable The color table used to color the vertex.
      */
-    public void setColor(Scalar scalar, ColorTable colorTable) {
-        if (this.valid && colorTable != null) {
+    public void setColor(Scalar scalar, ColorTable colorTable)
+    {
+        if (valid && colorTable != null) {
             if (scalar.getMin() >= 0.0f && scalar.getMax() <= 1.0f) {
-                this.color = colorTable.getColor(this.getScalar(scalar));
+                color = colorTable.getColor(getScalar(scalar));
             } else {
-                this.color = colorTable.getColor(this.getNormalizedScalar(scalar));
+                color = colorTable.getColor(getNormalizedScalar(scalar));
             }
         }
     }

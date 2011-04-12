@@ -53,6 +53,11 @@ package visualizer.view.color;
  */
 public class ColorTable {
 
+
+    public ColorScale colorScale;
+    
+    public ColorScaleType colorScaleType;
+    
     /** Creates a new instance of ColorTable */
     public ColorTable() {
         this.colorScaleType = ColorScaleType.PSEUDORAINBOWCALE;
@@ -84,7 +89,4 @@ public class ColorTable {
         this.colorScaleType = colorScaleType;
         this.colorScale = ColorScaleFactory.getInstance(colorScaleType);
     }
-
-    public ColorScale colorScale;
-    public ColorScaleType colorScaleType;
 }

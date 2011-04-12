@@ -102,11 +102,6 @@ public class ZipCorpus extends BaseCorpus
     }
 
     @Override
-    public String getSearchContent(String itemUrl) throws IOException {
-        return this.getFullContent(itemUrl);
-    }
-
-    @Override
     public String getFullContent(String itemUrl) throws IOException {
         ZipFile zip = null;
         try {
@@ -137,11 +132,6 @@ public class ZipCorpus extends BaseCorpus
         }
 
         return null;
-    }
-
-    @Override
-    public String getFilteredContent(String itemUrl) throws IOException {
-        return this.getFullContent(itemUrl);
     }
 
     @Override

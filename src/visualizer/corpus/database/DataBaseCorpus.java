@@ -126,18 +126,9 @@ public class DataBaseCorpus extends BaseCorpus {
         return content;
     }
 
-    @Override
-    public String getFilteredContent(String id) throws IOException {
-        return this.getFullContent(id);
-    }
 
     @Override
     public String getViewContent(String id) throws IOException {
-        return this.getFullContent(id);
-    }
-
-    @Override
-    public String getSearchContent(String id) throws IOException {
         return this.getFullContent(id);
     }
 
