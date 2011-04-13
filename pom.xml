@@ -112,18 +112,48 @@
 			<artifactId>jfreechart</artifactId>
 			<version>1.0.13</version>
 		</dependency>
+
 		<dependency>
-			<groupId>colt</groupId>
-			<artifactId>colt</artifactId>
-			<version>[1.2.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.jabref</groupId>
-			<artifactId>jabref</artifactId>
-			<version>2.6</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+			<groupId>org.tartarus</groupId>
+                       <artifactId>snowball</artifactId>
+                       <version>[1.0.0,)</version>
+                       <type>jar</type>
+                       <scope>compile</scope>
+               </dependency>
+
+               <dependency>
+                       <groupId>org.apache.pdfbox</groupId>
+                       <artifactId>pdfbox</artifactId>
+                       <version>[1.2.1,)</version>
+                       <scope>compile</scope>
+               </dependency>
+
+               <dependency>
+                       <groupId>org.ujmp</groupId>
+                       <artifactId>ujmp</artifactId>
+                       <version>[0.2.5,)</version>
+                       <type>jar</type>
+                       <scope>compile</scope>
+                </dependency>
+
+                <dependency>
+                        <groupId>net.sf.jabref</groupId>
+                        <artifactId>jabref</artifactId>
+                        <version>2.6</version>
+                       <exclusions>
+                               <exclusion>
+                                       <artifactId>looks</artifactId>
+                                       <groupId>com.jgoodies</groupId>
+                               </exclusion>
+                       </exclusions>
+                       <type>jar</type>
+                        <scope>compile</scope>
+                </dependency>
+                <dependency>
+                	<groupId>colt</groupId>
+                	<artifactId>colt</artifactId>
+                	<version>1.2.0</version>
+                </dependency>
 	</dependencies>
 
 	<build>
