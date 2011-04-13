@@ -108,25 +108,22 @@ public class ZipCorpus extends BaseCorpus
             zip = new ZipFile(this.url);
             ZipEntry entry = zip.getEntry(itemUrl);
             if (entry != null) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(zip.getInputStream(entry),
-                        BaseCorpus.getEncoding().toString()));
-
+                BufferedReader in = new BufferedReader(new InputStreamReader(zip.getInputStream(entry), BaseCorpus.getEncoding().toString()));
                 String line;
                 StringBuffer text = new StringBuffer();
                 while ((line = in.readLine()) != null) {
                     text.append(line + "\r\n");
                 }
-
                 return text.toString();
             }
         } catch (IOException e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
             throw new IllegalArgumentException("File " + itemUrl + " does not exist.", e);
         } finally {
             if (zip != null) {
                 try {
                     zip.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -256,7 +253,6 @@ public class ZipCorpus extends BaseCorpus
                     try {
                         zip.close();
                     } catch (IOException ex) {
-                        Logger.getLogger(ZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

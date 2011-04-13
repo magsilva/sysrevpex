@@ -50,6 +50,8 @@ package visualizer.graph.coodination;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import visualizer.corpus.Corpus;
 import visualizer.matrix.Matrix;
@@ -69,7 +71,13 @@ import visualizer.view.Viewer;
  *
  * @author Fernando Vieira Paulovich
  */
-public class DistanceMapping extends Mapping {
+public class DistanceMapping extends Mapping
+{
+    private ProjectionData localPData;
+    
+    private ProjectionData outerPData;
+    
+    private int nrNeighbors = 5;
 
     /** Creates a new instance of DistanceMapping
      * @param localPData
@@ -120,9 +128,9 @@ public class DistanceMapping extends Mapping {
             local_pp.setStartword(false);
             local_pp.setStemmer(localPData.getStemmer());
             Matrix local_points = local_pp.getMatrix();
-            ArrayList<Ngram> local_ngrams = local_pp.getNgrams();
+            Collection<Ngram> local_ngrams = local_pp.getNgrams();
 
-            MatrixTransformation transf1 = MatrixTransformationFactory.getInstance(this.localPData.getMatrixTransformationType());
+            MatrixTransformation transf1 = MatrixTransformationFactory.getInstance(localPData.getMatrixTransformationType());
             local_points = transf1.tranform(local_points, null);
             
             //processing outer corpus
@@ -136,20 +144,20 @@ public class DistanceMapping extends Mapping {
             outer_pp.setStartword(false);
             outer_pp.setStemmer(outerPData.getStemmer());
             Matrix outer_points = outer_pp.getMatrix();
-            ArrayList<Ngram> outer_ngrams = outer_pp.getNgrams();
+            List<Ngram> outer_ngrams = outer_pp.getNgrams();
 
-            MatrixTransformation transf2 = MatrixTransformationFactory.getInstance(this.outerPData.getMatrixTransformationType());
+            MatrixTransformation transf2 = MatrixTransformationFactory.getInstance(outerPData.getMatrixTransformationType());
             outer_points = transf2.tranform(outer_points, null);
 
             //tranforming the matrixes to have the same format (same common columns)
-            ArrayList<Ngram> common_ngrams = this.findCommonNGrams(local_ngrams, outer_ngrams);
+            Collection<Ngram> common_ngrams = findCommonNGrams(local_ngrams, outer_ngrams);
 
             if (common_ngrams.size() < 1) {
                 throw new IOException("There are not common attributes between the projections!");
             }
 
-            Matrix new_local_points = this.transformMatrix(local_ngrams, common_ngrams, local_points);
-            Matrix new_outer_points = this.transformMatrix(outer_ngrams, common_ngrams, outer_points);
+            Matrix new_local_points = transformMatrix(local_ngrams, common_ngrams, local_points);
+            Matrix new_outer_points = transformMatrix(outer_ngrams, common_ngrams, outer_points);
 
             //Deciding the distance type
             Dissimilarity diss = DissimilarityFactory.getInstance(this.localPData.getDissimilarityType());
@@ -195,29 +203,32 @@ public class DistanceMapping extends Mapping {
         }
     }
 
-    public Matrix transformMatrix(ArrayList<Ngram> old_ngrams, 
-            ArrayList<Ngram> new_ngrams, Matrix old_matrix) {
+    public Matrix transformMatrix(Collection<Ngram> old_ngrams, Collection<Ngram> new_ngrams, Matrix old_matrix)
+    {
         //creating the new matrix
         Matrix new_matrix = new SparseMatrix();
 
         //creating the index
         int[] index = new int[new_ngrams.size()];
+        int i = 0;
 
         //for each new ngram
-        for (int i = 0; i < index.length; i++) {
-            //find the old index
+        for (Ngram new_ngram : new_ngrams) {
             int old_index = 0;
-            for (int j = 0; j < old_ngrams.size(); j++) {
-                if (old_ngrams.get(j).ngram.equals(new_ngrams.get(i).ngram)) {
+            int j = 0;
+            for (Ngram old_ngram : old_ngrams) {
+                if (old_ngram.ngram.equals(new_ngram.ngram)) {
                     old_index = j;
                     break;
+                } else {
+                	j++;
                 }
             }
-
             index[i] = old_index;
+            i++;
         }
 
-        for (int i = 0; i < old_matrix.getRowCount(); i++) {
+        for (i = 0; i < old_matrix.getRowCount(); i++) {
             float[] vector = new float[index.length];
             Arrays.fill(vector, 0.0f);
 
@@ -225,31 +236,26 @@ public class DistanceMapping extends Mapping {
                 vector[j] = old_matrix.getRow(i).getValue(index[j]);
             }
 
-            SparseVector sv = new SparseVector(vector, old_matrix.getRow(i).getId(),
-                    old_matrix.getRow(i).getKlass());
+            SparseVector sv = new SparseVector(vector, old_matrix.getRow(i).getId(), old_matrix.getRow(i).getKlass());
             new_matrix.addRow(sv);
         }
 
         return new_matrix;
     }
 
-    public ArrayList<Ngram> findCommonNGrams(ArrayList<Ngram> ngrams_1,
-            ArrayList<Ngram> ngrams_2) {
+    public Collection<Ngram> findCommonNGrams(Collection<Ngram> ngrams_1, Collection<Ngram> ngrams_2)
+    {
         ArrayList<Ngram> final_ngrams = new ArrayList<Ngram>();
 
-        for (int i = 0; i < ngrams_1.size(); i++) {
-            for (int j = 0; j < ngrams_2.size(); j++) {
-                if (ngrams_1.get(i).ngram.equals(ngrams_2.get(j).ngram)) {
-                    final_ngrams.add(ngrams_1.get(i));
-                    break;
-                }
-            }
+        for (Ngram ngram1 : ngrams_1) {
+        	for (Ngram ngram2 : ngrams_2) {
+        		if (ngram1.ngram.equals(ngram2.ngram)) {
+        			final_ngrams.add(ngram1);
+        		}
+        	}
         }
 
         return final_ngrams;
     }
 
-    private ProjectionData localPData;
-    private ProjectionData outerPData;
-    private int nrNeighbors = 5;
 }

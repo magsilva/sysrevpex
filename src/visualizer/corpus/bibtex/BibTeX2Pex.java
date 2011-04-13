@@ -184,7 +184,9 @@ public class BibTeX2Pex
 			scalarwriter.write(";");
 			if (bibtexEntry.getField("status") != null) {
 				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
-				if (status.getDecision() == Status.SELECTED) {
+				List<Argument> arguments = status.getArguments();
+				Reason reason = arguments.get(arguments.size() - 1).getReason(); 
+				if (status.getDecision() == Status.SELECTED && reason == Reason.FULL_TEXT) {
 					scalarwriter.write("1");
 				} else {
 					scalarwriter.write("0");
@@ -195,7 +197,9 @@ public class BibTeX2Pex
 			scalarwriter.write(";");
 			if (bibtexEntry.getField("status") != null) {
 				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
-				if (status.getDecision() == Status.EXCLUDED) {
+				List<Argument> arguments = status.getArguments();
+				Reason reason = arguments.get(arguments.size() - 1).getReason(); 
+				if (status.getDecision() == Status.EXCLUDED && reason == Reason.ABSTRACT) {
 					scalarwriter.write("1");
 				} else {
 					scalarwriter.write("0");

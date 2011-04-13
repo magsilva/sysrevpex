@@ -1,6 +1,7 @@
 package visualizer.textprocessing;
 
 import java.util.Collection;
+import java.util.List;
 
 import visualizer.corpus.Corpus;
 import visualizer.graph.Vertex;
@@ -14,7 +15,7 @@ public interface PreProcessor
 	
 	Matrix getMatrixForSelection(Collection<Vertex> selectedVertex);
 	
-	Collection<Ngram> getNgrams();
+	List<Ngram> getNgrams();
 	
 	void setCorpus(Corpus corpus);
 	

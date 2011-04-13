@@ -49,6 +49,7 @@ address = {Washington, DC, USA},
 package visualizer.view.tools;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,6 +59,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -66,6 +68,7 @@ import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
 import visualizer.projection.ProjectionData;
 import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
@@ -597,51 +600,47 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         this.setVisible(true);
     }
 
-    protected void analizeButtonAction(java.awt.event.ActionEvent evt) {
-        try {
-            HashMap<String, Ngram> corporaNgrams = new HashMap<String, Ngram>();
-            this.countWordsFrequency(corporaNgrams);
+    protected void analizeButtonAction(ActionEvent evt)
+    {
+    	HashMap<String, Ngram> corporaNgrams = new HashMap<String, Ngram>();
+        countWordsFrequency(corporaNgrams);
 
-            int lowercut = pdata.getLunhLowerCut();
-            if (this.tdata != null) {
-                lowercut = tdata.getLunhLowerCut();
-            }
-
-            //Remove the ngrams which occurs less than LUHN-LOWER-CUT times
-            List<Ngram> ngrams = new ArrayList<Ngram>();
-            for (String key : corporaNgrams.keySet()) {
-                Ngram n = corporaNgrams.get(key);
-                if (n.frequency >= lowercut) {
-                    ngrams.add(n);
-                }
-            }
-
-            //Sorting the ngrams by its frequency in decreasing order
-            Collections.sort(ngrams);
-
-            this.initModels();
-            this.ngramsTable.setModel(this.tableModel);
-
-            for (int i = 0; i < ngrams.size(); i++) {
-                String[] label = new String[2];
-                label[0] = ngrams.get(i).ngram;
-                label[1] = Integer.toString(ngrams.get(i).frequency);
-                this.tableModel.addRow(label);
-            }
-
-            ((ZipfCurve) this.zipfCurvePanel).setNgrams(ngrams);
-
-            this.lowerCutSlider.setMaximum(ngrams.size() - 1);
-            //this.lowerCutSlider.setMajorTickSpacing(ngrams.size()/100);
-            this.lowerCutSlider.setEnabled(true);
-
-            this.upperCutSlider.setMaximum(ngrams.size() - 1);
-            //this.upperCutSlider.setMajorTickSpacing(ngrams.size()/100);
-            this.upperCutSlider.setEnabled(true);
-
-        } catch (IOException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        int lowercut = pdata.getLunhLowerCut();
+        if (tdata != null) {
+            lowercut = tdata.getLunhLowerCut();
         }
+
+        // Remove the ngrams which occurs less than LUHN-LOWER-CUT times
+        List<Ngram> ngrams = new ArrayList<Ngram>();
+        for (String key : corporaNgrams.keySet()) {
+            Ngram n = corporaNgrams.get(key);
+            if (n.frequency >= lowercut) {
+                ngrams.add(n);
+            }
+        }
+
+        // Sorting the ngrams by its frequency in decreasing order
+        Collections.sort(ngrams);
+
+        initModels();
+        ngramsTable.setModel(tableModel);
+
+        for (Ngram ngram : ngrams) {
+            String[] label = new String[2];
+            label[0] = ngram.ngram;
+            label[1] = Integer.toString(ngram.frequency);
+            tableModel.addRow(label);
+        }
+
+        ((ZipfCurve) zipfCurvePanel).setNgrams(ngrams);
+
+        lowerCutSlider.setMaximum(ngrams.size() - 1);
+        //this.lowerCutSlider.setMajorTickSpacing(ngrams.size()/100);
+        lowerCutSlider.setEnabled(true);
+
+        upperCutSlider.setMaximum(ngrams.size() - 1);
+        //this.upperCutSlider.setMajorTickSpacing(ngrams.size()/100);
+        upperCutSlider.setEnabled(true);
     }
 
     protected void closeButtonAction(java.awt.event.ActionEvent evt) {
@@ -663,30 +662,39 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         this.setVisible(false);
     }
 
-    protected void countWordsFrequency(HashMap<String, Ngram> corporaNgrams) throws IOException {
+    protected void countWordsFrequency(Map<String, Ngram> corporaNgrams)
+    {
         boolean useStopword = true;
-        if (this.tdata != null) {
-            useStopword = this.tdata.isUseStopword();
+        if (tdata != null) {
+            useStopword = tdata.isUseStopword();
         } else {
-            useStopword = this.pdata.isUseStopword();
+            useStopword = pdata.isUseStopword();
+        }
+
+        boolean useStartword = false;
+        if (tdata != null) {
+            useStartword = tdata.isUseStartword();
+        } else {
+            useStartword = pdata.isUseStartword();
         }
 
         StemmerType stemmer = null;
-        if (this.tdata != null) {
-            stemmer = this.tdata.getStemmer();
+        if (tdata != null) {
+            stemmer = tdata.getStemmer();
         } else {
-            stemmer = this.pdata.getStemmer();
+            stemmer = pdata.getStemmer();
         }
 
         int lowercut = pdata.getLunhLowerCut();
         int nrGrams = pdata.getNumberGrams();
 
-        if (this.tdata != null) {
+        if (tdata != null) {
             lowercut = tdata.getLunhLowerCut();
             nrGrams = tdata.getNumberGrams();
         }
 
         MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        // PipelinePreprocessor pre = new PipelinePreprocessor();
         pre.setCorpus(corpus);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(-1);
@@ -694,6 +702,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         pre.setStopword(useStopword);
         pre.setStartword(useStartword);
         pre.setNumberGrams(nrGrams);
+        pre.run();
         Collection<Ngram> ngrams = pre.getNgrams();
 
         for (Ngram n : ngrams) {
@@ -735,6 +744,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         }
 
         MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        // PipelinePreprocessor pre = new PipelinePreprocessor();
         pre.setCorpus(cp);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(uppercut);
@@ -827,6 +837,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         }
 
         MonoliticPreprocessor pre = new MonoliticPreprocessor();
+        // PipelinePreprocessor pre = new PipelinePreprocessor();
         pre.setCorpus(cp);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(uppercut);

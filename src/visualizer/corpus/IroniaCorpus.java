@@ -1,6 +1,5 @@
 package visualizer.corpus;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import visualizer.textprocessing.Ngram;

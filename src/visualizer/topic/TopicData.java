@@ -50,6 +50,7 @@ package visualizer.topic;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import visualizer.corpus.Corpus;
@@ -73,7 +74,7 @@ public class TopicData {
     private int numberGrams = 1;
     private MatrixTransformationType matrixType = MatrixTransformationType.TF_IDF;
     private Matrix matrix;
-    private ArrayList<Ngram> corporaNgrams = null;
+    private List<Ngram> corporaNgrams = null;
     private Float weightBeta = 1.0f;
     private StemmerType stemmer = StemmerType.NONE;
     private boolean useStopword = true;
@@ -217,11 +218,11 @@ public class TopicData {
         this.matrixType = matrixType;
     }
 
-    public ArrayList<Ngram> getCorporaNgrams() {
+    public List<Ngram> getCorporaNgrams() {
         return corporaNgrams;
     }
 
-    public void setCorporaNgrams(ArrayList<Ngram> corporaNgrams) {
+    public void setCorporaNgrams(List<Ngram> corporaNgrams) {
         this.corporaNgrams = corporaNgrams;
     }
 

@@ -78,9 +78,21 @@ import visualizer.textprocessing.TermExtractor;
  *
  * @author Fernando Vieira Paulovich
  */
-public class InvertedZipCorpus {
+public class InvertedZipCorpus
+{
+    private static final String invDir = "inv/";
+    
+    private String invFilename;
+    
+    private ZipFile zip;
+    
+    private ZipCorpus corpus;
+    
+    private int nrGrams;
 
-    /** Creates a new instance of InvertedFile
+    /**
+     * Creates a new instance of InvertedFile.
+     * 
      * @param corpus
      * @param nrGrams
      * @param invFilename 
@@ -90,17 +102,9 @@ public class InvertedZipCorpus {
         this.corpus = corpus;
         this.nrGrams = nrGrams;
 
-        if (!(new File(this.invFilename).exists()) ||
-                corpus.getNumberGrams() != this.getNumberGrams() ||
-                !BaseCorpus.getEncoding().toString().equals(this.getEncoding())) {
-            try {
-                this.removeFile();
-                this.processCorpus(corpus, nrGrams, BaseCorpus.getEncoding());
-                this.dispose();
-            } catch (IOException ex) {
-                Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        removeFile();
+        processCorpus(corpus, nrGrams, BaseCorpus.getEncoding());
+        dispose();
     }
 
     public void removeFile() {
@@ -206,7 +210,8 @@ public class InvertedZipCorpus {
         return invFilename;
     }
 
-    private void processCorpus(ZipCorpus corpus, int nrGrams, Encoding encoding) throws IOException {
+    private void processCorpus(ZipCorpus corpus, int nrGrams, Encoding encoding)
+    {
         HashMap<String, Integer> corpusNgrams = new HashMap<String, Integer>();
 
         ZipOutputStream zout = null;
@@ -412,10 +417,4 @@ public class InvertedZipCorpus {
         sb.append(word);
         return sb.toString();
     }
-
-    private static final String invDir = "inv/";
-    private String invFilename;
-    private ZipFile zip;
-    private ZipCorpus corpus;
-    private int nrGrams;
 }

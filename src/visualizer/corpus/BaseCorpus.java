@@ -140,7 +140,7 @@ public abstract class BaseCorpus implements Corpus
 	 */
     @Override
 	public int getNumberGrams() {
-        return this.nrGrams;
+        return nrGrams;
     }
 
     /* (non-Javadoc)

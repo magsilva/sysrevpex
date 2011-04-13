@@ -54,7 +54,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -104,7 +103,7 @@ public class RuleTopic extends Topic {
     protected void createTopic(ArrayList<Vertex> vertex, Corpus corpus) {
         float[][] points;
         float[][] selectedPoints;
-        ArrayList<Ngram> corporaNgrams = null;
+        List<Ngram> corporaNgrams = null;
 
          //Get Matrix
         //should change to use inverted files
