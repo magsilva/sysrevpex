@@ -53,8 +53,7 @@ import visualizer.matrix.Matrix;
  *
  * @author Fernando Vieira Paulovich
  */
-public interface MatrixTransformation {
-
-    public Matrix tranform(Matrix matrix, Object parameter);
-
+public interface MatrixTransformation
+{
+    Matrix tranform(Matrix matrix, Object parameter);
 }

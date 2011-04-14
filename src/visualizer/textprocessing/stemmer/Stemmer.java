@@ -54,8 +54,7 @@ package visualizer.textprocessing.stemmer;
  *
  * @author Fernando Vieira Paulovich
  */
-public interface Stemmer {
-
+public interface Stemmer
+{
     public String stem(String word);
-
 }

@@ -720,11 +720,11 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
             useStopword = this.pdata.isUseStopword();
         }
 
-        StemmerType stemmer = null;
+        StemmerType stemmerType = null;
         if (this.tdata != null) {
-            stemmer = this.tdata.getStemmer();
+            stemmerType = this.tdata.getStemmer();
         } else {
-            stemmer = this.pdata.getStemmer();
+            stemmerType = this.pdata.getStemmer();
         }
 
         int nrGrams = pdata.getNumberGrams();
@@ -748,7 +748,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         pre.setCorpus(cp);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(uppercut);
-        pre.setStemmer(stemmer);
+        pre.setStemmer(stemmerType);
         pre.setStopword(useStopword);
         pre.setStartword(useStartword);
         pre.setNumberGrams(nrGrams);
@@ -761,12 +761,12 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         pre.run();
         Collection<Ngram> corpus_ngrams = pre.getNgrams();
         StopWord stopWords = SetStopword.getInstance();
-        Stemmer stemmerInstance = StemmerFactory.getInstance(stemmer);
+        Stemmer stemmer = StemmerFactory.getInstance(stemmerType);
         
         for (Ngram ngram : corpus_ngrams) {
             boolean contain = false;
             String corpus_ngram = ngram.ngram;
-            String corpus_ngram_stem = stemmerInstance.stem(corpus_ngram);
+            String corpus_ngram_stem = stemmer.stem(corpus_ngram);
             for (Ngram res_ngram : res_ngrams) {
                 if (corpus_ngram_stem.equals(res_ngram.ngram)) {
                     contain = true;

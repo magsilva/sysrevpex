@@ -21,9 +21,11 @@ public class BibTeX2PexTest
 	@Test
 	public void testConvertConsolidated() throws IOException
 	{
-		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Studies-Retrieved.bib"));
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Studies.bib"));
 		converter.convert();
-		
+	}
+	
+	/*
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Retrieved.bib"));
 		converter.convert();
 		
@@ -33,4 +35,5 @@ public class BibTeX2PexTest
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ScienceDirect - Retrieved.bib"));
 		converter.convert();
 	}
+	*/
 }

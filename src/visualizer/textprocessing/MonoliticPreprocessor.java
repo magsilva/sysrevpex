@@ -63,6 +63,7 @@ import visualizer.graph.Vertex;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.SparseMatrix;
 import visualizer.matrix.SparseVector;
+import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.textprocessing.stopword.SetStopword;
@@ -78,7 +79,7 @@ public class MonoliticPreprocessor implements PreProcessor
 
     private List<Ngram> ngrams;
     
-    private StemmerType stemmer;
+    private StemmerType stemmerType;
     
     private boolean useStopword;
     
@@ -102,12 +103,12 @@ public class MonoliticPreprocessor implements PreProcessor
 
 	public StemmerType getStemmer()
 	{
-		return stemmer;
+		return stemmerType;
 	}
 
 	public void setStemmer(StemmerType stemmer)
 	{
-		this.stemmer = stemmer;
+		this.stemmerType = stemmer;
 	}
 
 	public boolean getStopword()
@@ -281,9 +282,9 @@ public class MonoliticPreprocessor implements PreProcessor
     private List<Ngram> getCorpusNgrams()
     {
         Map<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
-
         StopWord stp = null;
         Startword sta = null;
+        Stemmer stemmer = StemmerFactory.getInstance(stemmerType);
 
         try {
         	if (useStopword) {
@@ -300,7 +301,7 @@ public class MonoliticPreprocessor implements PreProcessor
         for (Ngram n : corpus.getCorpusNgrams()) {
             String token = n.ngram;
             if ((useStopword && ! useStartword && ! stp.isStopWord(token))) {
-                token = StemmerFactory.getInstance(stemmer).stem(token);
+                token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
                         corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -310,7 +311,7 @@ public class MonoliticPreprocessor implements PreProcessor
                 }
             }
             if ((! useStopword && useStartword && sta.isStartWord(token))) {
-                token = StemmerFactory.getInstance(stemmer).stem(token);
+                token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
                         corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -320,7 +321,7 @@ public class MonoliticPreprocessor implements PreProcessor
                 }
             }
             if ((useStopword && useStartword && ! stp.isStopWord(token) && sta.isStartWord(token))) {
-                token = StemmerFactory.getInstance(stemmer).stem(token);
+                token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
                         corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -330,7 +331,7 @@ public class MonoliticPreprocessor implements PreProcessor
                 }
             }
             if (! useStopword && ! useStartword) {
-                token = StemmerFactory.getInstance(stemmer).stem(token);
+                token = StemmerFactory.getInstance(stemmerType).stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
                         corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -365,6 +366,7 @@ public class MonoliticPreprocessor implements PreProcessor
         HashMap<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
         StopWord stp = null;
         Startword sta = null;
+        Stemmer stemmer = StemmerFactory.getInstance(stemmerType);
 
         try {
         	if (useStopword) {
@@ -384,7 +386,7 @@ public class MonoliticPreprocessor implements PreProcessor
                 String token = n.ngram;
 
                 if ((useStopword && ! useStartword && ! stp.isStopWord(token))) {
-                    token = StemmerFactory.getInstance(stemmer).stem(token);
+                    token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
                             corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -394,7 +396,7 @@ public class MonoliticPreprocessor implements PreProcessor
                     }
                 }
                 if ((! useStopword && useStartword && sta.isStartWord(token))) {
-                    token = StemmerFactory.getInstance(stemmer).stem(token);
+                    token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
                             corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -404,7 +406,7 @@ public class MonoliticPreprocessor implements PreProcessor
                     }
                 }
                 if ((useStopword && useStartword && ! stp.isStopWord(token) && sta.isStartWord(token))) {
-                    token = StemmerFactory.getInstance(stemmer).stem(token);
+                    token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
                             corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
@@ -414,7 +416,7 @@ public class MonoliticPreprocessor implements PreProcessor
                     }
                 }
                 if (! useStopword && ! useStartword) {
-                    token = StemmerFactory.getInstance(stemmer).stem(token);
+                    token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
                             corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
