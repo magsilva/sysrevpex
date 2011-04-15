@@ -186,19 +186,19 @@ public class Graph implements java.io.Serializable {
         }
 
         //Draw each vertice of the graph
-        for (Vertex v : this.vertex) {
-            if (!v.isValid()) {
+        for (Vertex v : vertex) {
+            if (! v.isValid()) {
                 v.draw(image, null, highquality);
             }
         }
 
-        for (Vertex v : this.vertex) {
-            if (v.isValid() && !v.isSelected()) {
+        for (Vertex v : vertex) {
+            if (v.isValid() && ! v.isSelected()) {
                 v.draw(image, null, highquality);
             }
         }
 
-        for (Vertex v : this.vertex) {
+        for (Vertex v : vertex) {
             if (v.isValid() && v.isSelected()) {
                 v.draw(image, null, highquality);
             }

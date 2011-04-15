@@ -47,46 +47,56 @@ address = {Washington, DC, USA},
 
 package visualizer.view.color;
 
+import java.awt.Color;
+
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class ColorTable {
-
-
+public class ColorTable
+{
+	public static final ColorScaleType DEFAULT_VALUE = ColorScaleType.PSEUDORAINBOWCALE; 
+	
     public ColorScale colorScale;
     
     public ColorScaleType colorScaleType;
     
-    /** Creates a new instance of ColorTable */
-    public ColorTable() {
-        this.colorScaleType = ColorScaleType.PSEUDORAINBOWCALE;
-        this.colorScale = ColorScaleFactory.getInstance(colorScaleType);
+    /**
+     * Creates a new instance of ColorTable
+     */
+    public ColorTable()
+    {
+        this(DEFAULT_VALUE);
     }
 
-    public ColorTable(ColorScaleType colorScaleType) {
+    public ColorTable(ColorScaleType colorScaleType)
+    {
+        setColorScaleType(colorScaleType);
+    }
+
+    public Color getColor(float value)
+    {
+        return colorScale.getColor(value);
+    }
+
+    public int getNumberColors()
+    {
+        return colorScale.getNumberColors();
+    }
+
+    public ColorScaleType getColorScaleType()
+    {
+        return colorScaleType;
+    }
+
+    public ColorScale getColorScale()
+    {
+        return colorScale;
+    }
+
+    public void setColorScaleType(ColorScaleType colorScaleType)
+    {
         this.colorScaleType = colorScaleType;
-        this.colorScale = ColorScaleFactory.getInstance(colorScaleType);
-    }
-
-    public java.awt.Color getColor(float value) {
-        return this.colorScale.getColor(value);
-    }
-
-    public int getNumberColors() {
-        return this.colorScale.getNumberColors();
-    }
-
-    public ColorScaleType getColorScaleType() {
-        return this.colorScaleType;
-    }
-
-    public ColorScale getColorScale() {
-        return this.colorScale;
-    }
-
-    public void setColorScaleType(ColorScaleType colorScaleType) {
-        this.colorScaleType = colorScaleType;
-        this.colorScale = ColorScaleFactory.getInstance(colorScaleType);
+        colorScale = ColorScaleFactory.getInstance(colorScaleType);
     }
 }

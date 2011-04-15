@@ -47,29 +47,34 @@ address = {Washington, DC, USA},
 
 package visualizer.view.color;
 
+import java.awt.Color;
+
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public abstract class ColorScale {
+public abstract class ColorScale
+{
+    private float min = 0.0f;
 
-    public java.awt.Color getColor(float value) {
-        float maxlength = ((this.colors.length - 1) / 2) + (max * ((this.colors.length - 1) / 2));
-        float minlength = (min * ((this.colors.length - 1) / 2));
+    private float max = 1.0f;
+    
+    private  boolean reverse = false;
+    
+	public Color getColor(float value)
+    {
+        float maxlength = ((getNumberColors() - 1) / 2) + (max * ((getNumberColors() - 1) / 2));
+        float minlength = (min * ((getNumberColors() - 1) / 2));
 
         if (reverse) {
             value = 1 - value;
-            maxlength = ((this.colors.length - 1) / 2) + ((1 - min) * ((this.colors.length - 1) / 2));
-            minlength = ((1 - max) * ((this.colors.length - 1) / 2));
+            maxlength = ((getNumberColors() - 1) / 2) + ((1 - min) * ((getNumberColors() - 1) / 2));
+            minlength = ((1 - max) * ((getNumberColors() - 1) / 2));
         }
 
         int index = (int) ((value * (maxlength - minlength)) + minlength);
 
-        return (this.colors.length >= index) ? this.colors[index] : this.colors[this.colors.length - 1];
-    }
-
-    public int getNumberColors() {
-        return this.colors.length;
+        return (getNumberColors() >= index) ? getIndexedColor(index) : getIndexedColor(getNumberColors() - 1);
     }
 
     public float getMin() {
@@ -95,9 +100,8 @@ public abstract class ColorScale {
     public void setReverse(boolean reverse) {
         this.reverse = reverse;
     }
-
-    private float min = 0.0f;
-    private float max = 1.0f;
-    private  boolean reverse = false;
-    protected java.awt.Color[] colors;
+    
+    public abstract int getNumberColors();
+    
+    public abstract Color getIndexedColor(int i);
 }

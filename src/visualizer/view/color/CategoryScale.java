@@ -53,16 +53,25 @@ import java.awt.Color;
  *
  * @author Fernando Vieira Paulovich
  */
-public class CategoryScale extends ColorScale {
+public class CategoryScale extends ColorScale
+{
 
-    private static final Color[] BASE_COLORS = {/*Color.DARK_GRAY,*/ Color.MAGENTA, Color.YELLOW,
-        Color.BLUE, Color.WHITE, Color.RED, Color.CYAN, Color.ORANGE, Color.PINK, Color.GREEN
+    private static final Color[] BASE_COLORS = {
+    	/*Color.DARK_GRAY,*/
+    	Color.MAGENTA,
+    	Color.YELLOW,
+        Color.BLUE,
+        Color.WHITE,
+        Color.RED,
+        Color.CYAN,
+        Color.ORANGE,
+        Color.PINK,
+        Color.GREEN
     };
-
-    public CategoryScale() {
-        colors = new java.awt.Color[(BASE_COLORS.length - 1) * 25];
-
-        int intercolros = colors.length / (BASE_COLORS.length - 1);
+    
+    private static final Color[] colors = new Color[(BASE_COLORS.length - 1) * 25]; 
+    static {
+    	int intercolros = colors.length / (BASE_COLORS.length - 1);
         int k = 0;
 
         for (int i = 0; i < BASE_COLORS.length - 1; i++) {
@@ -72,11 +81,23 @@ public class CategoryScale extends ColorScale {
         }
     }
 
-    private Color interpolate(Color a, Color b, float alpha) {
+    private static Color interpolate(Color a, Color b, float alpha)
+    {
         int blue = (int) Math.min((1 - alpha) * a.getBlue() + alpha * b.getBlue(), 255);
         int green = (int) Math.min((1 - alpha) * a.getGreen() + alpha * b.getGreen(), 255);
         int red = (int) Math.min((1 - alpha) * a.getRed() + alpha * b.getRed(), 255);
         return new Color(red, green, blue);
     }
 
+	@Override
+	public int getNumberColors()
+	{
+		return CategoryScale.colors.length;
+	}
+
+	@Override
+	public Color getIndexedColor(int i)
+	{
+		return CategoryScale.colors[i];
+	}
 }

@@ -25,15 +25,24 @@ public class BibTeX2PexTest
 		converter.convert();
 	}
 	
-	/*
+	@Test
+	public void testConvertConsolidated_ACM() throws IOException
+	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Retrieved.bib"));
 		converter.convert();
-		
+	}
+	
+	@Test
+	public void testConvertConsolidated_IEEE() throws IOException
+	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - IEEE - Retrieved.bib"));
 		converter.convert();
+	}
 
+	@Test
+	public void testConvertConsolidated_ScienceDirect() throws IOException
+	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ScienceDirect - Retrieved.bib"));
 		converter.convert();
 	}
-	*/
 }

@@ -47,14 +47,17 @@ address = {Washington, DC, USA},
  * ***** END LICENSE BLOCK ***** */
 package visualizer.graph;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import visualizer.forcelayout.ForceData;
@@ -66,10 +69,12 @@ import visualizer.view.color.ColorTable;
  * 
  * @author Fernando Vieira Paulovich
  */
-public class Vertex implements Comparable, java.io.Serializable {
-
+public class Vertex implements Comparable, Serializable
+{
     private static final long serialVersionUID = 1L;
+    
     private static final float EPSILON = 0.00001f;
+    
     private long id = 0; //The vertex identification
 
     /**
@@ -77,7 +82,7 @@ public class Vertex implements Comparable, java.io.Serializable {
      */
     private Map<Scalar, Float> scalars = new HashMap<Scalar, Float>();
     
-    private ArrayList<String> titles = new ArrayList<String>();  //The titles associated with this vertex
+    private List<String> titles = new ArrayList<String>();  //The titles associated with this vertex
     
     private int indexTitle;
     
@@ -138,7 +143,8 @@ public class Vertex implements Comparable, java.io.Serializable {
      * @param globalsel Indicates if there is at least one selected vertex on 
      * the graph this vertex belongs to
      */
-    public void draw(BufferedImage image, Graphics2D g2, boolean highquality) {
+    public void draw(BufferedImage image, Graphics2D g2, boolean highquality)
+    {
         if (image != null) {
             g2 = (Graphics2D) image.getGraphics();
         }
@@ -151,30 +157,27 @@ public class Vertex implements Comparable, java.io.Serializable {
             if (this.valid) {
                 if (this.selected) {
                     g2.setStroke(new BasicStroke(4.0f));
-                    rayBase *= 1.5;
+                    rayBase *= 2.5;
 
                     g2.setColor(this.color);
-                    g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) -
-                            this.getRay(), this.getRay() * 2, this.getRay() * 2);
+                    g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) - this.getRay(), this.getRay() * 2, this.getRay() * 2);
 
                     g2.setColor(Color.DARK_GRAY);
-                    g2.drawOval(((int) this.x) - this.getRay(), ((int) this.y) -
-                            this.getRay(), this.getRay() * 2, this.getRay() * 2);
+                    g2.drawOval(((int) this.x) - this.getRay(), ((int) this.y) - this.getRay(), this.getRay() * 2, this.getRay() * 2);
 
                     g2.setStroke(new BasicStroke(1.0f));
-                    rayBase /= 1.5;
+                    rayBase /= 2.5;
                 } else {
-                    g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
+                	Color borderColor = new Color((int) (color.getRed() * 0.3), (int) (color.getBlue() * 0.3), (int) (color.getGreen() * 0.3), color.getAlpha()); 
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 
-                    g2.setColor(this.color);
-                    g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) -
-                            this.getRay(), this.getRay() * 2, this.getRay() * 2);
+                    g2.setColor(color);
+                    g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) - this.getRay(), this.getRay() * 2, this.getRay() * 2);
 
-                    g2.setColor(Color.BLACK);
-                    g2.drawOval(((int) this.x) - this.getRay(), ((int) this.y) -
-                            this.getRay(), this.getRay() * 2, this.getRay() * 2);
+                    g2.setColor(borderColor);
+                    g2.drawOval(((int) this.x) - this.getRay(), ((int) this.y) - this.getRay(), this.getRay() * 2, this.getRay() * 2);
 
-                    g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 1.0f));
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                 }
 
                 //show the label associated to this vertex
@@ -336,8 +339,10 @@ public class Vertex implements Comparable, java.io.Serializable {
         if (valid && colorTable != null) {
             if (scalar.getMin() >= 0.0f && scalar.getMax() <= 1.0f) {
                 color = colorTable.getColor(getScalar(scalar));
+                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getScalar(scalar), 1));
             } else {
                 color = colorTable.getColor(getNormalizedScalar(scalar));
+                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getNormalizedScalar(scalar), 1));
             }
         }
     }

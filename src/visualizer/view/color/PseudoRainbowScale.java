@@ -53,16 +53,12 @@ import java.awt.Color;
  *
  * @author Fernando Vieira Paulovich
  */
-public class PseudoRainbowScale extends ColorScale {
+public class PseudoRainbowScale extends ColorScale
+{
 
-    /**
-     * Creates a new instance of PseudoRainbowScale
-     */
-    public PseudoRainbowScale() {
-        colors = new Color[256];
-
+	private static final Color[] colors = new Color[256];
+	static {
         float dx = 0.8f;
-
         for (int i = 0; i < colors.length; i++) {
             float aux = (float) i / (colors.length - 1);
             float scaled = (6 - 2 * dx) * aux + dx;
@@ -74,5 +70,16 @@ public class PseudoRainbowScale extends ColorScale {
             colors[i] = new Color(r, g, b);
         }
     }
+    
+	@Override
+	public int getNumberColors()
+	{
+		return PseudoRainbowScale.colors.length;
+	}
 
+	@Override
+	public Color getIndexedColor(int i)
+	{
+		return PseudoRainbowScale.colors[i];
+	} 
 }

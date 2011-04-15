@@ -49,24 +49,27 @@ package visualizer.view.color;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class ColorScaleType implements Serializable {
+public class ColorScaleType implements Serializable
+{
+	private static ArrayList<ColorScaleType> types = new ArrayList<ColorScaleType>();
 
-    static {
-        ColorScaleType.types = new ArrayList<ColorScaleType>();
-    }
-
-    public static final ColorScaleType HEATEDOBJECTS = new ColorScaleType("Heated Objects Scalae");
+	public static final ColorScaleType HEATEDOBJECTS = new ColorScaleType("Heated Objects Scale");
     public static final ColorScaleType GRAYSCALE = new ColorScaleType("Gray Scale");
     public static final ColorScaleType LINEARGRAYSCALE = new ColorScaleType("Linear Gray Scale");
     public static final ColorScaleType LOCSSCALE = new ColorScaleType("Linearized Optimal Color Scale (LOCS)");
     public static final ColorScaleType RAINBOWCALE = new ColorScaleType("Rainbow Scale");
     public static final ColorScaleType PSEUDORAINBOWCALE = new ColorScaleType("Pseudo Rainbow Scale");
     public static final ColorScaleType CATEGORYSCALE = new ColorScaleType("Category Scale");
+    
+    public static final long serialVersionUID = 1L;
+    
+    private String name;
     
     /**
      * Creates a new instance of Encoding
@@ -76,7 +79,7 @@ public class ColorScaleType implements Serializable {
         ColorScaleType.types.add(this);
     }
 
-    public static ArrayList<ColorScaleType> getTypes() {
+    public static List<ColorScaleType> getTypes() {
         return ColorScaleType.types;
     }
 
@@ -109,8 +112,4 @@ public class ColorScaleType implements Serializable {
     public int hashCode() {
         return 29 + (this.name != null ? this.name.hashCode() : 0);
     }
-
-    public static final long serialVersionUID = 1L;
-    private static ArrayList<ColorScaleType> types;
-    private String name;
 }

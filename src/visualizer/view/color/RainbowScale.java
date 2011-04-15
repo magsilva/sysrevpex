@@ -58,12 +58,8 @@ import java.awt.Color;
  */
 public class RainbowScale extends ColorScale
 {
-    /**
-     * Creates a new instance of RainbowCS
-     */
-    public RainbowScale()
-    {
-        colors = new Color[256];
+	private static final Color[] colors = new Color[256];
+	static {
         colors[  0] = new Color(0, 0, 0);
         colors[  1] = new Color(45, 0, 36);
         colors[  2] = new Color(56, 0, 46);
@@ -321,4 +317,17 @@ public class RainbowScale extends ColorScale
         colors[254] = new Color(255, 253, 253);
         colors[255] = new Color(255, 255, 255);
     }
+	    
+	@Override
+	public int getNumberColors()
+	{
+		return RainbowScale.colors.length;
+	}
+
+	@Override
+	public Color getIndexedColor(int i)
+	{
+		return RainbowScale.colors[i];
+	} 
+
 }
