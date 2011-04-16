@@ -66,8 +66,11 @@ import visualizer.graph.Vertex;
 import visualizer.matrix.Matrix;
 import visualizer.textprocessing.transformation.MatrixTransformation;
 import visualizer.textprocessing.transformation.MatrixTransformationFactory;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.tools.apriori.ItemSet;
 import visualizer.tools.apriori.RuleSet;
@@ -108,7 +111,8 @@ public class RuleTopic extends Topic {
          //Get Matrix
         //should change to use inverted files
         if (tdata.getMatrix() == null) {
-            MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            // MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            BasicPreProcessor pp = PreProcessorFactory.getBasicInstance();
             pp.setCorpus(corpus);
             pp.setLowerCut(tdata.getLunhLowerCut());
             pp.setUpperCut(tdata.getLunhUpperCut());

@@ -49,6 +49,7 @@ package visualizer.view.tools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -268,7 +269,7 @@ public class MSTConnectivity extends javax.swing.JDialog {
                 if (this.distanceMatrixTextField.getText().trim().length() > 0) {
 
                     DistanceMatrix dmat = new DistanceMatrix(this.distanceMatrixTextField.getText());
-                    ArrayList<String> names = dmat.getIds();
+                    List<String> names = dmat.getIds();
 
                     this.connectivity = new Connectivity(PExConstants.MST);
                     MSTEdges mst = new MSTEdges(this.graph.getVertex(), names);

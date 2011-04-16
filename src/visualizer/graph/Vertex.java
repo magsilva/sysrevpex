@@ -339,10 +339,10 @@ public class Vertex implements Comparable, Serializable
         if (valid && colorTable != null) {
             if (scalar.getMin() >= 0.0f && scalar.getMax() <= 1.0f) {
                 color = colorTable.getColor(getScalar(scalar));
-                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getScalar(scalar), 1));
+                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getScalar(scalar), 50));
             } else {
                 color = colorTable.getColor(getNormalizedScalar(scalar));
-                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getNormalizedScalar(scalar), 1));
+                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) Math.max(color.getAlpha() * getNormalizedScalar(scalar), 50));
             }
         }
     }

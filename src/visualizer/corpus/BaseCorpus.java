@@ -49,6 +49,7 @@ address = {Washington, DC, USA},
 package visualizer.corpus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import visualizer.textprocessing.Ngram;
 
@@ -83,27 +84,23 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getFullContent(java.lang.String)
 	 */
-    @Override
 	public abstract String getFullContent(String id);
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getViewContent(java.lang.String)
 	 */
-    @Override
 	public abstract String getViewContent(String id);
 
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getNgrams(java.lang.String)
 	 */
-    @Override
-	public abstract ArrayList<Ngram> getNgrams(String id);
+	public abstract List<Ngram> getNgrams(String id);
 
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getCorpusNgrams()
 	 */
-    @Override
-	public abstract ArrayList<Ngram> getCorpusNgrams();
+	public abstract List<Ngram> getCorpusNgrams();
 
     /**
      * This method must be implemented to fill all attributes (urls, and 
@@ -114,7 +111,6 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getClassData()
 	 */
-    @Override
 	public float[] getClassData() {
         return this.cdata;
     }
@@ -122,8 +118,7 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getIds()
 	 */
-    @Override
-	public ArrayList<String> getIds() {
+	public List<String> getIds() {
         return this.ids;
     }
 
@@ -138,7 +133,6 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getNumberGrams()
 	 */
-    @Override
 	public int getNumberGrams() {
         return nrGrams;
     }
@@ -146,7 +140,6 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getTitle(int, java.lang.String)
 	 */
-    @Override
 	public String getTitle(int nrLines, String id)
     {       
         if (nrLines <= 0) {

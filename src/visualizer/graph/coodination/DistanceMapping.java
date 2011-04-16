@@ -57,8 +57,12 @@ import visualizer.corpus.Corpus;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.SparseMatrix;
 import visualizer.matrix.SparseVector;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
@@ -120,7 +124,8 @@ public class DistanceMapping extends Mapping
             //processing local corpus
             Corpus local_cp = local.getGraph().getCorpus();
 
-            MonoliticPreprocessor local_pp = new MonoliticPreprocessor();
+            // MonoliticPreprocessor local_pp = new MonoliticPreprocessor();
+            BasicPreProcessor local_pp = PreProcessorFactory.getBasicInstance();
             local_pp.setCorpus(local_cp);
             local_pp.setLowerCut(localPData.getLunhLowerCut());
             local_pp.setUpperCut(localPData.getLunhUpperCut());
@@ -136,7 +141,8 @@ public class DistanceMapping extends Mapping
             //processing outer corpus
             Corpus outer_cp = outer.getGraph().getCorpus();
 
-            MonoliticPreprocessor outer_pp = new MonoliticPreprocessor();
+            // MonoliticPreprocessor outer_pp = new MonoliticPreprocessor();
+            BasicPreProcessor outer_pp = PreProcessorFactory.getBasicInstance();
             outer_pp.setCorpus(outer_cp);
             outer_pp.setLowerCut(outerPData.getLunhLowerCut());
             outer_pp.setUpperCut(outerPData.getLunhUpperCut());

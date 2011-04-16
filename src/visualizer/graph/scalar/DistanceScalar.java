@@ -51,6 +51,8 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
@@ -120,7 +122,7 @@ public class DistanceScalar {
 
     public Scalar scalarFromDistanceMarix(String filename, Vertex vertex) throws IOException {
         DistanceMatrix dmat = new DistanceMatrix(filename);
-        ArrayList<String> filenames = dmat.getIds();
+        List<String> filenames = dmat.getIds();
 
         //defining the index
         int index = -1;
@@ -152,8 +154,7 @@ public class DistanceScalar {
         return this.createScalar(scalar, filenames, vertex);
     }
 
-    private Scalar createScalar(float[] scalar, ArrayList<String> ids,
-            Vertex v) throws IOException {
+    private Scalar createScalar(float[] scalar, List<String> ids, Vertex v) throws IOException {
         Scalar s = null;
 
         //Creating the new scalar inside the graph

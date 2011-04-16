@@ -92,7 +92,6 @@ public class ArrayStopword implements StopWord
 		return instance;
 	}
 
-	@Override
 	public void changeStopwordList(String stpFilename) throws java.io.IOException
 	{
 		readStopwordList(stpFilename);
@@ -103,7 +102,6 @@ public class ArrayStopword implements StopWord
 		return stopwords.iterator();
 	}
 
-	@Override
 	public void addStopword(String stopword)
 	{
 		stopwords.add(stopword);
@@ -111,20 +109,17 @@ public class ArrayStopword implements StopWord
 	}
 
 	
-	@Override
 	public void addStopwords(List<String> stopwords)
 	{
 		this.stopwords.addAll(stopwords);
 		Collections.sort(this.stopwords);
 	}
 
-	@Override
 	public void removeStopword(String stopword)
 	{
 		stopwords.remove(stopword);
 	}
 
-	@Override
 	public void saveStopwordsList(String filename) throws java.io.IOException
 	{
 		File file = new File(filename);
@@ -147,13 +142,11 @@ public class ArrayStopword implements StopWord
 		}
 	}
 
-	@Override
 	public String getFilename()
 	{
 		return file.getAbsolutePath();
 	}
 
-	@Override
 	public boolean isStopWord(String word)
 	{
 		return (Collections.binarySearch(stopwords, word) >= 0);

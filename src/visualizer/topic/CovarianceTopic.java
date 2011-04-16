@@ -61,8 +61,12 @@ import visualizer.graph.Graph;
 import visualizer.graph.Vertex;
 import visualizer.graph.scalar.Scalar;
 import visualizer.matrix.Matrix;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.util.PExConstants;
 
@@ -111,7 +115,8 @@ public class CovarianceTopic extends Topic {
                 lowercut = 20;
             }
 
-            MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            // MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            BasicPreProcessor pp = PreProcessorFactory.getBasicInstance();
             pp.setCorpus(corpus);
             pp.setLowerCut(lowercut);
             pp.setUpperCut(uppercut);

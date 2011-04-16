@@ -56,7 +56,11 @@ import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
 import visualizer.textprocessing.transformation.MatrixTransformation;
 import visualizer.textprocessing.transformation.MatrixTransformationFactory;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.wizard.ProjectionView;
 
 /**
@@ -81,7 +85,8 @@ public class MatrixFactory {
                 view.setStatus("Pre-processing the corpus... documents: " + size, 35);
             }
 
-            MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            // MonoliticPreprocessor pp = new MonoliticPreprocessor();
+            BasicPreProcessor pp = PreProcessorFactory.getBasicInstance();
             pp.setCorpus(cp);
             pp.setLowerCut(pdata.getLunhLowerCut());
             pp.setUpperCut(pdata.getLunhUpperCut());

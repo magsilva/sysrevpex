@@ -52,6 +52,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,20 @@ import visualizer.projection.GraphBuilder;
  * 
  * @author Fernando Vieira Paulovich
  */
-public class DistanceMatrix implements Cloneable {
+public class DistanceMatrix implements Cloneable
+{
+    protected List<String> ids;
+
+    protected float[] cdata;
+
+    protected float[][] distmatrix;
+
+    protected int nrElements;	//the number of points
+
+    protected float maxDistance;		//Maximun distance in the distmatrix
+
+    protected float minDistance;		//Minimum distance in the distmatrix
+
 
     public DistanceMatrix(String filename) throws IOException {
         this.load(filename);
@@ -363,22 +377,15 @@ public class DistanceMatrix implements Cloneable {
         return this.cdata;
     }
 
-    public ArrayList<String> getIds() {
-        return this.ids;
+    public List<String> getIds() {
+        return ids;
     }
 
     public void setClassData(float[] cdata) {
         this.cdata = cdata;
     }
 
-    public void setIds(ArrayList<String> ids) {
+    public void setIds(List<String> ids) {
         this.ids = ids;
     }
-
-    protected ArrayList<String> ids;
-    protected float[] cdata;
-    protected float[][] distmatrix;
-    protected int nrElements;	//the number of points
-    protected float maxDistance;		//Maximun distance in the distmatrix
-    protected float minDistance;		//Minimum distance in the distmatrix
 }

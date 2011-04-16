@@ -60,7 +60,7 @@ public class CompressorType implements Serializable {
         CompressorType.types = new ArrayList<CompressorType>();
     }
 
-    public static final CompressorType BZIP2 = new CompressorType("Bzip2");
+    public static final CompressorType ZIP = new CompressorType("Zip");
     public static final CompressorType GZIP = new CompressorType("Gzip");
     
     /** 

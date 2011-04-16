@@ -49,6 +49,7 @@ package visualizer.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.graph.Vertex;
@@ -60,9 +61,13 @@ import visualizer.projection.distance.Dissimilarity;
  *
  * @author Fernando Vieira Paulovich
  */
-public class MSTEdges {
+public class MSTEdges
+{
+    private List<Vertex> vertex;
+    
+    private List<String> names;
 
-    public MSTEdges(ArrayList<Vertex> vertex, ArrayList<String> names) {
+    public MSTEdges(List<Vertex> vertex, List<String> names) {
         this.vertex = vertex;
         this.names = names;
     }
@@ -126,6 +131,4 @@ public class MSTEdges {
         }
     }
 
-    private ArrayList<Vertex> vertex;
-    private ArrayList<String> names;
 }

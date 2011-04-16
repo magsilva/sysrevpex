@@ -354,7 +354,7 @@ public class ProjectionDistanceChoice extends WizardPanel {
             if (gzipRadioButton.isSelected()) {
                 pdata.setCompressorType(CompressorType.GZIP);
             } else {
-                pdata.setCompressorType(CompressorType.BZIP2);
+                pdata.setCompressorType(CompressorType.ZIP);
             }
         } else {
             DissimilarityType metrictype = (DissimilarityType) this.distanceComboBox.getSelectedItem();

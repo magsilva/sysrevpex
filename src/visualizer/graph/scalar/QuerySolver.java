@@ -51,6 +51,7 @@ import visualizer.graph.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 import visualizer.corpus.Corpus;
@@ -273,7 +274,7 @@ public class QuerySolver {
     protected float getWordFrequencyFromFile(String word, String filename) throws java.io.IOException {
         float frequency = 0.0f;
 
-        ArrayList<Ngram> ngrams = this.corpus.getNgrams(filename);
+        List<Ngram> ngrams = corpus.getNgrams(filename);
         for (Ngram n : ngrams) {
             if (n.ngram.indexOf(word.toLowerCase()) != -1) {
                 frequency += n.frequency;

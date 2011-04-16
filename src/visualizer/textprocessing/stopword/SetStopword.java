@@ -92,37 +92,31 @@ public class SetStopword implements StopWord
 		return instance;
 	}
 
-	@Override
 	public void changeStopwordList(String stpFilename) throws IOException 
 	{
 		readStopwordList(stpFilename);
 	}
 
-	@Override
 	public Iterator<String> iterator()
 	{
 		return stopwords.iterator();
 	}
 
-	@Override
 	public void addStopword(String stopword)
 	{
 		this.stopwords.add(stopword);
 	}
 	
-	@Override
 	public void addStopwords(List<String> stopwords)
 	{
 		this.stopwords.addAll(stopwords);
 	}
 
-	@Override
 	public void removeStopword(String stopword)
 	{
 		stopwords.remove(stopword);
 	}
 
-	@Override
 	public void saveStopwordsList(String filename) throws IOException
 	{
 		File file = new File(filename);
@@ -145,13 +139,11 @@ public class SetStopword implements StopWord
 		}
 	}
 
-	@Override
 	public String getFilename()
 	{
 		return file.getAbsolutePath();
 	}
 
-	@Override
 	public boolean isStopWord(String word)
 	{
 		return stopwords.contains(word);

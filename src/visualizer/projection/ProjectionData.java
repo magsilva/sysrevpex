@@ -92,7 +92,7 @@ public class ProjectionData
     private boolean useStartword = false;
     private boolean useWeight = false;
     //Used only when NCD is used
-    private CompressorType comptype = CompressorType.BZIP2;
+    private CompressorType comptype = CompressorType.ZIP;
     //Used only by projCus projectionTechnique
     private float clusterFactor = 4.5f;
     //Used only by LSP

@@ -53,6 +53,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -65,7 +66,17 @@ import visualizer.corpus.Corpus;
  *
  * @author Fernando Vieira Paulovich
  */
-public class NormalCompressDistance {
+public class NormalCompressDistance
+{
+    private Corpus corpus;
+
+    private List<String> filenames = new ArrayList<String>();
+    
+    private CompressorType comptype = CompressorType.ZIP;
+    
+    private List<Long> c = new ArrayList<Long>();
+    
+    private List<Float> ncdXX = new ArrayList<Float>();
 
     public NormalCompressDistance(CompressorType comptype, Corpus corpus) {
         this.comptype = comptype;
@@ -119,7 +130,7 @@ public class NormalCompressDistance {
             //zip.DeflaterOutputStream out=null;
             OutputStream out = null;
 
-            if (this.comptype == CompressorType.BZIP2) {
+            if (this.comptype == CompressorType.ZIP) {
                 out = this.compressUsingZip(dest);
             } else {
                 out = this.compressUsingGzip(dest);
@@ -146,7 +157,7 @@ public class NormalCompressDistance {
             //zip.DeflaterOutputStream out=null;
             OutputStream out = null;
 
-            if (this.comptype == CompressorType.BZIP2) {
+            if (this.comptype == CompressorType.ZIP) {
                 out = this.compressUsingZip(dest);
             } else {
                 out = this.compressUsingGzip(dest);
@@ -176,7 +187,7 @@ public class NormalCompressDistance {
                 //zip.DeflaterOutputStream out=null;
                 OutputStream out = null;
 
-                if (this.comptype == CompressorType.BZIP2) {
+                if (this.comptype == CompressorType.ZIP) {
                     out = this.compressUsingZip(dest);
                 } else {
                     out = this.compressUsingGzip(dest);
@@ -214,10 +225,4 @@ public class NormalCompressDistance {
         out.putNextEntry(entry);
         return out;
     }
-
-    private Corpus corpus;
-    private ArrayList<String> filenames = new ArrayList<String>();
-    private CompressorType comptype = CompressorType.BZIP2;
-    private ArrayList<Long> c = new ArrayList<Long>();
-    private ArrayList<Float> ncdXX = new ArrayList<Float>();
 }

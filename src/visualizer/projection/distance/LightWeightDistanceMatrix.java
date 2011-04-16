@@ -49,13 +49,19 @@ package visualizer.projection.distance;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import visualizer.matrix.Matrix;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class LightWeightDistanceMatrix extends DistanceMatrix {
+public class LightWeightDistanceMatrix extends DistanceMatrix
+{
+    private Matrix matrix;
+    
+    private Dissimilarity diss;
 
     public LightWeightDistanceMatrix(Matrix matrix, Dissimilarity diss) {
         this.matrix = matrix;
@@ -117,10 +123,7 @@ public class LightWeightDistanceMatrix extends DistanceMatrix {
     }
 
     @Override
-    public void setIds(ArrayList<String> ids) {
+    public void setIds(List<String> ids) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    private Matrix matrix;
-    private Dissimilarity diss;
 }

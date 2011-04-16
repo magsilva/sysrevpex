@@ -50,6 +50,7 @@ package visualizer.projection;
 import visualizer.matrix.MatrixFactory;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.corpus.CorpusFactory;
@@ -123,7 +124,7 @@ public class GraphBuilder {
 
     private void createGraph(ProjectionData pdata) throws IOException {
         float[] cdata = null;
-        ArrayList<String> ids = null;
+        List<String> ids = null;
         float[][] projection = null;
         Projection proj = null;
 

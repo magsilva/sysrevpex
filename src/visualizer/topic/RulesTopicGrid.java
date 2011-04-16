@@ -69,7 +69,11 @@ import visualizer.matrix.Matrix;
 import visualizer.projection.distance.Euclidean;
 import visualizer.textprocessing.transformation.MatrixTransformation;
 import visualizer.textprocessing.transformation.MatrixTransformationFactory;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.MonoliticPreprocessor;
+import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.tools.apriori.ItemSet;
 import visualizer.tools.apriori.ItemSetsWriter;
 import visualizer.tools.apriori.RuleSet;
@@ -122,7 +126,8 @@ public class RulesTopicGrid {
             //build VSM
             Corpus corpora = panel.getGraph().getCorpus();
             if (tdata.getMatrix() == null) {
-                MonoliticPreprocessor pp = new MonoliticPreprocessor();
+                // MonoliticPreprocessor pp = new MonoliticPreprocessor();
+                BasicPreProcessor pp = PreProcessorFactory.getBasicInstance();
                 pp.setCorpus(corpora);
                 pp.setLowerCut(tdata.getLunhLowerCut());
                 pp.setUpperCut(tdata.getLunhUpperCut());

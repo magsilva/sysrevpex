@@ -66,9 +66,10 @@ import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
+import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.textprocessing.PipelinePreprocessor;
+import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.projection.ProjectionData;
 import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
@@ -693,8 +694,8 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
             nrGrams = tdata.getNumberGrams();
         }
 
-        MonoliticPreprocessor pre = new MonoliticPreprocessor();
-        // PipelinePreprocessor pre = new PipelinePreprocessor();
+        // BasicPreProcessor pre = new MonoliticPreprocessor();
+        BasicPreProcessor pre = PreProcessorFactory.getBasicInstance();
         pre.setCorpus(corpus);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(-1);
@@ -734,17 +735,17 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
             nrGrams = tdata.getNumberGrams();
         }
 
-        if (this.lowerCutTextField.getText().trim().length() > 0) {
+        if (lowerCutTextField.getText().trim().length() > 0) {
             lowercut = Integer.parseInt(this.lowerCutTextField.getText());
         }
 
         int uppercut = -1;
-        if (this.upperCutTextField.getText().trim().length() > 0) {
+        if (upperCutTextField.getText().trim().length() > 0) {
             uppercut = Integer.parseInt(this.upperCutTextField.getText());
         }
 
-        MonoliticPreprocessor pre = new MonoliticPreprocessor();
-        // PipelinePreprocessor pre = new PipelinePreprocessor();
+        // BasicPreProcessor pre = new MonoliticPreprocessor();
+        BasicPreProcessor pre = PreProcessorFactory.getBasicInstance();
         pre.setCorpus(cp);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(uppercut);
@@ -836,8 +837,8 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
             uppercut = Integer.parseInt(this.upperCutTextField.getText());
         }
 
-        MonoliticPreprocessor pre = new MonoliticPreprocessor();
-        // PipelinePreprocessor pre = new PipelinePreprocessor();
+        // BasicPreProcessor pre = new MonoliticPreprocessor();
+        BasicPreProcessor pre = PreProcessorFactory.getBasicInstance();
         pre.setCorpus(cp);
         pre.setLowerCut(lowercut);
         pre.setUpperCut(uppercut);

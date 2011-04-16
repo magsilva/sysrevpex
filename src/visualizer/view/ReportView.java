@@ -516,7 +516,7 @@ public class ReportView extends javax.swing.JPanel {
                         if (pdata.getCompressorType() == CompressorType.GZIP) {
                             this.distanceTypeTextField.setText("NCD(gzip)");
                         } else {
-                            this.distanceTypeTextField.setText("NCD(bzip2)");
+                            this.distanceTypeTextField.setText("NCD(zip)");
                         }
                     }
                 }

@@ -93,7 +93,7 @@ public class NcdDistanceMatrixFactory {
             String url = "G:\\User\\users\\Documents\\FERNANDO\\Corpora\\cbr-ilp-ir.zip";
             Corpus corpus = new ZipCorpus(url, 1);
 
-            DistanceMatrix dmat = NcdDistanceMatrixFactory.getInstance(null, CompressorType.BZIP2, corpus);
+            DistanceMatrix dmat = NcdDistanceMatrixFactory.getInstance(null, CompressorType.ZIP, corpus);
             dmat.save(filename);
 
         } catch (IOException ex) {

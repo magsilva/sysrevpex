@@ -49,19 +49,14 @@ address = {Washington, DC, USA},
 package visualizer.textprocessing;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.ironiacorp.miner.BufferComponent;
 import com.ironiacorp.miner.ProducerAsListAdapter;
 import com.ironiacorp.miner.preprocessing.text.AdverbFilter;
-import com.ironiacorp.miner.preprocessing.text.DuplicatedPunctuationFilter;
-import com.ironiacorp.miner.preprocessing.text.DuplicatedWordFilter;
 import com.ironiacorp.miner.preprocessing.text.HyphenizationUndoer;
 import com.ironiacorp.miner.preprocessing.text.InvalidCharRemover;
 import com.ironiacorp.miner.preprocessing.text.LUCuts;
@@ -74,260 +69,48 @@ import com.ironiacorp.miner.preprocessing.text.stopword.StopWord;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopWordFilter;
 import com.ironiacorp.miner.preprocessing.text.stopword.exact.SetStopword;
 import com.ironiacorp.resource.Resource;
-import com.ironiacorp.resource.mining.UnformattedTextResource;
 
-import visualizer.corpus.Corpus;
-import visualizer.graph.Vertex;
-import visualizer.matrix.Matrix;
-import visualizer.matrix.SparseMatrix;
-import visualizer.matrix.SparseVector;
-import visualizer.textprocessing.stemmer.StemmerType;
+import visualizer.textprocessing.stemmer.Stemmer;
+import visualizer.textprocessing.stemmer.StemmerFactory;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class PipelinePreprocessor implements PreProcessor
+public class PipelinePreprocessor extends BasicPreProcessor
 {
-    private Corpus corpus;
-
-    private List<Ngram> ngrams;
-    
-    private StemmerType stemmer;
-    
-    private boolean useStopword;
-    
-    private boolean useStartword;
-    
-    private int numberGrams;
-    
-    private int lowerCut;
-    
-    private int upperCut;
-    
-    public Corpus getCorpus()
-	{
-		return corpus;
-	}
-
-	public void setCorpus(Corpus corpus)
-	{
-		this.corpus = corpus;
-	}
-
-	public StemmerType getStemmer()
-	{
-		return stemmer;
-	}
-
-	public void setStemmer(StemmerType stemmer)
-	{
-		this.stemmer = stemmer;
-	}
-
-	public boolean getStopword()
-	{
-		return useStopword;
-	}
-
-	public void setStopword(boolean useStopword)
-	{
-		this.useStopword = useStopword;
-	}
-	
-	public boolean getStartword()
-	{
-		return useStartword;
-	}
-	
-	public void setStartword(boolean useStartword)
-	{
-		this.useStartword = useStartword;
-	}
-
-	public int getNumberGrams()
-	{
-		return numberGrams;
-	}
-
-	public void setNumberGrams(int numberGrams)
-	{
-		this.numberGrams = numberGrams;
-	}
-
-	public int getLowerCut()
-	{
-		return lowerCut;
-	}
-
-	public void setLowerCut(int lowerCut)
-	{
-		this.lowerCut = lowerCut;
-	}
-
-	public int getUpperCut()
-	{
-		return upperCut;
-	}
-
-	public void setUpperCut(int upperCut)
-	{
-		this.upperCut = upperCut;
-	}
-
-	public void run()
-	{
-		// Store the ngrams present on the corpus
-        ngrams = getCorpusNgrams();
-	}
-	
-    public Matrix getMatrix()
-    {
-    	if (ngrams == null) {
-    		run();
-    	}
-        return getMatrix(corpus.getIds());
-    }
-
-    public Matrix getMatrixForSelection(Collection<Vertex> selected)
-    {
-    	ArrayList<String> urls = new ArrayList<String>();
-        for (Vertex v : selected) {
-            if (v.isValid()) {
-                urls.add(v.getUrl());
-            }
-        }
-
-        //store the ngrams present on the selected corpus
-        ngrams = getCorpusNgrams(urls);
-
-        return getMatrix(urls);
-    }
-
-    public List<Ngram> getNgrams() {
-    	if (ngrams == null) {
-    		run();
-    	}
-        return ngrams;
-    }
-
-    //If upperCut == -1 ths Luhn's upper cut-off will be ignored
-    private Matrix getMatrix(ArrayList<String> urls)  {
-        long start = System.currentTimeMillis();
-
-        Matrix matrix = new SparseMatrix();
-
-        //For each file
-        for (int i = 0; i < urls.size(); i++) {
-            float[] vector = new float[this.ngrams.size()];
-
-            //get the ngrams of the file
-            Map<String, Integer> docNgrams = getNgrams(urls.get(i));
-
-            //For each ngram in the corpus which occurs more than lowerCut
-            int j = 0;
-            for (Ngram n : this.ngrams) {
-                if (docNgrams.containsKey(n.ngram)) {
-                    vector[j] = docNgrams.get(n.ngram);
-                } else {
-                    vector[j] = 0.0f;
-                }
-
-                j++;
-            }
-
-            SparseVector spv = new SparseVector(vector, urls.get(i), corpus.getClassData()[i]);
-            matrix.addRow(spv);
-        }
-
-        //setting the attibutes
-        ArrayList<String> attr = new ArrayList<String>();
-        for (Ngram n : this.ngrams) {
-            attr.add(n.ngram);
-        }
-
-        matrix.setAttributes(attr);
-
-        long finish = System.currentTimeMillis();
-
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO,
-                "Document collection processing time: " + (finish - start) / 1000.0f + "s");
-
-        return matrix;
-    }
-
-    private List<Ngram> getCorpusNgrams(List<String> urls)
-    {
-        HashMap<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
-
-        for (String url : urls) {
-            Map<String, Integer> docNgrams = this.getNgrams(url);
-
-            for (String key : docNgrams.keySet()) {
-                if (corpusNgrams_aux.containsKey(key)) {
-                    corpusNgrams_aux.put(key, corpusNgrams_aux.get(key) + docNgrams.get(key));
-                } else {
-                    corpusNgrams_aux.put(key, docNgrams.get(key));
-                }
-            }
-        }
-
-        ArrayList<Ngram> ngrams_aux = new ArrayList<Ngram>();
-
-        for (String key : corpusNgrams_aux.keySet()) {
-            int freq = corpusNgrams_aux.get(key);
-
-            if (upperCut >= 0) {
-                if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
-                }
-            } else {
-                if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
-                }
-            }
-        }
-
-        Collections.sort(ngrams_aux);
-
-        return ngrams_aux;
-    }
-
-    private List<Ngram> getCorpusNgrams()
+    @Override
+    protected List<Ngram> getCorpusNgrams()
     {
         Map<String, Integer> corpusNgrams_aux = new HashMap<String, Integer>();
         List<Ngram> ngrams_aux = new ArrayList<Ngram>();
-    
+        Stemmer stemmer = StemmerFactory.getInstance(stemmerType);
         ProducerAsListAdapter inputComponent = new ProducerAsListAdapter();
         BufferComponent resultBuffer = setupPipeline(inputComponent);
+        
+        
         //For each ngram in the corpus
         for (Ngram n : corpus.getCorpusNgrams()) {
-        	inputComponent.addResource(new UnformattedTextResource(n.ngram));
+        	inputComponent.addResource(new PexNgramResource(n));
         }
         inputComponent.start();
         inputComponent.stop();
-        
         for (Resource resource : resultBuffer.getResources()) {
-        	UnformattedTextResource textResource = (UnformattedTextResource) resource;
-        	String text = textResource.getText();
-            if (corpusNgrams_aux.containsKey(text)) {
-            	int value = corpusNgrams_aux.get(text);
-            	corpusNgrams_aux.put(text, value + 1);
+        	Ngram ngram;
+       		PexNgramResource pexNgramResource = (PexNgramResource) resource;
+       		ngram = pexNgramResource.getNgram();
+        	String token = stemmer.stem(ngram.ngram);
+            if (corpusNgrams_aux.containsKey(token)) {
+            	corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + ngram.frequency);
             } else {
-            	corpusNgrams_aux.put(text, 1);
+            	corpusNgrams_aux.put(token, ngram.frequency);
             }
         }
 
         for (String key : corpusNgrams_aux.keySet()) {
             int freq = corpusNgrams_aux.get(key);
-            if (upperCut >= 0) {
-                if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
-                }
-            } else {
-                if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
-                }
+            if (freq >= lowerCut && freq <= upperCut) {
+                ngrams_aux.add(new Ngram(key, freq));
             }
         }
         
@@ -335,29 +118,32 @@ public class PipelinePreprocessor implements PreProcessor
 
         return ngrams_aux;
     }
-
-    private Map<String, Integer> getNgrams(String url)
+    
+    @Override
+    protected Map<String, Integer> getNgrams(String url)
     {
     	Map<String, Integer> ngrams_aux = new HashMap<String, Integer>();
-        
+        Stemmer stemmer = StemmerFactory.getInstance(stemmerType);
         ProducerAsListAdapter inputComponent = new ProducerAsListAdapter();
         BufferComponent resultBuffer = setupPipeline(inputComponent);
         //For each ngram in the corpus
-        for (Ngram n : corpus.getNgrams(url)) {
-        	inputComponent.addResource(new UnformattedTextResource(n.ngram));
-        }
+        for (Ngram ngram : corpus.getNgrams(url)) {
+        	inputComponent.addResource(new PexNgramResource(ngram));
+         }
         inputComponent.start();
         inputComponent.stop();
         
         for (Resource resource : resultBuffer.getResources()) {
-        	UnformattedTextResource textResource = (UnformattedTextResource) resource;
-        	String text = textResource.getText();
-            if (ngrams_aux.containsKey(text)) {
-            	int value = ngrams_aux.get(text);
-            	ngrams_aux.put(text, value++);
+        	Ngram ngram;
+       		PexNgramResource pexNgramResource = (PexNgramResource) resource;
+       		ngram = pexNgramResource.getNgram();
+        	String token = stemmer.stem(ngram.ngram);
+            if (ngrams_aux.containsKey(token)) {
+            	ngrams_aux.put(token, ngrams_aux.get(token) + ngram.frequency);
             } else {
-            	ngrams_aux.put(text, 1);
+            	ngrams_aux.put(token, ngram.frequency);
             }
+
         }
         
         return ngrams_aux;      
@@ -366,7 +152,6 @@ public class PipelinePreprocessor implements PreProcessor
     private BufferComponent setupPipeline(ProducerAsListAdapter inputComponent)
     {
 		// What is left is plain text
-		HyphenizationUndoer hyphenizationUndoer = new HyphenizationUndoer();
 		LowerCaseTransformer lowercaseTransformer = new LowerCaseTransformer();
 		NumberInWordRemover numberRemover = new NumberInWordRemover();
 		AdverbFilter adverbFilter = new AdverbFilter();
@@ -377,49 +162,38 @@ public class PipelinePreprocessor implements PreProcessor
 		WhiteSpaceFilter whitespaceWordFilter2 = new WhiteSpaceFilter();
 		InvalidCharRemover invalidCharRemover = new InvalidCharRemover();
 		LUCuts luCutWordFilter = new LUCuts();
-		DuplicatedWordFilter duplicatedWordFilter = new DuplicatedWordFilter();
-		DuplicatedPunctuationFilter duplicatedPunctuationFilter = new DuplicatedPunctuationFilter();
 		PunctuationFilter punctuationFilter = new PunctuationFilter();
 		WordSingularizer wordSingularizer = new WordSingularizer();
 		BufferComponent bufferComponent = new BufferComponent();
 
-		inputComponent.setConsumer(hyphenizationUndoer);
-		
-		hyphenizationUndoer.setConsumer(lowercaseTransformer);
+		inputComponent.setConsumer(lowercaseTransformer);
 		
 		lowercaseTransformer.setConsumer(numberRemover);
 
-		numberRemover.setConsumer(adverbFilter);
+		numberRemover.setConsumer(invalidCharRemover);
 
-		adverbFilter.setConsumer(whitespaceWordFilter0);
-		
-		if (useStopword) {
-			whitespaceWordFilter0.setConsumer(stopwordFilter);
-			stopwordFilter.setStopWord(stopwords);
-			stopwordFilter.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
-			stopwordFilter.setConsumer(invalidCharRemover);
-		} else {
-			whitespaceWordFilter0.setConsumer(invalidCharRemover);
-		}
-		
 		invalidCharRemover.setConsumer(whitespaceWordFilter1);
 		
-		whitespaceWordFilter1.setConsumer(luCutWordFilter);
-
-		luCutWordFilter.setLowCut(2);
-		luCutWordFilter.setUpCut(100);
-		luCutWordFilter.setIgnorePunctuation(true);
-		luCutWordFilter.setConsumer(duplicatedWordFilter);
-
-		duplicatedWordFilter.setConsumer(duplicatedPunctuationFilter);
-		
-		duplicatedPunctuationFilter.setConsumer(punctuationFilter);
+		whitespaceWordFilter1.setConsumer(punctuationFilter);
 		
 		punctuationFilter.setConsumer(whitespaceWordFilter2);
 		
 		whitespaceWordFilter2.setConsumer(wordSingularizer);
 		
-		wordSingularizer.setConsumer(bufferComponent);
+		wordSingularizer.setConsumer(luCutWordFilter);
+
+		luCutWordFilter.setLowCut(2);
+		luCutWordFilter.setUpCut(100);
+		luCutWordFilter.setConsumer(adverbFilter);
+		
+		if (useStopword) {
+			adverbFilter.setConsumer(stopwordFilter);
+			stopwordFilter.setStopWord(stopwords);
+			stopwordFilter.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+			stopwordFilter.setConsumer(bufferComponent);
+		} else {
+			adverbFilter.setConsumer(bufferComponent);
+		}
 		
 		return bufferComponent;
     }

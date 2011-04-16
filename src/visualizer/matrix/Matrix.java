@@ -49,6 +49,7 @@ package visualizer.matrix;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +57,13 @@ import java.util.logging.Logger;
  *
  * @author Fernando Vieira Paulovich
  */
-public abstract class Matrix {
+public abstract class Matrix
+{
+    protected int dimensions;
+    
+    protected List<String> attributes = new ArrayList<String>();
+    
+    protected List<Vector> rows = new ArrayList<Vector>();
 
     public abstract void load(String filename) throws IOException;
 
@@ -126,11 +133,11 @@ public abstract class Matrix {
         return matrix;
     }
 
-    public ArrayList<String> getAttributes() {
+    public List<String> getAttributes() {
         return this.attributes;
     }
 
-    public void setAttributes(ArrayList<String> attributes) {
+    public void setAttributes(List<String> attributes) {
         assert (rows.isEmpty() || this.dimensions == attributes.size()) :
                 "ERROR: attributes and vectors of different sizes!";
 
@@ -163,7 +170,7 @@ public abstract class Matrix {
         SparseMatrix clone = new SparseMatrix();
         clone.dimensions = this.dimensions;
 
-        for (String attr : this.attributes) {
+        for (String attr : attributes) {
             clone.attributes.add(attr);
         }
 
@@ -173,8 +180,4 @@ public abstract class Matrix {
 
         return clone;
     }
-
-    protected int dimensions;
-    protected ArrayList<String> attributes = new ArrayList<String>();
-    protected ArrayList<Vector> rows = new ArrayList<Vector>();
 }
