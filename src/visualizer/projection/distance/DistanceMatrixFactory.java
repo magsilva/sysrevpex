@@ -55,6 +55,7 @@ import visualizer.corpus.Corpus;
 import visualizer.matrix.DenseMatrix;
 import visualizer.matrix.DenseVector;
 import visualizer.matrix.Matrix;
+import visualizer.matrix.MatrixFactory;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.SourceType;
 import visualizer.projection.distance.kolmogorov.NcdDistanceMatrixFactory;
@@ -86,6 +87,8 @@ public class DistanceMatrixFactory {
             }
 
             dmat = new DistanceMatrix(pdata.getSourceFile());
+        } else if (pdata.getSourceType().equals(SourceType.CORPUS)) {
+        	dmat = new DistanceMatrix(MatrixFactory.getInstance(view, pdata), DissimilarityFactory.getInstance(pdata.getDissimilarityType()));
         }
 
         Logger.getLogger(DistanceMatrixFactory.class.getName()).log(Level.INFO,

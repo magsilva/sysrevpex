@@ -47,13 +47,39 @@ address = {Washington, DC, USA},
 
 package visualizer.datamining.dataanalysis;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
+
 import visualizer.matrix.Matrix;
 import visualizer.matrix.MatrixFactory;
 import visualizer.projection.distance.DistanceMatrix;
@@ -72,17 +98,48 @@ import visualizer.util.filefilter.PRJandXMLFilter;
  *
  * @author  Fernando Vieira Paulovich
  */
-public class NeighborhoodPreservationView extends javax.swing.JDialog {
+public class NeighborhoodPreservationView extends JDialog
+{
 
-    /** Creates new form NeighborhoodPreservationView */
-    private NeighborhoodPreservationView(java.awt.Frame parent) {
+    private DefaultTableModel projTableModel;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton addButton;
+    private JPanel buttonPanel;
+    private JPanel chooseDistanceTypePanel2;
+    private JButton closeButton;
+    private JPanel dataPanel;
+    private JComboBox distanceComboBox;
+    private JButton distanceMatrixButton;
+    private JRadioButton distanceMatrixRadioButton;
+    private JTextField distanceMatrixTextField;
+    private JButton generateButton;
+    private JPanel multiDataPanel;
+    private JLabel nrNeighborsLabel;
+    private JPanel nrNeighborsPanel;
+    private JTextField nrNeighborsTextField;
+    private JButton pointsButton;
+    private JRadioButton pointsRadioButton;
+    private JTextField pointsTextField;
+    private JPanel projButtonPanel;
+    private JPanel projPanel;
+    private JScrollPane projScrollPane;
+    private JTable projTable;
+    private JButton removeButton;
+    private ButtonGroup sourceButtonGroup;
+    private JPanel sourcePanel;
+    // End of variables declaration//GEN-END:variables
+    
+    /**
+     * Creates new form NeighborhoodPreservationView
+     */
+    private NeighborhoodPreservationView(Frame parent) {
         super(parent);
         initComponents();
         initModels();
 
         for (DissimilarityType disstype : DissimilarityType.getTypes()) {
             if (disstype != DissimilarityType.KOLMOGOROV && disstype != DissimilarityType.NONE) {
-                this.distanceComboBox.addItem(disstype);
+                distanceComboBox.addItem(disstype);
             }
         }
 
@@ -96,164 +153,163 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+        GridBagConstraints gridBagConstraints;
 
-        sourceButtonGroup = new javax.swing.ButtonGroup();
-        buttonPanel = new javax.swing.JPanel();
-        generateButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
-        dataPanel = new javax.swing.JPanel();
-        multiDataPanel = new javax.swing.JPanel();
-        chooseDistanceTypePanel2 = new javax.swing.JPanel();
-        distanceComboBox = new javax.swing.JComboBox();
-        sourcePanel = new javax.swing.JPanel();
-        pointsRadioButton = new javax.swing.JRadioButton();
-        distanceMatrixRadioButton = new javax.swing.JRadioButton();
-        distanceMatrixTextField = new javax.swing.JTextField();
-        pointsTextField = new javax.swing.JTextField();
-        pointsButton = new javax.swing.JButton();
-        distanceMatrixButton = new javax.swing.JButton();
-        nrNeighborsPanel = new javax.swing.JPanel();
-        nrNeighborsLabel = new javax.swing.JLabel();
-        nrNeighborsTextField = new javax.swing.JTextField();
-        projPanel = new javax.swing.JPanel();
-        projScrollPane = new javax.swing.JScrollPane();
-        projTable = new javax.swing.JTable();
-        projButtonPanel = new javax.swing.JPanel();
-        addButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
+        sourceButtonGroup = new ButtonGroup();
+        buttonPanel = new JPanel();
+        generateButton = new JButton();
+        closeButton = new JButton();
+        dataPanel = new JPanel();
+        multiDataPanel = new JPanel();
+        chooseDistanceTypePanel2 = new JPanel();
+        distanceComboBox = new JComboBox();
+        sourcePanel = new JPanel();
+        pointsRadioButton = new JRadioButton();
+        distanceMatrixRadioButton = new JRadioButton();
+        distanceMatrixTextField = new JTextField();
+        pointsTextField = new JTextField();
+        pointsButton = new JButton();
+        distanceMatrixButton = new JButton();
+        nrNeighborsPanel = new JPanel();
+        nrNeighborsLabel = new JLabel();
+        nrNeighborsTextField = new JTextField();
+        projPanel = new JPanel();
+        projScrollPane = new JScrollPane();
+        projTable = new JTable();
+        projButtonPanel = new JPanel();
+        addButton = new JButton();
+        removeButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Neighborhood Preservation");
 
         generateButton.setText("Generate");
-        generateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        generateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 generateButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(generateButton);
 
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(closeButton);
 
-        getContentPane().add(buttonPanel, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
 
-        dataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Data"));
-        dataPanel.setLayout(new java.awt.BorderLayout(5, 5));
+        dataPanel.setBorder(BorderFactory.createTitledBorder("Data"));
+        dataPanel.setLayout(new BorderLayout(5, 5));
 
-        multiDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Multidimensional Data"));
-        multiDataPanel.setLayout(new java.awt.GridBagLayout());
+        multiDataPanel.setBorder(BorderFactory.createTitledBorder("Multidimensional Data"));
+        multiDataPanel.setLayout(new GridBagLayout());
 
-        chooseDistanceTypePanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Choose the Distance Type"));
-        chooseDistanceTypePanel2.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 3);
+        chooseDistanceTypePanel2.setBorder(BorderFactory.createTitledBorder("Choose the Distance Type"));
+        chooseDistanceTypePanel2.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 0, 3, 3);
         chooseDistanceTypePanel2.add(distanceComboBox, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         multiDataPanel.add(chooseDistanceTypePanel2, gridBagConstraints);
 
-        sourcePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source File"));
-        sourcePanel.setLayout(new java.awt.GridBagLayout());
+        sourcePanel.setBorder(BorderFactory.createTitledBorder("Source File"));
+        sourcePanel.setLayout(new GridBagLayout());
 
         sourceButtonGroup.add(pointsRadioButton);
-        pointsRadioButton.setSelected(true);
         pointsRadioButton.setText("Points File");
-        pointsRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        pointsRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        pointsRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        pointsRadioButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        pointsRadioButton.setMargin(new Insets(0, 0, 0, 0));
+        pointsRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 pointsRadioButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(pointsRadioButton, gridBagConstraints);
 
         sourceButtonGroup.add(distanceMatrixRadioButton);
         distanceMatrixRadioButton.setText("Distance File");
-        distanceMatrixRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        distanceMatrixRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        distanceMatrixRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        distanceMatrixRadioButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        distanceMatrixRadioButton.setMargin(new Insets(0, 0, 0, 0));
+        distanceMatrixRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 distanceMatrixRadioButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(distanceMatrixRadioButton, gridBagConstraints);
 
         distanceMatrixTextField.setColumns(35);
         distanceMatrixTextField.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(distanceMatrixTextField, gridBagConstraints);
 
         pointsTextField.setColumns(35);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(pointsTextField, gridBagConstraints);
 
         pointsButton.setText("Search...");
-        pointsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        pointsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 pointsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(pointsButton, gridBagConstraints);
 
         distanceMatrixButton.setText("Search...");
         distanceMatrixButton.setEnabled(false);
-        distanceMatrixButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        distanceMatrixButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 distanceMatrixButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         sourcePanel.add(distanceMatrixButton, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
         multiDataPanel.add(sourcePanel, gridBagConstraints);
 
-        nrNeighborsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        nrNeighborsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         nrNeighborsLabel.setText("Number of neighbors");
         nrNeighborsPanel.add(nrNeighborsLabel);
@@ -262,52 +318,53 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
         nrNeighborsTextField.setText("30");
         nrNeighborsPanel.add(nrNeighborsTextField);
 
-        multiDataPanel.add(nrNeighborsPanel, new java.awt.GridBagConstraints());
+        multiDataPanel.add(nrNeighborsPanel, new GridBagConstraints());
 
-        dataPanel.add(multiDataPanel, java.awt.BorderLayout.SOUTH);
+        dataPanel.add(multiDataPanel, BorderLayout.SOUTH);
 
-        projPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Projections"));
-        projPanel.setLayout(new java.awt.BorderLayout());
+        projPanel.setBorder(BorderFactory.createTitledBorder("Projections"));
+        projPanel.setLayout(new BorderLayout());
 
-        projScrollPane.setPreferredSize(new java.awt.Dimension(452, 250));
+        projScrollPane.setPreferredSize(new Dimension(452, 250));
         projScrollPane.setViewportView(projTable);
 
-        projPanel.add(projScrollPane, java.awt.BorderLayout.CENTER);
+        projPanel.add(projScrollPane, BorderLayout.CENTER);
 
-        projButtonPanel.setLayout(new java.awt.GridBagLayout());
+        projButtonPanel.setLayout(new GridBagLayout());
 
         addButton.setText("Add");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 addButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         projButtonPanel.add(addButton, gridBagConstraints);
 
         removeButton.setText("Remove");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 removeButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
         projButtonPanel.add(removeButton, gridBagConstraints);
 
-        projPanel.add(projButtonPanel, java.awt.BorderLayout.LINE_END);
+        projPanel.add(projButtonPanel, BorderLayout.LINE_END);
 
-        dataPanel.add(projPanel, java.awt.BorderLayout.CENTER);
+        dataPanel.add(projPanel, BorderLayout.CENTER);
 
-        getContentPane().add(dataPanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(dataPanel, BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+    
+    private void generateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
         if (this.projTable.getRowCount() > 0) {
             ArrayList<NeighborhoodPreservation.Serie> series = new ArrayList<NeighborhoodPreservation.Serie>();
 
@@ -344,8 +401,7 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
                         Logger.getLogger(NeighborhoodPreservationView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "A points file must be selected.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "A points file must be selected.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else if (this.distanceMatrixRadioButton.isSelected()) {
                 if (this.distanceMatrixTextField.getText().trim().length() > 0) {
@@ -362,33 +418,29 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
                         Logger.getLogger(NeighborhoodPreservationView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "A distance matrix file must be selected.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "A distance matrix file must be selected.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "At least one projection must be added.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "At least one projection must be added.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_generateButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_closeButtonActionPerformed
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+    private void addButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         int result = OpenDialog.showOpenDialog(new PRJandXMLFilter(), this);
 
-        if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
+        if (result == JFileChooser.APPROVE_OPTION) {
             String filename = OpenDialog.getFilename();
-            String description = filename.substring(filename.lastIndexOf("\\") + 1,
-                    filename.lastIndexOf("."));
-
-            this.projTableModel.addRow(new String[]{description, filename});
+            String description = filename.substring(filename.lastIndexOf("\\") + 1, filename.lastIndexOf("."));
+            projTableModel.addRow(new String[]{description, filename});
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+    private void removeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         int index = this.projTable.getSelectedRow();
 
         if (index > -1) {
@@ -396,29 +448,25 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
-    private void pointsRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pointsRadioButtonActionPerformed
-        this.distanceMatrixButton.setEnabled(false);
-        this.distanceMatrixTextField.setEnabled(false);
-
-        this.pointsButton.setEnabled(true);
+    private void pointsRadioButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pointsRadioButtonActionPerformed
+    	this.pointsButton.setEnabled(true);
         this.pointsTextField.setEnabled(true);
 
-        this.distanceMatrixTextField.setText("");
-        this.distanceComboBox.setEnabled(true);
+        this.distanceComboBox.setEnabled(false);
+        this.distanceMatrixButton.setEnabled(false);
+        this.distanceMatrixTextField.setEnabled(false);
     }//GEN-LAST:event_pointsRadioButtonActionPerformed
 
-    private void distanceMatrixRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_distanceMatrixRadioButtonActionPerformed
+    private void distanceMatrixRadioButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_distanceMatrixRadioButtonActionPerformed
+        this.distanceComboBox.setEnabled(true);
         this.distanceMatrixButton.setEnabled(true);
         this.distanceMatrixTextField.setEnabled(true);
 
         this.pointsButton.setEnabled(false);
         this.pointsTextField.setEnabled(false);
-
-        this.pointsTextField.setText("");
-        this.distanceComboBox.setEnabled(false);
     }//GEN-LAST:event_distanceMatrixRadioButtonActionPerformed
 
-    private void pointsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pointsButtonActionPerformed
+    private void pointsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pointsButtonActionPerformed
         int result = OpenDialog.showOpenDialog(new DATAFilter(), this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -427,7 +475,7 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_pointsButtonActionPerformed
 
-    private void distanceMatrixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_distanceMatrixButtonActionPerformed
+    private void distanceMatrixButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_distanceMatrixButtonActionPerformed
         int result = OpenDialog.showOpenDialog(new DMATFilter(), this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -436,7 +484,7 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_distanceMatrixButtonActionPerformed
 
-    public static NeighborhoodPreservationView getInstance(javax.swing.JFrame parent) {
+    public static NeighborhoodPreservationView getInstance(JFrame parent) {
         return new NeighborhoodPreservationView(parent);
     }
 
@@ -450,32 +498,4 @@ public class NeighborhoodPreservationView extends javax.swing.JDialog {
         String[] titles = new String[]{"Description", "File name"};
         this.projTableModel = new DefaultTableModel(null, titles);
     }
-
-    private DefaultTableModel projTableModel;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addButton;
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JPanel chooseDistanceTypePanel2;
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel dataPanel;
-    private javax.swing.JComboBox distanceComboBox;
-    private javax.swing.JButton distanceMatrixButton;
-    private javax.swing.JRadioButton distanceMatrixRadioButton;
-    private javax.swing.JTextField distanceMatrixTextField;
-    private javax.swing.JButton generateButton;
-    private javax.swing.JPanel multiDataPanel;
-    private javax.swing.JLabel nrNeighborsLabel;
-    private javax.swing.JPanel nrNeighborsPanel;
-    private javax.swing.JTextField nrNeighborsTextField;
-    private javax.swing.JButton pointsButton;
-    private javax.swing.JRadioButton pointsRadioButton;
-    private javax.swing.JTextField pointsTextField;
-    private javax.swing.JPanel projButtonPanel;
-    private javax.swing.JPanel projPanel;
-    private javax.swing.JScrollPane projScrollPane;
-    private javax.swing.JTable projTable;
-    private javax.swing.JButton removeButton;
-    private javax.swing.ButtonGroup sourceButtonGroup;
-    private javax.swing.JPanel sourcePanel;
-    // End of variables declaration//GEN-END:variables
 }

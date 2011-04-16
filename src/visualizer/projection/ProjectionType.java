@@ -67,13 +67,13 @@ public class ProjectionType implements Serializable {
     private boolean attributesNeeded;
 	
     public static final ProjectionType IDMAP = new ProjectionType("Interactive Document Map (IDMAP)", true, true, false);
-    public static final ProjectionType LSP = new ProjectionType("Least Square Projection (LSP)", true, false, false);
-    public static final ProjectionType PLSP = new ProjectionType("Piecewise Least Square Projection (P-LSP)", true, false, true);
-    public static final ProjectionType PROJCLUS = new ProjectionType("Projection by Clustering (ProjCus)", true, false, false);
+    public static final ProjectionType LSP = new ProjectionType("Least Square Projection (LSP)", true, true, false);
+    public static final ProjectionType PLSP = new ProjectionType("Piecewise Least Square Projection (P-LSP)", true, true, true);
+    public static final ProjectionType PROJCLUS = new ProjectionType("Projection by Clustering (ProjCus)", true, true, false);
     public static final ProjectionType NJ = new ProjectionType("Neighbor Joining (NJ)", true, true, false);
     public static final ProjectionType SAMMON = new ProjectionType("Sammon's Mapping", true, true, false);
     public static final ProjectionType PCA = new ProjectionType("Principal Components Analysis (PCA)", false, false, true);
-    public static final ProjectionType LLE = new ProjectionType("Local Linear Embedding (LLE)", true, false, true);
+    public static final ProjectionType LLE = new ProjectionType("Local Linear Embedding (LLE)", true, true, true);
     public static final ProjectionType CLASSICAL_SCALING = new ProjectionType("Classical Scaling", true, true, false);
     public static final ProjectionType ISOMAP = new ProjectionType("Isometric Feature Mapping (ISOMAP)", true, true, false);
     public static final ProjectionType MST = new ProjectionType("Minimum Spanning Tree Projection (MSTProj)", true, true, false);

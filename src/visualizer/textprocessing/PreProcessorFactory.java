@@ -2,7 +2,7 @@ package visualizer.textprocessing;
 
 public class PreProcessorFactory
 {
-	static final Class<? extends PreProcessor> DEFAULT_PREPROCESSOR = MonoliticPreprocessor.class;
+	static final Class<? extends PreProcessor> DEFAULT_PREPROCESSOR = PipelinePreprocessor.class;
 	
 	public static PreProcessor getInstance()
 	{

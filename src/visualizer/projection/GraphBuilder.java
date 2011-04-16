@@ -128,8 +128,7 @@ public class GraphBuilder {
         float[][] projection = null;
         Projection proj = null;
 
-        if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX ||
-                pdata.getDissimilarityType() == DissimilarityType.KOLMOGOROV) {
+        if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX || pdata.getDissimilarityType() == DissimilarityType.KOLMOGOROV) {
 
             //projecting using distance matrix
             dmat = DistanceMatrixFactory.getInstance(view, pdata);
@@ -157,16 +156,14 @@ public class GraphBuilder {
             //dimensionality reduction
             if (pdata.getDimensionReductionType() != DimensionalityReductionType.NONE) {
                 if (matrix.getDimensions() > pdata.getTargetDimension()) {
-                    this.view.setStatus("Reducing the dimensions to " +
-                            pdata.getTargetDimension() + " dimensions...", 10);
-
+                    this.view.setStatus("Reducing the dimensions to " +  pdata.getTargetDimension() + " dimensions...", 10);
                     DimensionalityReduction dr = DimensionalityReductionFactory.getInstance(pdata.getDimensionReductionType(), pdata.getTargetDimension());
                     matrix = dr.reduce(matrix, pdata.getDissimilarityType());
                 }
             }
 
             //saving the data
-            this.saveData(pdata, null, matrix);
+            this.saveData(pdata, dmat, matrix);
 
             proj = ProjectionFactory.getInstance(pdata.getProjectionType());
             projection = proj.project(matrix, pdata, view);
@@ -174,7 +171,11 @@ public class GraphBuilder {
             pdata.setNumberObjects(matrix.getRowCount());
             pdata.setNumberDimensions(matrix.getDimensions());
 
+            
             dmat = proj.getDistanceMatrix();
+            if (dmat == null) {
+            	dmat = DistanceMatrixFactory.getInstance(view, pdata);
+            }
 
             //saving the data
             this.saveData(pdata, dmat, null);
