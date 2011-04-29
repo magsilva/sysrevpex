@@ -96,9 +96,8 @@ public class PipelinePreprocessor extends BasicPreProcessor
         inputComponent.start();
         inputComponent.stop();
         for (Resource resource : resultBuffer.getResources()) {
-        	Ngram ngram;
-       		PexNgramResource pexNgramResource = (PexNgramResource) resource;
-       		ngram = pexNgramResource.getNgram();
+        	PexNgramResource pexNgramResource = (PexNgramResource) resource;
+       		Ngram ngram = pexNgramResource.getNgram();
         	String token = stemmer.stem(ngram.ngram);
             if (corpusNgrams_aux.containsKey(token)) {
             	corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + ngram.frequency);
@@ -155,11 +154,12 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		LowerCaseTransformer lowercaseTransformer = new LowerCaseTransformer();
 		NumberInWordRemover numberRemover = new NumberInWordRemover();
 		AdverbFilter adverbFilter = new AdverbFilter();
-		StopWordFilter stopwordFilter = new StopWordFilter();
+		StopWordFilter stopwordFilter1 = new StopWordFilter();
+		StopWordFilter stopwordFilter2 = new StopWordFilter();
 		StopWord stopwords = new SetStopword();
-		WhiteSpaceFilter whitespaceWordFilter0 = new WhiteSpaceFilter();
 		WhiteSpaceFilter whitespaceWordFilter1 = new WhiteSpaceFilter();
 		WhiteSpaceFilter whitespaceWordFilter2 = new WhiteSpaceFilter();
+		WhiteSpaceFilter whitespaceWordFilter3 = new WhiteSpaceFilter();
 		InvalidCharRemover invalidCharRemover = new InvalidCharRemover();
 		LUCuts luCutWordFilter = new LUCuts();
 		PunctuationFilter punctuationFilter = new PunctuationFilter();
@@ -178,19 +178,28 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		
 		punctuationFilter.setConsumer(whitespaceWordFilter2);
 		
-		whitespaceWordFilter2.setConsumer(wordSingularizer);
+		if (useStopword) {
+			whitespaceWordFilter2.setConsumer(stopwordFilter1);
+			stopwordFilter1.setStopWord(stopwords);
+			stopwordFilter1.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+			stopwordFilter1.setConsumer(wordSingularizer);
+		} else {
+			whitespaceWordFilter2.setConsumer(wordSingularizer);
+		}
+			
+		wordSingularizer.setConsumer(whitespaceWordFilter3);
 		
-		wordSingularizer.setConsumer(luCutWordFilter);
+		whitespaceWordFilter3.setConsumer(luCutWordFilter);
 
 		luCutWordFilter.setLowCut(2);
 		luCutWordFilter.setUpCut(100);
 		luCutWordFilter.setConsumer(adverbFilter);
 		
 		if (useStopword) {
-			adverbFilter.setConsumer(stopwordFilter);
-			stopwordFilter.setStopWord(stopwords);
-			stopwordFilter.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
-			stopwordFilter.setConsumer(bufferComponent);
+			adverbFilter.setConsumer(stopwordFilter2);
+			stopwordFilter2.setStopWord(stopwords);
+			stopwordFilter2.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+			stopwordFilter2.setConsumer(bufferComponent);
 		} else {
 			adverbFilter.setConsumer(bufferComponent);
 		}

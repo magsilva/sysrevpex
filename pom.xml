@@ -5,7 +5,7 @@
 
 	<groupId>vicg</groupId>
 	<artifactId>pex</artifactId>
-	<version>1.7.0</version>
+	<version>1.7.1</version>
 	<packaging>jar</packaging>
 
 	<name>Projection Explorer (PEx)</name>
@@ -104,7 +104,7 @@
 		<dependency>
 			<groupId>labes</groupId>
 			<artifactId>lode</artifactId>
-			<version>[0.2.4,)</version>
+			<version>[0.2.5,)</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

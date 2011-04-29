@@ -30,6 +30,8 @@ public class BibTeX2PexTest
 	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Retrieved.bib"));
 		converter.convert();
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Selected.bib"));
+		converter.convert();
 	}
 	
 	@Test
