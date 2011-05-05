@@ -30,6 +30,8 @@ public class BibTeX2PexTest
 	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Retrieved.bib"));
 		converter.convert();
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Screened.bib"));
+		converter.convert();
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - ACM - Selected.bib"));
 		converter.convert();
 	}
@@ -38,6 +40,10 @@ public class BibTeX2PexTest
 	public void testConvertConsolidated_IEEE() throws IOException
 	{
 		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - IEEE - Retrieved.bib"));
+		converter.convert();
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - IEEE - Screened.bib"));
+		converter.convert();
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Interactive Learning Objects - IEEE - Selected.bib"));
 		converter.convert();
 	}
 

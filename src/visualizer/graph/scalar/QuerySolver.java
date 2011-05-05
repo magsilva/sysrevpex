@@ -276,8 +276,8 @@ public class QuerySolver {
 
         List<Ngram> ngrams = corpus.getNgrams(filename);
         for (Ngram n : ngrams) {
-            if (n.ngram.indexOf(word.toLowerCase()) != -1) {
-                frequency += n.frequency;
+            if (n.getNgram().indexOf(word.toLowerCase()) != -1) {
+                frequency += n.getFrequency();
             }
         }
 

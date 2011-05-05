@@ -67,6 +67,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import com.ironiacorp.resource.mining.Corpus;
+
 import visualizer.corpus.Encoding;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.TermExtractor;
@@ -143,10 +146,10 @@ public class ZipFileImporter
 
                 for (int j = 0; j < fngrams.size(); j++) {
                     Ngram n = fngrams.get(j);
-                    if (corpusNgrams.containsKey(n.ngram)) {
-                        corpusNgrams.put(n.ngram, corpusNgrams.get(n.ngram) + n.frequency);
+                    if (corpusNgrams.containsKey(n.getNgram())) {
+                        corpusNgrams.put(n.getNgram(), corpusNgrams.get(n.getNgram()) + n.getFrequency());
                     } else {
-                        corpusNgrams.put(n.ngram, n.frequency);
+                        corpusNgrams.put(n.getNgram(), n.getFrequency());
                     }
                 }
             }
@@ -154,7 +157,7 @@ public class ZipFileImporter
 
         ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
         for (String key : corpusNgrams.keySet()) {
-            ngrams.add(new Ngram(key, corpusNgrams.get(key)));
+            ngrams.add(new Ngram(key, nrGrams, corpusNgrams.get(key)));
         }
 
         Collections.sort(ngrams);
@@ -387,7 +390,7 @@ public class ZipFileImporter
             StringBuffer sb = new StringBuffer();
             for (int j = 0; j <
                     ngram.length - 1; j++) {
-                sb.append(ngram[j] + "<>");
+                sb.append(ngram[j] + visualizer.corpus.Corpus.NGRAM_SEPARATOR);
             }
 
             sb.append(ngram[ngram.length - 1]);
@@ -422,7 +425,7 @@ public class ZipFileImporter
         ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
 
         for (String n : ngramsTable.keySet()) {
-            ngrams.add(new Ngram(n, ngramsTable.get(n)));
+            ngrams.add(new Ngram(n, nrGrams, ngramsTable.get(n)));
         }
 
         Collections.sort(ngrams);
@@ -440,7 +443,7 @@ public class ZipFileImporter
         for (int i = 0; i <
                 ngram.length - 1; i++) {
             ngram[i] = ngram[i + 1];
-            sb.append(ngram[i] + "<>");
+            sb.append(ngram[i] + visualizer.corpus.Corpus.NGRAM_SEPARATOR);
         }
 
         ngram[ngram.length - 1] = word;

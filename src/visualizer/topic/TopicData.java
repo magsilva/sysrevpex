@@ -56,7 +56,7 @@ import java.util.Set;
 import visualizer.corpus.Corpus;
 import visualizer.graph.Graph;
 import visualizer.matrix.Matrix;
-import visualizer.textprocessing.transformation.MatrixTransformationType;
+import visualizer.ranking.text.MatrixTransformationType;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.stemmer.StemmerType;
 

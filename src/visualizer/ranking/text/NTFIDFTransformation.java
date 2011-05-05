@@ -45,7 +45,7 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
+package visualizer.ranking.text;
 
 import visualizer.matrix.Matrix;
 
@@ -53,7 +53,12 @@ import visualizer.matrix.Matrix;
  *
  * @author Fernando Vieira Paulovich
  */
-public interface MatrixTransformation
-{
-    Matrix tranform(Matrix matrix, Object parameter);
+public class NTFIDFTransformation implements MatrixTransformation {
+
+    public Matrix tranform(Matrix matrix, Object parameter) {
+        NTFTransformation ntf = new NTFTransformation();
+        TFIDFTransformation tfidf = new TFIDFTransformation();
+        return tfidf.tranform(ntf.tranform(matrix, parameter), parameter);
+    }
+
 }

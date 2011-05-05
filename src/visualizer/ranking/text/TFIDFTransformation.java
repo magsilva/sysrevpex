@@ -45,20 +45,51 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
+package visualizer.ranking.text;
 
 import visualizer.matrix.Matrix;
+import visualizer.matrix.SparseVector;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class NTFIDFTransformation implements MatrixTransformation {
+public class TFIDFTransformation implements MatrixTransformation
+{
+    public Matrix tranform(Matrix matrix, Object parameter)
+    {
+        // Store the number of documents which the term occur
+        float[] docsFreq = new float[matrix.getDimensions()];
 
-    public Matrix tranform(Matrix matrix, Object parameter) {
-        NTFTransformation ntf = new NTFTransformation();
-        TFIDFTransformation tfidf = new TFIDFTransformation();
-        return tfidf.tranform(ntf.tranform(matrix, parameter), parameter);
+        // Count the number of documents which the terms occur
+        for (int row = 0; row < matrix.getRowCount(); row++) {
+            SparseVector sv = (SparseVector) matrix.getRow(row);
+            int svlength = sv.getIndex().length;
+
+            for (int col = 0; col < svlength; col++) {
+                docsFreq[sv.getIndex()[col]]++;
+            }
+        }
+
+        // Calculate the TF-IDF
+        for (int lin = 0; lin < matrix.getRowCount(); lin++) {
+            SparseVector sv = (SparseVector) matrix.getRow(lin);
+            sv.shouldUpdateNorm();
+
+            int svlength = sv.getIndex().length;
+
+            for (int col = 0; col < svlength; col++) {
+                // Get the term-frequency
+                float tf = sv.getValues()[col];
+                float idf = 0.0f;
+                if (docsFreq[col] != 0) {
+                    idf = (float) Math.log(matrix.getRowCount() / docsFreq[sv.getIndex()[col]]);
+                }
+
+                // Calculate and store the T-IDF
+                sv.getValues()[col] = (tf * idf);
+            }
+        }
+        return matrix;
     }
-
 }

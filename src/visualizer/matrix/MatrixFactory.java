@@ -51,11 +51,12 @@ import java.io.BufferedReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.projection.*;
+import visualizer.ranking.text.MatrixTransformation;
+import visualizer.ranking.text.MatrixTransformationFactory;
+
 import java.io.IOException;
 import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
-import visualizer.textprocessing.transformation.MatrixTransformation;
-import visualizer.textprocessing.transformation.MatrixTransformationFactory;
 import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.MonoliticPreprocessor;
 import visualizer.textprocessing.PipelinePreprocessor;

@@ -3,10 +3,7 @@
  * Copyright (c) 2005-2007 Universidade de Sao Paulo, Sao Carlos/SP, Brazil.
  * All Rights Reserved.
  *
- * This file is part of Projection Explorer (PEx), based on the code presented 
- * in:
- * 
- * http://tartarus.org/~martin/PorterStemmer/java.txt
+ * This file is part of Projection Explorer (PEx).
  *
  * How to cite this work:
  *  
@@ -48,24 +45,18 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
+package visualizer.ranking.text;
+
+import visualizer.matrix.Matrix;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class MatrixTransformationFactory {
+public class NoneTransformation implements MatrixTransformation {
 
-    public static MatrixTransformation getInstance(MatrixTransformationType type) {
-        if (type.equals(MatrixTransformationType.NTF)) {
-            return new NTFTransformation();
-        } else if (type.equals(MatrixTransformationType.NTF_IDF)) {
-            return new NTFIDFTransformation();
-        } else if (type.equals(MatrixTransformationType.TF_IDF)) {
-            return new TFIDFTransformation();
-        } else {
-            return new NoneTransformation();
-        }
+    public Matrix tranform(Matrix matrix, Object parameter) {
+        return matrix;
     }
 
 }

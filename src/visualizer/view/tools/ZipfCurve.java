@@ -115,8 +115,8 @@ public class ZipfCurve extends JPanel
         repaint();
 
         int[] freqs = new int[2];
-        freqs[0] = ngrams.get(lowerLine).frequency;
-        freqs[1] = ngrams.get(upperLine).frequency;
+        freqs[0] = ngrams.get(lowerLine).getFrequency();
+        freqs[1] = ngrams.get(upperLine).getFrequency();
 
         return freqs;
     }
@@ -146,14 +146,14 @@ public class ZipfCurve extends JPanel
 
         if (ngrams != null) {
             int nelements = ngrams.size();
-            float maxf = ngrams.get(0).frequency;
-            float minf = ngrams.get(0).frequency;
+            float maxf = ngrams.get(0).getFrequency();
+            float minf = ngrams.get(0).getFrequency();
 
             for (int i = 1; i < nelements; i++) {
-                if (ngrams.get(i).frequency > maxf) {
-                    maxf = ngrams.get(i).frequency;
-                } else if (ngrams.get(i).frequency < minf) {
-                    minf = ngrams.get(i).frequency;
+                if (ngrams.get(i).getFrequency() > maxf) {
+                    maxf = ngrams.get(i).getFrequency();
+                } else if (ngrams.get(i).getFrequency() < minf) {
+                    minf = ngrams.get(i).getFrequency();
                 }
             }
 
@@ -162,10 +162,10 @@ public class ZipfCurve extends JPanel
 
             for (int i = 0; i < nelements - 1; i++) {
                 int posx1 = (int) ((((float) i) / nelements) * (size.width - 40)) + 20;
-                int posy1 = (int) ((((Math.log(ngrams.get(i).frequency) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
+                int posy1 = (int) ((((Math.log(ngrams.get(i).getFrequency()) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
 
                 int posx2 = (int) ((((float) (i + 1)) / nelements) * (size.width - 40)) + 20;
-                int posy2 = (int) ((((Math.log(ngrams.get(i + 1).frequency) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
+                int posy2 = (int) ((((Math.log(ngrams.get(i + 1).getFrequency()) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
 
                 gBuffer.setColor(Color.RED);
                 gBuffer.drawLine(posx1, size.height - posy1, posx2, size.height - posy2);

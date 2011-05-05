@@ -167,8 +167,8 @@ public abstract class BasicPreProcessor implements PreProcessor
             //For each ngram in the corpus which occurs more than lowerCut
             int j = 0;
             for (Ngram n : this.ngrams) {
-                if (docNgrams.containsKey(n.ngram)) {
-                    vector[j] = docNgrams.get(n.ngram);
+                if (docNgrams.containsKey(n.getNgram())) {
+                    vector[j] = docNgrams.get(n.getNgram());
                 } else {
                     vector[j] = 0.0f;
                 }
@@ -183,7 +183,7 @@ public abstract class BasicPreProcessor implements PreProcessor
         //setting the attibutes
         List<String> attr = new ArrayList<String>();
         for (Ngram n : this.ngrams) {
-            attr.add(n.ngram);
+            attr.add(n.getNgram());
         }
 
         matrix.setAttributes(attr);
@@ -215,11 +215,11 @@ public abstract class BasicPreProcessor implements PreProcessor
             int freq = corpusNgrams_aux.get(key);
             if (upperCut >= 0) {
                 if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
+                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
                 }
             } else {
                 if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
+                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
                 }
             }
         }
@@ -228,7 +228,6 @@ public abstract class BasicPreProcessor implements PreProcessor
 
         return ngrams_aux;
     }
-
 	
     protected abstract List<Ngram> getCorpusNgrams();
     

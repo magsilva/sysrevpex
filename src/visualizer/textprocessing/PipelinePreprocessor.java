@@ -64,7 +64,9 @@ import com.ironiacorp.miner.preprocessing.text.LowerCaseTransformer;
 import com.ironiacorp.miner.preprocessing.text.NumberInWordRemover;
 import com.ironiacorp.miner.preprocessing.text.PunctuationFilter;
 import com.ironiacorp.miner.preprocessing.text.WhiteSpaceFilter;
+import com.ironiacorp.miner.preprocessing.text.WordReplacer;
 import com.ironiacorp.miner.preprocessing.text.WordSingularizer;
+import com.ironiacorp.miner.preprocessing.text.stopword.StopNgramFilter;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopWord;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopWordFilter;
 import com.ironiacorp.miner.preprocessing.text.stopword.exact.SetStopword;
@@ -98,18 +100,18 @@ public class PipelinePreprocessor extends BasicPreProcessor
         for (Resource resource : resultBuffer.getResources()) {
         	PexNgramResource pexNgramResource = (PexNgramResource) resource;
        		Ngram ngram = pexNgramResource.getNgram();
-        	String token = stemmer.stem(ngram.ngram);
+        	String token = stemmer.stem(ngram.getNgram());
             if (corpusNgrams_aux.containsKey(token)) {
-            	corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + ngram.frequency);
+            	corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + ngram.getFrequency());
             } else {
-            	corpusNgrams_aux.put(token, ngram.frequency);
+            	corpusNgrams_aux.put(token, ngram.getFrequency());
             }
         }
 
         for (String key : corpusNgrams_aux.keySet()) {
             int freq = corpusNgrams_aux.get(key);
             if (freq >= lowerCut && freq <= upperCut) {
-                ngrams_aux.add(new Ngram(key, freq));
+                ngrams_aux.add(new Ngram(key, numberGrams, freq));
             }
         }
         
@@ -136,11 +138,11 @@ public class PipelinePreprocessor extends BasicPreProcessor
         	Ngram ngram;
        		PexNgramResource pexNgramResource = (PexNgramResource) resource;
        		ngram = pexNgramResource.getNgram();
-        	String token = stemmer.stem(ngram.ngram);
+        	String token = stemmer.stem(ngram.getNgram());
             if (ngrams_aux.containsKey(token)) {
-            	ngrams_aux.put(token, ngrams_aux.get(token) + ngram.frequency);
+            	ngrams_aux.put(token, ngrams_aux.get(token) + ngram.getFrequency());
             } else {
-            	ngrams_aux.put(token, ngram.frequency);
+            	ngrams_aux.put(token, ngram.getFrequency());
             }
 
         }
@@ -154,8 +156,8 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		LowerCaseTransformer lowercaseTransformer = new LowerCaseTransformer();
 		NumberInWordRemover numberRemover = new NumberInWordRemover();
 		AdverbFilter adverbFilter = new AdverbFilter();
-		StopWordFilter stopwordFilter1 = new StopWordFilter();
-		StopWordFilter stopwordFilter2 = new StopWordFilter();
+		StopWordFilter stopwordFilter1;
+		StopWordFilter stopwordFilter2;
 		StopWord stopwords = new SetStopword();
 		WhiteSpaceFilter whitespaceWordFilter1 = new WhiteSpaceFilter();
 		WhiteSpaceFilter whitespaceWordFilter2 = new WhiteSpaceFilter();
@@ -164,8 +166,19 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		LUCuts luCutWordFilter = new LUCuts();
 		PunctuationFilter punctuationFilter = new PunctuationFilter();
 		WordSingularizer wordSingularizer = new WordSingularizer();
+		NgramReducerFilter ngramReducerFilter = new NgramReducerFilter();
+		WordReplacer wordReplacer = new WordReplacer();
 		BufferComponent bufferComponent = new BufferComponent();
 
+		if (numberGrams == 1) {
+			stopwordFilter1 = new StopWordFilter();
+			stopwordFilter2 = new StopWordFilter();
+		} else {
+			stopwordFilter1 = new StopNgramFilter();
+			stopwordFilter2 = new StopNgramFilter();
+		}
+		
+		
 		inputComponent.setConsumer(lowercaseTransformer);
 		
 		lowercaseTransformer.setConsumer(numberRemover);
@@ -199,11 +212,32 @@ public class PipelinePreprocessor extends BasicPreProcessor
 			adverbFilter.setConsumer(stopwordFilter2);
 			stopwordFilter2.setStopWord(stopwords);
 			stopwordFilter2.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
-			stopwordFilter2.setConsumer(bufferComponent);
+			stopwordFilter2.setConsumer(wordReplacer);
 		} else {
-			adverbFilter.setConsumer(bufferComponent);
+			adverbFilter.setConsumer(wordReplacer);
 		}
 		
+		// ngramReducerFilter.setConsumer(wordReplacer);
+		
+		wordReplacer.addSynonym("learning object", "learning resource");
+		wordReplacer.addSynonym("learning object", "educational module");
+		wordReplacer.addSynonym("learning object", "educational resource");
+		wordReplacer.addSynonym("learning object", "unit of learning");
+		wordReplacer.addSynonym("instructional design", "learning design");
+		
+		wordReplacer.addSynonym("interactivity", "interactive");
+		wordReplacer.addSynonym("interactivity", "interaction");
+		wordReplacer.addSynonym("interactivity", "user experience");
+		wordReplacer.addSynonym("interactivity", "colaboration");
+		wordReplacer.addSynonym("interactivity", "colaborative");
+		
+		wordReplacer.addSynonym("interactivity", "interactive");
+		wordReplacer.addSynonym("interactivity", "interactive");
+
+		wordReplacer.addSynonym("interaction design", "interaction modeling");
+		
+		wordReplacer.setConsumer(bufferComponent);
+
 		return bufferComponent;
     }
 }

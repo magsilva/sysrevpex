@@ -91,14 +91,14 @@ public class QuerySolverMatrix extends QuerySolver {
     protected float getWordFrequencyFromFile(String word, String filename) throws java.io.IOException {
         float frequency = 0.0f;
 
-        if (wordLine.get(word + "<>") == null || pointLine.get(filename) == null) {
+        if (wordLine.get(word + Corpus.NGRAM_SEPARATOR) == null || pointLine.get(filename) == null) {
             return frequency;
         }
 
         int i, j;
 
         i = pointLine.get(filename).intValue();
-        j = wordLine.get(word + "<>").intValue();
+        j = wordLine.get(word + Corpus.NGRAM_SEPARATOR).intValue();
         frequency = points[i][j];
 
 

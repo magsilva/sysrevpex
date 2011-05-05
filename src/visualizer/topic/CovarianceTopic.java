@@ -215,8 +215,8 @@ public class CovarianceTopic extends Topic {
         indexes.add(jcov);
 
         if (attributes.size() > 0) {
-            String msg = "(" + attributes.get(icov).replaceAll("<>", "") + "," +
-                    attributes.get(jcov).replaceAll("<>", "") + ",";
+            String msg = "(" + attributes.get(icov).replaceAll(Corpus.NGRAM_SEPARATOR, "") + "," +
+                    attributes.get(jcov).replaceAll(Corpus.NGRAM_SEPARATOR, "") + ",";
 
             for (int i = 0; i < points[0].length - 1; i++) {
                 if (!indexes.contains(i)) {
@@ -224,7 +224,7 @@ public class CovarianceTopic extends Topic {
                             this.covariance(points, jcov, i)) / 2;
 
                     if (aux / gcov1 > tdata.getPercentageTerms()) {
-                        msg += attributes.get(i).replaceAll("<>", "") + ",";
+                        msg += attributes.get(i).replaceAll(Corpus.NGRAM_SEPARATOR, "") + ",";
                         indexes.add(i);
                     }
                 }
@@ -266,7 +266,7 @@ public class CovarianceTopic extends Topic {
         indexGrams.clear();
         Iterator<Ngram> ngramsI = cpNgrams.iterator();
         for (int i = 0; i < newpoints[0].length; i++) {
-            indexGrams.add(ngramsI.next().ngram);
+            indexGrams.add(ngramsI.next().getNgram());
         }
 
         return newpoints;

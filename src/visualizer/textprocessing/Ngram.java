@@ -54,28 +54,121 @@ import java.io.Serializable;
  *
  * @author Fernando Vieira Paulovich
  */
-public class Ngram implements Comparable, Serializable {
-
-    public Ngram(String ngram) {
-        this.ngram = ngram;
-        this.frequency = 1;
+public class Ngram implements Comparable, Serializable
+{
+    private String ngram;
+    
+    private int frequency;
+    
+    private int n;
+    
+    private static final long serialVersionUID = 1L;
+	
+    public Ngram(String ngram, int n) {
+        this(ngram, n, 1);
     }
 
-    public Ngram(String ngram, int frequency) {
-        this.ngram = ngram;
-        this.frequency = frequency;
+    public Ngram(String ngram, int n, int frequency) {
+        setNgram(ngram);
+        setN(n);
+        setFrequency(frequency);
     }
 
-    public int compareTo(Object o) {
-        return ((Ngram) o).frequency - this.frequency;
+    public String getNgram()
+	{
+		return ngram;
+	}
+
+	public int getFrequency()
+	{
+		return frequency;
+	}
+
+	public void setFrequency(int frequency)
+	{
+		this.frequency = frequency;
+	}
+
+	public int getN()
+	{
+		return n;
+	}
+	
+	private void setN(int n)
+	{
+		if (n <= 0) {
+			throw new IllegalArgumentException("Invalid size for the N-gram");
+		}
+		this.n = n;
+	}
+	
+
+	public int compareTo(Object o)
+	{
+		Ngram otherNgram = (Ngram) o;
+		if (equals(otherNgram)) {
+			return 0;
+		}
+		
+		if (o == null) {
+			return - frequency;
+		}
+		
+		return otherNgram.frequency - frequency;
     }
+	
 
     @Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + frequency;
+		result = prime * result + n;
+		result = prime * result + ((ngram == null) ? 0 : ngram.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		
+		if (obj == null)
+			return false;
+		
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Ngram other = (Ngram) obj;
+		/*
+		if (frequency != other.frequency)
+			return false;
+		
+		if (n != other.n)
+			return false;
+		*/
+		
+		if (ngram == null) {
+			if (other.ngram != null)
+				return false;
+		} else if (! ngram.equals(other.ngram))
+			return false;
+		
+		return true;
+	}
+
+	@Override
     public String toString() {
         return ngram;
     }
 
-    public String ngram;
-    public int frequency;
-    private static final long serialVersionUID = 1L;
+	public void setNgram(String text)
+	{
+		if (text == null || text.trim().isEmpty()) {
+			throw new IllegalArgumentException("Invalid text");
+		}
+		this.ngram = text;
+	}
 }

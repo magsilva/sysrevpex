@@ -14,7 +14,7 @@ public class PexNgramResource extends UnformattedTextResource implements Cloneab
 	public void setNgram(Ngram ngram)
 	{
 		this.ngram = ngram;
-		setText(ngram.ngram);
+		setText(ngram.getNgram());
 	}
 	
 	public PexNgramResource()
@@ -32,15 +32,15 @@ public class PexNgramResource extends UnformattedTextResource implements Cloneab
 	public void setText(String text)
 	{
 		super.setText(text);
-		ngram.ngram = text;
+		ngram.setNgram(text);
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
 		PexNgramResource clone = new PexNgramResource();
-		if (getText() != ngram.ngram) {
-			ngram.ngram = getText();
+		if (getText() != ngram.getNgram()) {
+			ngram.setNgram(getText());
 		}
 		clone.setNgram(ngram);
 		

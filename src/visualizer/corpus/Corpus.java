@@ -7,6 +7,8 @@ import visualizer.textprocessing.Ngram;
 
 public interface Corpus
 {
+	public static final String NGRAM_SEPARATOR = "<>";
+	
 	/**
 	 * Return the raw file content
 	 * 

@@ -56,6 +56,7 @@ import visualizer.corpus.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -132,12 +133,12 @@ public class ZipCorpus extends BaseCorpus
     }
 
     @Override
-    public ArrayList<Ngram> getCorpusNgrams() {
+    public List<Ngram> getCorpusNgrams() {
         return invertedCorpus.getCorpusNgrams();
     }
 
     @Override
-    public ArrayList<Ngram> getNgrams(String filename)  {
+    public List<Ngram> getNgrams(String filename)  {
         return invertedCorpus.getNgrams(filename);
     }
 

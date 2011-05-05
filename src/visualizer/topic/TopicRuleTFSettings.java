@@ -51,7 +51,7 @@ package visualizer.topic;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import visualizer.graph.Graph;
-import visualizer.textprocessing.transformation.MatrixTransformationType;
+import visualizer.ranking.text.MatrixTransformationType;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.util.OpenDialog;
 import visualizer.view.tools.LuhnCutAnalizer;
@@ -427,15 +427,15 @@ public class TopicRuleTFSettings extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void phraseLabelCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phraseLabelCheckBoxActionPerformed
-// TODO adicione seu código de manipulação aqui:
+// TODO adicione seu cï¿½digo de manipulaï¿½ï¿½o aqui:
     }//GEN-LAST:event_phraseLabelCheckBoxActionPerformed
 
     private void ruleLabelCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ruleLabelCheckBoxActionPerformed
-// TODO adicione seu código de manipulação aqui:
+// TODO adicione seu cï¿½digo de manipulaï¿½ï¿½o aqui:
     }//GEN-LAST:event_ruleLabelCheckBoxActionPerformed
 
     private void groupLabelCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupLabelCheckBoxActionPerformed
-// TODO adicione seu código de manipulação aqui:
+// TODO adicione seu cï¿½digo de manipulaï¿½ï¿½o aqui:
     }//GEN-LAST:event_groupLabelCheckBoxActionPerformed
 
     private void cancekButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancekButtonActionPerformed

@@ -1608,7 +1608,7 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
 
                             Collections.sort(sortedList);
                             for (String term : sortedList) {
-                                out.println(term.replaceAll("<>", ""));
+                                out.println(term.replaceAll(Corpus.NGRAM_SEPARATOR, ""));
                             }
                             out.close();
                         } catch (IOException ex) {

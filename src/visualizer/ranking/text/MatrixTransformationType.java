@@ -45,7 +45,7 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
+package visualizer.ranking.text;
 
 import java.io.Serializable;
 import java.util.ArrayList;

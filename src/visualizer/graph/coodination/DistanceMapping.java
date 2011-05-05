@@ -57,6 +57,8 @@ import visualizer.corpus.Corpus;
 import visualizer.matrix.Matrix;
 import visualizer.matrix.SparseMatrix;
 import visualizer.matrix.SparseVector;
+import visualizer.ranking.text.MatrixTransformation;
+import visualizer.ranking.text.MatrixTransformationFactory;
 import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
@@ -66,8 +68,6 @@ import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.distance.DissimilarityFactory;
 import visualizer.projection.distance.Dissimilarity;
-import visualizer.textprocessing.transformation.MatrixTransformation;
-import visualizer.textprocessing.transformation.MatrixTransformationFactory;
 import visualizer.util.Pair;
 import visualizer.view.Viewer;
 
@@ -132,6 +132,7 @@ public class DistanceMapping extends Mapping
             local_pp.setStopword(localPData.isUseStopword());
             local_pp.setStartword(false);
             local_pp.setStemmer(localPData.getStemmer());
+            local_pp.setNumberGrams(localPData.getNumberGrams());
             Matrix local_points = local_pp.getMatrix();
             Collection<Ngram> local_ngrams = local_pp.getNgrams();
 
@@ -149,6 +150,7 @@ public class DistanceMapping extends Mapping
             outer_pp.setStopword(outerPData.isUseStopword());
             outer_pp.setStartword(false);
             outer_pp.setStemmer(outerPData.getStemmer());
+            outer_pp.setNumberGrams(outerPData.getNumberGrams());
             Matrix outer_points = outer_pp.getMatrix();
             List<Ngram> outer_ngrams = outer_pp.getNgrams();
 
@@ -223,7 +225,7 @@ public class DistanceMapping extends Mapping
             int old_index = 0;
             int j = 0;
             for (Ngram old_ngram : old_ngrams) {
-                if (old_ngram.ngram.equals(new_ngram.ngram)) {
+                if (old_ngram.getNgram().equals(new_ngram.getNgram())) {
                     old_index = j;
                     break;
                 } else {
@@ -255,7 +257,7 @@ public class DistanceMapping extends Mapping
 
         for (Ngram ngram1 : ngrams_1) {
         	for (Ngram ngram2 : ngrams_2) {
-        		if (ngram1.ngram.equals(ngram2.ngram)) {
+        		if (ngram1.getNgram().equals(ngram2.getNgram())) {
         			final_ngrams.add(ngram1);
         		}
         	}

@@ -52,7 +52,7 @@ import visualizer.matrix.normalization.NormalizationType;
 import visualizer.projection.distance.DissimilarityType;
 import visualizer.projection.distance.kolmogorov.CompressorType;
 import visualizer.projection.lsp.ControlPointsType;
-import visualizer.textprocessing.transformation.MatrixTransformationType;
+import visualizer.ranking.text.MatrixTransformationType;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.datamining.clustering.HierarchicalClusteringType;
 

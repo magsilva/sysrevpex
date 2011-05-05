@@ -63,7 +63,7 @@ import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 
 import visualizer.projection.ProjectionData;
-import visualizer.textprocessing.transformation.MatrixTransformationType;
+import visualizer.ranking.text.MatrixTransformationType;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.view.tools.LuhnCutAnalizer;
 

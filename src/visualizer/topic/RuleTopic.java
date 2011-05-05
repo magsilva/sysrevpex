@@ -64,8 +64,8 @@ import java.util.regex.Pattern;
 import visualizer.corpus.Corpus;
 import visualizer.graph.Vertex;
 import visualizer.matrix.Matrix;
-import visualizer.textprocessing.transformation.MatrixTransformation;
-import visualizer.textprocessing.transformation.MatrixTransformationFactory;
+import visualizer.ranking.text.MatrixTransformation;
+import visualizer.ranking.text.MatrixTransformationFactory;
 import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.MonoliticPreprocessor;
@@ -178,7 +178,7 @@ public class RuleTopic extends Topic {
 
             Object[] ngrams = new Object[corporaNgrams.size()];
             for (int k = 0; k < corporaNgrams.size(); k++) {
-                ngrams[k] = corporaNgrams.get(k).ngram;
+                ngrams[k] = corporaNgrams.get(k).getNgram();
             }
 
             SelectedApriori sApriori = new SelectedApriori(selectedPoints, points, ngrams);
@@ -236,7 +236,7 @@ public class RuleTopic extends Topic {
                 }
                 this.selectedItemSets.get(k).setRelatedVertices(relatedVertices);
                 if (tdata.getStemmer() != StemmerType.NONE) {
-                    msg = msg.replaceAll("<>", "");
+                    msg = msg.replaceAll(Corpus.NGRAM_SEPARATOR, "");
                 }
                 StringBox box = new StringBox(msg, relatedVertices, this.selectedItemSets.get(k));
 
@@ -269,7 +269,7 @@ public class RuleTopic extends Topic {
                 ruleSetList.get(k).setRelatedVertices(relatedVertices);
 
                 if (tdata.getStemmer() != StemmerType.NONE) {
-                    msg = msg.replaceAll("<>", "");
+                    msg = msg.replaceAll(Corpus.NGRAM_SEPARATOR, "");
                 }
                 StringBox box = new StringBox(msg, relatedVertices, ruleSetList.get(k));
                 this.boxes.add(box);
@@ -295,7 +295,7 @@ public class RuleTopic extends Topic {
             }
             if (!query.equals("")) {
                 query = query.replaceFirst(" and ", "");
-                query = query.replaceAll("<>", "");
+                query = query.replaceAll(Corpus.NGRAM_SEPARATOR, "");
                 return query;
             } else {
                 return null;

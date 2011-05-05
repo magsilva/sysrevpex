@@ -88,14 +88,14 @@ public class MonoliticPreprocessor extends BasicPreProcessor
 
         // For each ngram in the corpus
         for (Ngram n : corpus.getCorpusNgrams()) {
-            String token = n.ngram;
+            String token = n.getNgram();
             if ((useStopword && ! useStartword && ! stp.isStopWord(token))) {
                 token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
-                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                     } else {
-                        corpusNgrams_aux.put(token, n.frequency);
+                        corpusNgrams_aux.put(token, n.getFrequency());
                     }
                 }
             }
@@ -103,9 +103,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                 token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
-                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                     } else {
-                        corpusNgrams_aux.put(token, n.frequency);
+                        corpusNgrams_aux.put(token, n.getFrequency());
                     }
                 }
             }
@@ -113,9 +113,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                 token = stemmer.stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
-                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                     } else {
-                        corpusNgrams_aux.put(token, n.frequency);
+                        corpusNgrams_aux.put(token, n.getFrequency());
                     }
                 }
             }
@@ -123,9 +123,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                 token = StemmerFactory.getInstance(stemmerType).stem(token);
                 if (token.trim().length() > 0) {
                     if (corpusNgrams_aux.containsKey(token)) {
-                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                        corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                     } else {
-                        corpusNgrams_aux.put(token, n.frequency);
+                        corpusNgrams_aux.put(token, n.getFrequency());
                     }
                 }
             }
@@ -135,11 +135,11 @@ public class MonoliticPreprocessor extends BasicPreProcessor
             int freq = corpusNgrams_aux.get(key);
             if (upperCut >= 0) {
                 if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
+                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
                 }
             } else {
                 if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, freq));
+                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
                 }
             }
         }
@@ -171,15 +171,15 @@ public class MonoliticPreprocessor extends BasicPreProcessor
         List<Ngram> fngrams = corpus.getNgrams(url);
         if (fngrams != null) {
             for (Ngram n : fngrams) {
-                String token = n.ngram;
+                String token = n.getNgram();
 
                 if ((useStopword && ! useStartword && ! stp.isStopWord(token))) {
                     token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
-                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                         } else {
-                            corpusNgrams_aux.put(token, n.frequency);
+                            corpusNgrams_aux.put(token, n.getFrequency());
                         }
                     }
                 }
@@ -187,9 +187,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                     token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
-                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                         } else {
-                            corpusNgrams_aux.put(token, n.frequency);
+                            corpusNgrams_aux.put(token, n.getFrequency());
                         }
                     }
                 }
@@ -197,9 +197,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                     token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
-                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                         } else {
-                            corpusNgrams_aux.put(token, n.frequency);
+                            corpusNgrams_aux.put(token, n.getFrequency());
                         }
                     }
                 }
@@ -207,9 +207,9 @@ public class MonoliticPreprocessor extends BasicPreProcessor
                     token = stemmer.stem(token);
                     if (token.trim().length() > 0) {
                         if (corpusNgrams_aux.containsKey(token)) {
-                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.frequency);
+                            corpusNgrams_aux.put(token, corpusNgrams_aux.get(token) + n.getFrequency());
                         } else {
-                            corpusNgrams_aux.put(token, n.frequency);
+                            corpusNgrams_aux.put(token, n.getFrequency());
                         }
                     }
                 }

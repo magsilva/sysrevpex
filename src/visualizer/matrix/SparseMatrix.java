@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import visualizer.corpus.Corpus;
 import visualizer.util.Pair;
 
 /**
@@ -205,7 +207,7 @@ public class SparseMatrix extends Matrix {
             //Writting the attributes
             if (attributes != null) {
                 for (int i = 0; i < attributes.size(); i++) {
-                    out.write(attributes.get(i).replaceAll("<>", " ").trim());
+                    out.write(attributes.get(i).replaceAll(Corpus.NGRAM_SEPARATOR, " ").trim());
 
                     if (i < attributes.size() - 1) {
                         out.write(";");

@@ -1,49 +1,51 @@
-/* ***** BEGIN LICENSE BLOCK *****
- *
+/*
+ * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Copyright (c) 2005-2007 Universidade de Sao Paulo, Sao Carlos/SP, Brazil.
  * All Rights Reserved.
- *
+ * 
  * This file is part of Projection Explorer (PEx).
- *
+ * 
  * How to cite this work:
- *  
-@inproceedings{paulovich2007pex,
-author = {Fernando V. Paulovich and Maria Cristina F. Oliveira and Rosane 
-Minghim},
-title = {The Projection Explorer: A Flexible Tool for Projection-based 
-Multidimensional Visualization},
-booktitle = {SIBGRAPI '07: Proceedings of the XX Brazilian Symposium on 
-Computer Graphics and Image Processing (SIBGRAPI 2007)},
-year = {2007},
-isbn = {0-7695-2996-8},
-pages = {27--34},
-doi = {http://dx.doi.org/10.1109/SIBGRAPI.2007.39},
-publisher = {IEEE Computer Society},
-address = {Washington, DC, USA},
-}
- *  
- * PEx is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
+ * 
+ * @inproceedings{paulovich2007pex,
+ * author = {Fernando V. Paulovich and Maria Cristina F. Oliveira and Rosane
+ * Minghim},
+ * title = {The Projection Explorer: A Flexible Tool for Projection-based
+ * Multidimensional Visualization},
+ * booktitle = {SIBGRAPI '07: Proceedings of the XX Brazilian Symposium on
+ * Computer Graphics and Image Processing (SIBGRAPI 2007)},
+ * year = {2007},
+ * isbn = {0-7695-2996-8},
+ * pages = {27--34},
+ * doi = {http://dx.doi.org/10.1109/SIBGRAPI.2007.39},
+ * publisher = {IEEE Computer Society},
+ * address = {Washington, DC, USA},
+ * }
+ * 
+ * PEx is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
  * any later version.
- *
- * PEx is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ * 
+ * PEx is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- *
+ * 
  * This code was developed by members of Computer Graphics and Image
  * Processing Group (http://www.lcad.icmc.usp.br) at Instituto de Ciencias
- * Matematicas e de Computacao - ICMC - (http://www.icmc.usp.br) of 
- * Universidade de Sao Paulo, Sao Carlos/SP, Brazil. The initial developer 
+ * Matematicas e de Computacao - ICMC - (http://www.icmc.usp.br) of
+ * Universidade de Sao Paulo, Sao Carlos/SP, Brazil. The initial developer
  * of the original code is Fernando Vieira Paulovich <fpaulovich@gmail.com>.
- *
+ * 
  * Contributor(s): Rosane Minghim <rminghim@icmc.usp.br>
- *
- * You should have received a copy of the GNU General Public License along 
+ * 
+ * You should have received a copy of the GNU General Public License along
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
- *
- * ***** END LICENSE BLOCK ***** */
+ * 
+ * ***** END LICENSE BLOCK *****
+ */
 
 package visualizer.corpus.zip;
 
@@ -64,357 +66,321 @@ import visualizer.corpus.database.DataBaseCorpus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.ironiacorp.datastructure.StringCircularBuffer;
+
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.TermExtractor;
 
 /**
- *
+ * 
  * @author Fernando Vieira Paulovich
  */
 public class InvertedZipCorpus
 {
-    private static final String invDir = "inv/";
-    
-    private String invFilename;
-    
-    private ZipFile zip;
-    
-    private ZipCorpus corpus;
-    
-    private int nrGrams;
+	private static final String INVERTED_FILE_PROPERTIES = "inverted.properties";
+	
+	private static final String invDir = "inv/";
 
-    /**
-     * Creates a new instance of InvertedFile.
-     * 
-     * @param corpus
-     * @param nrGrams
-     * @param invFilename 
-     */
-    public InvertedZipCorpus(ZipCorpus corpus, int nrGrams, String invFilename) {
-        this.invFilename = invFilename;
-        this.corpus = corpus;
-        this.nrGrams = nrGrams;
+	private String invFilename;
 
-        removeFile();
-        processCorpus(corpus, nrGrams, BaseCorpus.getEncoding());
-        dispose();
-    }
+	private ZipFile zip;
 
-    public void removeFile() {
-        //if the inverted file exists, remove it.
-        File f = new File(this.invFilename);
+	private ZipCorpus corpus;
 
-        if (f.exists()) {
-            f.delete();
-        }
-    }
+	private int nrGrams;
 
-    public ArrayList<Ngram> getNgrams(String filename) {
-        ArrayList<Ngram> ngrams = null;
-        BufferedInputStream bis = null;
-        ObjectInputStream ois = null;
+	private Encoding encoding;
 
-        try {
-            if (this.zip == null) {
-                this.zip = new ZipFile(this.invFilename);
-            }
+	/**
+	 * Creates a new instance of InvertedFile.
+	 * 
+	 * @param corpus
+	 * @param nrGrams
+	 * @param invFilename
+	 */
+	public InvertedZipCorpus(ZipCorpus corpus, int nrGrams, String invFilename)
+	{
+		this.invFilename = invFilename;
+		this.corpus = corpus;
+		this.nrGrams = nrGrams;
+		this.encoding = BaseCorpus.getEncoding();
 
-            ZipEntry entry = zip.getEntry(invDir + filename);
-            if (entry != null) {
-                bis = new BufferedInputStream(zip.getInputStream(entry));
-                ois = new ObjectInputStream(bis);
-                ngrams = (ArrayList<Ngram>) ois.readObject();
-                ois.close();
-            }
-        } catch (InvalidClassException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            this.dispose();
-            this.removeFile();          
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-        	try {
-	            if (bis != null) {
-	                bis.close();
-	            }
-	            if (ois != null) {
-	                ois.close();
-	            }
-        	} catch (IOException e) {}
-        }
+		removeFile();
+		processCorpus();
+		dispose();
+	}
 
-        return ngrams;
-    }
+	public void removeFile()
+	{
+		// if the inverted file exists, remove it.
+		File f = new File(this.invFilename);
 
-    public ArrayList<Ngram> getCorpusNgrams()  {
-        ArrayList<Ngram> ngrams = null;
-        BufferedInputStream bis = null;
-        ObjectInputStream ois = null;
+		if (f.exists()) {
+			f.delete();
+		}
+	}
 
-        try {
-            if (this.zip == null) {
-                this.zip = new ZipFile(this.invFilename);
-            }
+	public List<Ngram> getNgrams(String filename)
+	{
+		List<Ngram> ngrams = null;
+		BufferedInputStream bis = null;
+		ObjectInputStream ois = null;
 
-            ZipEntry entry = zip.getEntry("corpusNgrams.txt");
+		try {
+			if (zip == null) {
+				zip = new ZipFile(invFilename);
+			}
 
-            if (entry != null) {
-                bis = new BufferedInputStream(zip.getInputStream(entry));
-                ois = new ObjectInputStream(bis);
-                ngrams = (ArrayList<Ngram>) ois.readObject();
-            }
+			ZipEntry entry = zip.getEntry(invDir + filename);
+			if (entry != null) {
+				bis = new BufferedInputStream(zip.getInputStream(entry));
+				ois = new ObjectInputStream(bis);
+				ngrams = (List<Ngram>) ois.readObject();
+				ois.close();
+			}
+		} catch (InvalidClassException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			dispose();
+			removeFile();
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			try {
+				if (bis != null) {
+					bis.close();
+				}
+				if (ois != null) {
+					ois.close();
+				}
+			} catch (IOException e) {
+			}
+		}
 
-        } catch (InvalidClassException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            this.dispose();
-            this.removeFile();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-        	try {
-	            if (bis != null) {
-	                bis.close();
-	            }
-	            if (ois != null) {
-	                ois.close();
-	            }
-        	} catch (IOException e){}
-        }
+		return ngrams;
+	}
 
-        return ngrams;
-    }
+	public List<Ngram> getCorpusNgrams()
+	{
+		List<Ngram> ngrams = null;
+		BufferedInputStream bis = null;
+		ObjectInputStream ois = null;
 
-    public void dispose() {
-        if (this.zip != null) {
-            try {
-                this.zip.close();
-                this.zip = null;
-            } catch (IOException ex) {
-                Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+		try {
+			if (zip == null) {
+				zip = new ZipFile(invFilename);
+			}
 
-    public String getInvFilename() {
-        return invFilename;
-    }
+			ZipEntry entry = zip.getEntry("corpusNgrams.txt");
+			if (entry != null) {
+				bis = new BufferedInputStream(zip.getInputStream(entry));
+				ois = new ObjectInputStream(bis);
+				ngrams = (List<Ngram>) ois.readObject();
+			}
 
-    private void processCorpus(ZipCorpus corpus, int nrGrams, Encoding encoding)
-    {
-        HashMap<String, Integer> corpusNgrams = new HashMap<String, Integer>();
+		} catch (InvalidClassException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			this.dispose();
+			this.removeFile();
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(DataBaseCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			try {
+				if (bis != null) {
+					bis.close();
+				}
+				if (ois != null) {
+					ois.close();
+				}
+			} catch (IOException e) {
+			}
+		}
 
-        ZipOutputStream zout = null;
+		return ngrams;
+	}
 
-        try {
-            FileOutputStream dest = new FileOutputStream(this.invFilename);
-            zout = new ZipOutputStream(new BufferedOutputStream(dest));
-            zout.setMethod(ZipOutputStream.DEFLATED);
-            zout.setLevel(Deflater.BEST_SPEED);
+	public void dispose()
+	{
+		if (this.zip != null) {
+			try {
+				this.zip.close();
+				this.zip = null;
+			} catch (IOException ex) {
+				Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 
-            //add the number of grams and encoding to the inverted corpus properties file
-            ZipEntry entry = new ZipEntry("inverted.properties");
-            zout.putNextEntry(entry);
-            String prop = "number.grams=" + nrGrams + "\n";
-            zout.write(prop.getBytes(), 0, prop.length());
-            prop = "char.encoding=" + encoding.toString() + "\n";
-            zout.write(prop.getBytes(), 0, prop.length());
+	public String getInvFilename()
+	{
+		return invFilename;
+	}
 
-            for (int i = 0; i < corpus.getIds().size(); i++) {
-                ArrayList<Ngram> ngrams = this.getNgramsFromFile(corpus, corpus.getIds().get(i));
-                this.addFile(zout, ngrams, invDir + corpus.getIds().get(i));
+	private void processCorpus()
+	{
+		HashMap<String, Integer> corpusNgrams = new HashMap<String, Integer>();
 
-                for (int j = 0; j < ngrams.size(); j++) {
-                    Ngram n = ngrams.get(j);
+		ZipOutputStream zout = null;
 
-                    if (corpusNgrams.containsKey(n.ngram)) {
-                        corpusNgrams.put(n.ngram, corpusNgrams.get(n.ngram) + n.frequency);
-                    } else {
-                        corpusNgrams.put(n.ngram, n.frequency);
-                    }
-                }
-            }
+		try {
+			FileOutputStream dest = new FileOutputStream(invFilename);
+			zout = new ZipOutputStream(new BufferedOutputStream(dest));
+			zout.setMethod(ZipOutputStream.DEFLATED);
+			zout.setLevel(Deflater.BEST_SPEED);
 
-            ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
-            for (String key : corpusNgrams.keySet()) {
-                ngrams.add(new Ngram(key, corpusNgrams.get(key)));
-            }
+			// add the number of grams and encoding to the inverted corpus
+			// properties file
+			ZipEntry entry = new ZipEntry(INVERTED_FILE_PROPERTIES);
+			zout.putNextEntry(entry);
+			String prop = "number.grams=" + nrGrams + "\n";
+			zout.write(prop.getBytes(), 0, prop.length());
+			prop = "char.encoding=" + encoding.toString() + "\n";
+			zout.write(prop.getBytes(), 0, prop.length());
 
-            Collections.sort(ngrams);
-            this.addFile(zout, ngrams, "corpusNgrams.txt");
+			for (int i = 0; i < corpus.getIds().size(); i++) {
+				List<Ngram> ngrams = getNgramsFromFile(corpus.getIds().get(i));
+				addFile(zout, ngrams, invDir + corpus.getIds().get(i));
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (zout != null) {
-                    zout.flush();
-                    zout.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+				for (int j = 0; j < ngrams.size(); j++) {
+					Ngram n = ngrams.get(j);
 
-    private String getEncoding() {
-        String encoding = "";
-        ZipFile zip_aux = null;
+					if (corpusNgrams.containsKey(n.getNgram())) {
+						corpusNgrams.put(n.getNgram(), corpusNgrams.get(n.getNgram()) + n.getFrequency());
+					} else {
+						corpusNgrams.put(n.getNgram(), n.getFrequency());
+					}
+				}
+			}
 
-        try {
-            zip_aux = new ZipFile(this.invFilename);
+			List<Ngram> ngrams = new ArrayList<Ngram>();
+			for (String key : corpusNgrams.keySet()) {
+				ngrams.add(new Ngram(key, nrGrams, corpusNgrams.get(key)));
+			}
 
-            ZipEntry entry = zip_aux.getEntry("inverted.properties");
-            if (entry != null) {
-                Properties prop = new Properties();
-                prop.load(zip_aux.getInputStream(entry));
-                encoding = prop.getProperty("char.encoding");
-            }
+			Collections.sort(ngrams);
+			addFile(zout, ngrams, "corpusNgrams.txt");
 
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                zip_aux.close();
-            } catch (IOException ex) {
-                Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+		} catch (FileNotFoundException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			try {
+				if (zout != null) {
+					zout.flush();
+					zout.close();
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 
-        return encoding;
-    }
+	private void loadFile()
+	{
+		String fileEncoding;
+		int fileNrGrams;
+		ZipFile fileZip = null;
 
-    private int getNumberGrams() {
-        int nrGrams_aux = -1;
-        ZipFile zip_aux = null;
+		try {
+			fileZip = new ZipFile(invFilename);
+			ZipEntry entry = fileZip.getEntry(INVERTED_FILE_PROPERTIES);
+			if (entry != null) {
+				Properties prop = new Properties();
+				prop.load(fileZip.getInputStream(entry));
+				fileEncoding = prop.getProperty("char.encoding");
+				fileNrGrams = Integer.parseInt(prop.getProperty("number.grams"));
+			}
+		} catch (NumberFormatException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			try {
+				fileZip.close();
+			} catch (IOException ex) {
+				Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 
-        try {
-            zip_aux = new ZipFile(this.invFilename);
 
-            ZipEntry entry = zip_aux.getEntry("inverted.properties");
-            if (entry != null) {
-                Properties prop = new Properties();
-                prop.load(zip_aux.getInputStream(entry));
-                nrGrams_aux = Integer.parseInt(prop.getProperty("number.grams"));
-            }
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                zip_aux.close();
-            } catch (IOException ex) {
-                Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+	private void addFile(ZipOutputStream zout, List<Ngram> ngrams, String filename) throws IOException
+	{
+		Collections.sort(ngrams);
 
-        return nrGrams_aux;
-    }
+		ZipEntry entry = new ZipEntry(filename);
+		zout.putNextEntry(entry);
 
-    private void addFile(ZipOutputStream zout, ArrayList<Ngram> ngrams, String filename) throws IOException {
-        Collections.sort(ngrams);
+		ObjectOutputStream oos = new ObjectOutputStream(zout);
+		oos.writeObject(ngrams);
+		oos.flush();
+	}
 
-        ZipEntry entry = new ZipEntry(filename);
-        zout.putNextEntry(entry);
+	/**
+	 * Method that creates the ngrams.
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws IOException
+	 */
+	private List<Ngram> getNgramsFromFile(String filename) throws IOException
+	{
+		String filecontent = corpus.getFullContent(filename);
+		List<Ngram> ngrams = new ArrayList<Ngram>();
 
-        ObjectOutputStream oos = new ObjectOutputStream(zout);
-        oos.writeObject(ngrams);
-        oos.flush();
-    }
+		if (filecontent == null) {
+			return ngrams;
+		}
 
-    private ArrayList<Ngram> getNgramsFromFile(ZipCorpus corpus, String filename) throws IOException {
-        HashMap<String, Integer> ngramsTable = new HashMap<String, Integer>();
+		Multiset<String> bag = HashMultiset.create();
+		Pattern pattern = Pattern.compile(TermExtractor.getRegularExpression());
+		StringCircularBuffer buffer = new StringCircularBuffer(nrGrams);
+		Matcher matcher = pattern.matcher(filecontent);
+		
+		
+		buffer.setSeparator(Corpus.NGRAM_SEPARATOR);
+		while (matcher.find()) {
+			String term = matcher.group().trim().toLowerCase();
+			if (! term.isEmpty()) {
+				String ngram = buffer.add(term);
+				bag.add(term);
+				if (nrGrams != 1 && ngram != null) {
+					bag.add(ngram);
+				}
+			}
+		}
+		String leftover = buffer.reset();
+		if (leftover != null) {
+			bag.add(leftover);
+		}
+		
+		Iterator<String> i = bag.iterator();
+		while (i.hasNext()) {
+			String ngramText = i.next();
+			Ngram ngram = new Ngram(ngramText, nrGrams);
+			ngram.setFrequency(bag.count(ngramText));
+			ngrams.add(ngram);
+		}
 
-        Pattern pattern = Pattern.compile(TermExtractor.getRegularExpression());
-        String filecontent = corpus.getFullContent(filename);
+		return ngrams;
+	}
 
-        if (filecontent != null) {
-            Matcher matcher = pattern.matcher(filecontent);
-
-            //create the firt ngram
-            String[] ngram = new String[corpus.getNumberGrams()];
-            int i = 0, count = 0;
-            while (count < corpus.getNumberGrams() && matcher.find()) {
-                String term = matcher.group();
-
-                if (term.length() > 0) {
-                    String word = term.toLowerCase();
-
-                    if (word.trim().length() > 0) {
-                        ngram[count] = word;
-                        count++;
-                    }
-                }
-
-                i++;
-            }
-
-            StringBuffer sb = new StringBuffer();
-            for (int j = 0; j < ngram.length - 1; j++) {
-                sb.append(ngram[j] + "<>");
-            }
-
-            sb.append(ngram[ngram.length - 1]);
-
-            //adding to the frequencies table
-            ngramsTable.put(sb.toString(), 1);
-
-            //creating the remaining ngrams
-            while (matcher.find()) {
-                String term = matcher.group();
-
-                if (term.trim().length() > 0) {
-                    String word = term.toLowerCase();
-
-                    if (word.trim().length() > 0) {
-                        String ng = this.addNextWord(ngram, word);
-
-                        //verify if the ngram already exist on the document
-                        if (ngramsTable.containsKey(ng)) {
-                            ngramsTable.put(ng, ngramsTable.get(ng) + 1);
-                        } else {
-                            ngramsTable.put(ng, 1);
-                        }
-                    }
-                }
-
-                i++;
-            }
-        }
-
-        ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
-
-        for (String n : ngramsTable.keySet()) {
-            ngrams.add(new Ngram(n, ngramsTable.get(n)));
-        }
-
-        return ngrams;
-    }
-
-    private String addNextWord(String[] ngram, String word) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < ngram.length - 1; i++) {
-            ngram[i] = ngram[i + 1];
-            sb.append(ngram[i] + "<>");
-        }
-
-        ngram[ngram.length - 1] = word;
-        sb.append(word);
-        return sb.toString();
-    }
 }

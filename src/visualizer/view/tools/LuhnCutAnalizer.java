@@ -615,7 +615,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         List<Ngram> ngrams = new ArrayList<Ngram>();
         for (String key : corporaNgrams.keySet()) {
             Ngram n = corporaNgrams.get(key);
-            if (n.frequency >= lowercut) {
+            if (n.getFrequency() >= lowercut) {
                 ngrams.add(n);
             }
         }
@@ -628,8 +628,8 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
 
         for (Ngram ngram : ngrams) {
             String[] label = new String[2];
-            label[0] = ngram.ngram;
-            label[1] = Integer.toString(ngram.frequency);
+            label[0] = ngram.getNgram();
+            label[1] = Integer.toString(ngram.getFrequency());
             tableModel.addRow(label);
         }
 
@@ -707,7 +707,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         Collection<Ngram> ngrams = pre.getNgrams();
 
         for (Ngram n : ngrams) {
-            corporaNgrams.put(n.ngram, n);
+            corporaNgrams.put(n.getNgram(), n);
         }
     }
 
@@ -766,10 +766,10 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         
         for (Ngram ngram : corpus_ngrams) {
             boolean contain = false;
-            String corpus_ngram = ngram.ngram;
+            String corpus_ngram = ngram.getNgram();
             String corpus_ngram_stem = stemmer.stem(corpus_ngram);
             for (Ngram res_ngram : res_ngrams) {
-                if (corpus_ngram_stem.equals(res_ngram.ngram)) {
+                if (corpus_ngram_stem.equals(res_ngram.getNgram())) {
                     contain = true;
                     break;
                 }
@@ -854,7 +854,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         try {
             out = new BufferedWriter(new FileWriter(filename));
             for (Ngram stt : res_ngrams) {
-                out.write(stt.ngram);
+                out.write(stt.getNgram());
                 out.write("\r\n");
             }
         } catch (IOException ex) {

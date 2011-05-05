@@ -54,7 +54,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.distance.DissimilarityType;
-import visualizer.textprocessing.transformation.MatrixTransformationType;
+import visualizer.ranking.text.MatrixTransformationType;
 import visualizer.textprocessing.stemmer.StemmerType;
 import visualizer.util.OpenDialog;
 import visualizer.view.Viewer;

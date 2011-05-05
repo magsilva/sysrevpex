@@ -45,17 +45,37 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
+package visualizer.ranking.text;
 
 import visualizer.matrix.Matrix;
+import visualizer.matrix.SparseVector;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class NoneTransformation implements MatrixTransformation {
+public class NTFTransformation implements MatrixTransformation {
 
     public Matrix tranform(Matrix matrix, Object parameter) {
+        for (int lin = 0; lin < matrix.getRowCount(); lin++) {
+            SparseVector sv = (SparseVector) matrix.getRow(lin);
+            sv.shouldUpdateNorm();
+
+            int svlength = sv.getIndex().length;
+
+            //Count the number of terms on the document
+            int nrtermsDoc = 0;
+            for (int col = 0; col < svlength; col++) {
+                nrtermsDoc += sv.getValues()[col];
+            }
+
+            //dividing the coordinations of a vector by the number
+            //of terms on it            
+            for (int col = 0; col < svlength; col++) {
+                sv.getValues()[col] /= nrtermsDoc;
+            }
+        }
+
         return matrix;
     }
 

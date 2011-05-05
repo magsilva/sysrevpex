@@ -3,7 +3,10 @@
  * Copyright (c) 2005-2007 Universidade de Sao Paulo, Sao Carlos/SP, Brazil.
  * All Rights Reserved.
  *
- * This file is part of Projection Explorer (PEx).
+ * This file is part of Projection Explorer (PEx), based on the code presented 
+ * in:
+ * 
+ * http://tartarus.org/~martin/PorterStemmer/java.txt
  *
  * How to cite this work:
  *  
@@ -45,51 +48,24 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-package visualizer.textprocessing.transformation;
-
-import visualizer.matrix.Matrix;
-import visualizer.matrix.SparseVector;
+package visualizer.ranking.text;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class TFIDFTransformation implements MatrixTransformation
-{
-    public Matrix tranform(Matrix matrix, Object parameter)
-    {
-        // Store the number of documents which the term occur
-        float[] docsFreq = new float[matrix.getDimensions()];
+public class MatrixTransformationFactory {
 
-        // Count the number of documents which the terms occur
-        for (int row = 0; row < matrix.getRowCount(); row++) {
-            SparseVector sv = (SparseVector) matrix.getRow(row);
-            int svlength = sv.getIndex().length;
-
-            for (int col = 0; col < svlength; col++) {
-                docsFreq[sv.getIndex()[col]]++;
-            }
+    public static MatrixTransformation getInstance(MatrixTransformationType type) {
+        if (type.equals(MatrixTransformationType.NTF)) {
+            return new NTFTransformation();
+        } else if (type.equals(MatrixTransformationType.NTF_IDF)) {
+            return new NTFIDFTransformation();
+        } else if (type.equals(MatrixTransformationType.TF_IDF)) {
+            return new TFIDFTransformation();
+        } else {
+            return new NoneTransformation();
         }
-
-        // Calculate the TF-IDF
-        for (int lin = 0; lin < matrix.getRowCount(); lin++) {
-            SparseVector sv = (SparseVector) matrix.getRow(lin);
-            sv.shouldUpdateNorm();
-
-            int svlength = sv.getIndex().length;
-
-            for (int col = 0; col < svlength; col++) {
-                // Get the term-frequency
-                float tf = sv.getValues()[col];
-                float idf = 0.0f;
-                if (docsFreq[col] != 0) {
-                    idf = (float) Math.log(matrix.getRowCount() / docsFreq[sv.getIndex()[col]]);
-                }
-
-                // Calculate and store the T-IDF
-                sv.getValues()[col] = (tf * idf);
-            }
-        }
-        return matrix;
     }
+
 }
