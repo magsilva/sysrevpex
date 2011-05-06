@@ -441,7 +441,7 @@ public class ReportView extends javax.swing.JPanel {
             this.numberObjectsTextField.setText(Integer.toString(pdata.getNumberObjects()));
 
             //set pre-processing
-            if (pdata.getSourceType() == SourceType.CORPUS) {
+            if (pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
                 this.luhnLowerCutTextField.setText(Integer.toString(pdata.getLunhLowerCut()));
                 this.numberGramsTextField.setText(Integer.toString(pdata.getNumberGrams()));
 

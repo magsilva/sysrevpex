@@ -87,7 +87,7 @@ public class DistanceMatrixFactory {
             }
 
             dmat = new DistanceMatrix(pdata.getSourceFile());
-        } else if (pdata.getSourceType().equals(SourceType.CORPUS)) {
+        } else if (pdata.getSourceType().equals(SourceType.CORPUS) || pdata.getSourceType().equals(SourceType.BIBTEX)) {
         	dmat = new DistanceMatrix(MatrixFactory.getInstance(view, pdata), DissimilarityFactory.getInstance(pdata.getDissimilarityType()));
         }
 

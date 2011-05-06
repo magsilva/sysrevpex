@@ -190,7 +190,7 @@ public class PLSPProjection2DView extends ProjectionView {
     public void reset() {
         int nrobjects = 0;
 
-        if (this.pdata.getSourceType() == SourceType.CORPUS) {
+        if (this.pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
             nrobjects = Util.countFiles(this.pdata.getSourceFile());
         } else if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX) {
             try {

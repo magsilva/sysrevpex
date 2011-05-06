@@ -241,7 +241,7 @@ public class GeneralParameters extends WizardPanel {
     }//GEN-LAST:event_hierarchicalClusteringCheckBoxActionPerformed
 
     public GeneralParameters reset() {
-        if (this.pdata.getSourceType() == SourceType.CORPUS) {
+        if (this.pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
             this.numberLinesComboBox.setEnabled(true);
         } else {
             this.numberLinesComboBox.setEnabled(false);

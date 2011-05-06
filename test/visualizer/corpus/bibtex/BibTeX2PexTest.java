@@ -21,7 +21,7 @@ public class BibTeX2PexTest
 	@Test
 	public void testConvertConsolidated() throws IOException
 	{
-		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Studies.bib"));
+		converter.setBibtexFile(new File("/home/magsilva/Publications/TechnicalReports/Learning objects requirements/Selection/Studies-Screened.bib"));
 		converter.convert();
 	}
 	

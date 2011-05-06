@@ -47,8 +47,10 @@ address = {Washington, DC, USA},
 
 package visualizer.corpus;
 
+import visualizer.corpus.bibtex.BibTeXCorpus;
 import visualizer.corpus.zip.ZipCorpus;
 import visualizer.projection.ProjectionData;
+import visualizer.projection.SourceType;
 
 /**
  *
@@ -58,7 +60,9 @@ public class CorpusFactory {
 
     public static Corpus getInstance(String filename, ProjectionData pdata)
     {
-        ZipCorpus corpus = new ZipCorpus(filename, pdata.getNumberGrams());
-        return corpus;
+    	if (pdata.getSourceType() == SourceType.BIBTEX) {
+    		return new BibTeXCorpus(filename, pdata.getNumberGrams());
+    	}
+		return new ZipCorpus(filename, pdata.getNumberGrams());
     }
 }

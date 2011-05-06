@@ -198,7 +198,7 @@ public class GraphBuilder {
         //Set the vertices
         graph.setVertex(vertex);
 
-        if (pdata.getSourceType() == SourceType.CORPUS) {
+        if (pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
             //setting the corpus
             Corpus cp = CorpusFactory.getInstance(pdata.getSourceFile(), pdata);
             graph.setCorpus(cp);

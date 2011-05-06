@@ -32,11 +32,11 @@ public class BibTeX2Pex
 	
 	private Set<Integer> numbers;
 	
-	private static final String BIBTEX_EXTENSION = ".bib";
+	public static final String BIBTEX_EXTENSION = ".bib";
 
-	private static final String PEX_DOCUMENT_EXTENSION = ".zip";
+	public static final String PEX_DOCUMENT_EXTENSION = ".zip";
 
-	private static final String PEX_SCALAR_EXTENSION = ".scalar";
+	public static final String PEX_SCALAR_EXTENSION = ".scalar";
 
 	private String baseDir;
 

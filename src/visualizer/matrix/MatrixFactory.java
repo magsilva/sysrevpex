@@ -74,7 +74,7 @@ public class MatrixFactory {
     public static Matrix getInstance(ProjectionView view, ProjectionData pdata) throws IOException {
         Matrix matrix = null;
 
-        if (pdata.getSourceType().equals(SourceType.CORPUS)) {
+        if (pdata.getSourceType().equals(SourceType.CORPUS) || pdata.getSourceType().equals(SourceType.BIBTEX)) {
             if (view != null) {
                 view.setStatus("Pre-processing the corpus...", 5);
             }
