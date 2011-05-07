@@ -158,6 +158,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		AdverbFilter adverbFilter = new AdverbFilter();
 		StopWordFilter stopwordFilter1;
 		StopWordFilter stopwordFilter2;
+		StopWordFilter stopwordFilter3;
 		StopWord stopwords = new SetStopword();
 		WhiteSpaceFilter whitespaceWordFilter1 = new WhiteSpaceFilter();
 		WhiteSpaceFilter whitespaceWordFilter2 = new WhiteSpaceFilter();
@@ -173,9 +174,11 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		if (numberGrams == 1) {
 			stopwordFilter1 = new StopWordFilter();
 			stopwordFilter2 = new StopWordFilter();
+			stopwordFilter3 = new StopWordFilter();
 		} else {
 			stopwordFilter1 = new StopNgramFilter();
 			stopwordFilter2 = new StopNgramFilter();
+			stopwordFilter3 = new StopNgramFilter();
 		}
 		
 		
@@ -219,24 +222,51 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		
 		// ngramReducerFilter.setConsumer(wordReplacer);
 		
-		wordReplacer.addSynonym("learning object", "learning resource");
+		wordReplacer.addSynonym("learning object", "LO");
+		wordReplacer.addSynonym("learning object", "RLO");
+		wordReplacer.addSynonym("learning object", "GLO");
 		wordReplacer.addSynonym("learning object", "educational module");
 		wordReplacer.addSynonym("learning object", "educational resource");
 		wordReplacer.addSynonym("learning object", "unit of learning");
+		wordReplacer.addSynonym("learning object", "learning resource");
+		
 		wordReplacer.addSynonym("instructional design", "learning design");
 		
-		wordReplacer.addSynonym("interactivity", "interactive");
-		wordReplacer.addSynonym("interactivity", "interaction");
-		wordReplacer.addSynonym("interactivity", "user experience");
-		wordReplacer.addSynonym("interactivity", "colaboration");
-		wordReplacer.addSynonym("interactivity", "colaborative");
+		wordReplacer.addSynonym("interaction", "interactive");
+		wordReplacer.addSynonym("interaction", "interactivity");
 		
-		wordReplacer.addSynonym("interactivity", "interactive");
-		wordReplacer.addSynonym("interactivity", "interactive");
-
+		wordReplacer.addSynonym("collaboration", "colaborative");
+		wordReplacer.addSynonym("collaboration", "colaborativity");
+		
 		wordReplacer.addSynonym("interaction design", "interaction modeling");
+		wordReplacer.addSynonym("interaction design", "interaction modelling");
+
+		wordReplacer.addSynonym("HCI", "user interface");
+		wordReplacer.addSynonym("HCI", "human-computer interaction");
+		wordReplacer.addSynonym("HCI", "human computer interaction");
+		wordReplacer.addSynonym("HCI", "human-computer interface");
+		wordReplacer.addSynonym("HCI", "human computer interface");
+		wordReplacer.addSynonym("HCI", "UX");
+		wordReplacer.addSynonym("HCI", "user experience");
+		wordReplacer.addSynonym("HCI", "usability");
+		wordReplacer.addSynonym("HCI", "UI");
 		
-		wordReplacer.setConsumer(bufferComponent);
+		wordReplacer.addSynonym("learning system", "learning environment");
+		wordReplacer.addSynonym("learning system", "LMS");
+		wordReplacer.addSynonym("learning system", "LCMS");
+		wordReplacer.addSynonym("learning system", "learning management system");
+		wordReplacer.addSynonym("learning system", "Moodle");
+		wordReplacer.addSynonym("learning system", "WebCT");
+		wordReplacer.addSynonym("learning system", "BlackBoard");
+		
+		wordReplacer.addSynonym("software", "tool");
+		wordReplacer.addSynonym("software", "application");
+
+		wordReplacer.setConsumer(stopwordFilter3);
+		
+		stopwordFilter3.setStopWord(stopwords);
+		stopwordFilter3.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+		stopwordFilter3.setConsumer(bufferComponent);
 
 		return bufferComponent;
     }

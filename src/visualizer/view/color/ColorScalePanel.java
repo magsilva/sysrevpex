@@ -46,42 +46,59 @@ address = {Washington, DC, USA},
  * ***** END LICENSE BLOCK ***** */
 package visualizer.view.color;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import visualizer.view.Viewer;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class ColorScalePanel extends javax.swing.JPanel {
+public class ColorScalePanel extends JPanel
+{
+	private JLabel maxLabel = new JLabel("Max");
+    
+	private JLabel minLabel = new JLabel("Min");
 
-    public ColorScalePanel(Viewer gv) {
+	private ColorScalePanel.ColorScale scale;
+    
+	private ColorTable colorTable;
+    
+	private Viewer gv;
+	
+    public ColorScalePanel(Viewer gv)
+    {
         this.gv = gv;
 
-        this.scale = new ColorScalePanel.ColorScale();
+        scale = new ColorScalePanel.ColorScale();
 
-        this.maxLabel.setForeground(java.awt.Color.GRAY);
-        this.maxLabel.setFont(new java.awt.Font("Verdana", Font.BOLD, 10));
+        maxLabel.setForeground(Color.GRAY);
+        maxLabel.setFont(new Font("Verdana", Font.BOLD, 10));
 
-        this.minLabel.setForeground(java.awt.Color.GRAY);
-        this.minLabel.setFont(new java.awt.Font("Verdana", Font.BOLD, 10));
+        minLabel.setForeground(Color.GRAY);
+        minLabel.setFont(new Font("Verdana", Font.BOLD, 10));
 
-//        this.scale.setBorder(new javax.swing.border.LineBorder(java.awt.Color.GRAY, 1, true));
-//        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+//        scale.setBorder(new border.LineBorder(Color.GRAY, 1, true));
+//        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
-        this.setToolTipText("Click to change the color scale");
+        setToolTipText("Click to change the color scale");
 
-        this.setLayout(new java.awt.BorderLayout(5, 5));
-        this.add(this.scale, java.awt.BorderLayout.CENTER);
-        this.add(this.maxLabel, java.awt.BorderLayout.EAST);
-        this.add(this.minLabel, java.awt.BorderLayout.WEST);
+        setLayout(new BorderLayout(5, 5));
+        add(scale, BorderLayout.CENTER);
+        add(maxLabel, BorderLayout.EAST);
+        add(minLabel, BorderLayout.WEST);
 
-        this.addMouseListener(new MouseClickedListener());
+        addMouseListener(new MouseClickedListener());
     }
 
     public void setColorTable(ColorTable colorTable) {
@@ -91,7 +108,7 @@ public class ColorScalePanel extends javax.swing.JPanel {
     class MouseClickedListener extends MouseAdapter {
 
         @Override
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
+        public void mouseClicked(MouseEvent evt) {
             super.mouseClicked(evt);
             if (ColorScalePanel.this.gv != null) {
                 ColorScaleChange.getInstance(gv.getProjectionExplorerView(), gv).display();
@@ -111,10 +128,10 @@ public class ColorScalePanel extends javax.swing.JPanel {
         }
     }
 
-    public class ColorScale extends javax.swing.JPanel {
+    public class ColorScale extends JPanel {
 
         @Override
-        public void paintComponent(java.awt.Graphics g) {
+        public void paintComponent(Graphics g) {
             super.paintComponent(g);
             drawScale(g);
         }
@@ -134,10 +151,4 @@ public class ColorScalePanel extends javax.swing.JPanel {
             }
         }
     }
-    
-    private javax.swing.JLabel maxLabel = new javax.swing.JLabel("Max");
-    private javax.swing.JLabel minLabel = new javax.swing.JLabel("Min");
-    private ColorScalePanel.ColorScale scale;
-    private ColorTable colorTable;
-    private Viewer gv;
 }

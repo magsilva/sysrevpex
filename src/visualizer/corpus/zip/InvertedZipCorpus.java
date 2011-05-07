@@ -60,17 +60,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import visualizer.corpus.*;
-import visualizer.corpus.database.DataBaseCorpus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
@@ -82,6 +77,10 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.ironiacorp.datastructure.StringCircularBuffer;
 
+import visualizer.corpus.BaseCorpus;
+import visualizer.corpus.Corpus;
+import visualizer.corpus.Encoding;
+import visualizer.corpus.database.DataBaseCorpus;
 import visualizer.textprocessing.Ngram;
 import visualizer.textprocessing.TermExtractor;
 
@@ -352,24 +351,30 @@ public class InvertedZipCorpus
 
 		Multiset<String> bag = HashMultiset.create();
 		Pattern pattern = Pattern.compile(TermExtractor.getRegularExpression());
-		StringCircularBuffer buffer = new StringCircularBuffer(nrGrams);
+		StringCircularBuffer[] buffers = new StringCircularBuffer[nrGrams - 1];
+		for (int i = 2; i <= nrGrams; i++) {
+			buffers[i - 2] = new StringCircularBuffer(i);
+			buffers[i - 2].setSeparator(Corpus.NGRAM_SEPARATOR);
+		}
 		Matcher matcher = pattern.matcher(filecontent);
 		
-		
-		buffer.setSeparator(Corpus.NGRAM_SEPARATOR);
 		while (matcher.find()) {
 			String term = matcher.group().trim().toLowerCase();
 			if (! term.isEmpty()) {
-				String ngram = buffer.add(term);
 				bag.add(term);
-				if (nrGrams != 1 && ngram != null) {
-					bag.add(ngram);
+				for (StringCircularBuffer buffer : buffers) { 
+					String ngram = buffer.add(term);
+					if (ngram != null) {
+						bag.add(ngram);
+					}
 				}
 			}
 		}
-		String leftover = buffer.reset();
-		if (leftover != null) {
-			bag.add(leftover);
+		for (StringCircularBuffer buffer : buffers) { 
+			String leftover = buffer.reset();
+			if (leftover != null) {
+				bag.add(leftover);
+			}
 		}
 		
 		Iterator<String> i = bag.iterator();

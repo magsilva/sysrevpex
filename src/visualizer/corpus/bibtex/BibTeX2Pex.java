@@ -166,17 +166,17 @@ public class BibTeX2Pex
 					case SELECTED:
 						switch (reason) {
 							case FULL_TEXT:
-								scalarwriter.write("1.0");
+								scalarwriter.write("0.5");
 								break;
 							default:
-								scalarwriter.write("0.5");
+								scalarwriter.write("0.7");
 						}
 						break;
 					case EXCLUDED:
-						scalarwriter.write("0.0");
+						scalarwriter.write("1.0");
 						break;
 					default:
-						scalarwriter.write("0.2");
+						scalarwriter.write("0.0");
 				}
 			} else {
 				scalarwriter.write("0");

@@ -54,11 +54,15 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -952,10 +956,37 @@ public class ProjectionViewer extends Viewer {
 
         public void saveToPngImageFile(String filename) throws IOException {
             try {
-                BufferedImage image =  new BufferedImage(graph.getSize().width + 1,
-                        graph.getSize().height + 1, BufferedImage.TYPE_INT_RGB);
+                BufferedImage image =  new BufferedImage(graph.getSize().width + 1, graph.getSize().height + 1, BufferedImage.TYPE_INT_RGB);
+                this.remove(this.csp);
                 this.paint(image.getGraphics());
+                this.add(this.csp);
                 ImageIO.write(image, "png", new File(filename));
+
+                // Crop image
+                BufferedImage buftmp = ImageIO.read(new File(filename));
+                int x1 = buftmp.getWidth(), x2 = 0, y1 = buftmp.getHeight(), y2 = 0;
+                for (int y = 0; y < buftmp.getHeight(); y++) {
+                	for (int x = 0; x < buftmp.getWidth(); x++) {
+                		int color = buftmp.getRGB(x, y);
+
+                		if (color != -1) {
+                			if (x < x1) {
+                				x1 = x;
+                			}
+                			if (y < y1) {
+                				y1 = y;
+                			}
+                			if (x > x2) {
+                				x2 = x;
+                			}
+                			if (y > y2) {
+                				y2 = y;
+                			}
+                		}
+                	}
+                }
+                ImageIO.write(buftmp.getSubimage(x1, y1, x2 - x1, y2 - y1), "png", new File(filename));
+                
             } catch (IOException ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             }

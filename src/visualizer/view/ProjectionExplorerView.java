@@ -1830,7 +1830,7 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
                 filename = SaveDialog.getFilename();
 
                 try {
-                    gv.saveToPngImageFile(filename);
+                     gv.saveToPngImageFile(filename);
                 } catch (IOException e) {
                     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
                     JOptionPane.showMessageDialog(this, e.getMessage(),
