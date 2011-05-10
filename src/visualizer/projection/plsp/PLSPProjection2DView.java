@@ -190,32 +190,24 @@ public class PLSPProjection2DView extends ProjectionView {
     public void reset() {
         int nrobjects = 0;
 
-        if (this.pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
-            nrobjects = Util.countFiles(this.pdata.getSourceFile());
+        if (pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
+       		nrobjects = Util.countFiles(pdata.getSourceFile());
         } else if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX) {
-            try {
-                nrobjects = Util.countObjectsDistanceFile(this.pdata.getSourceFile());
-            } catch (IOException ex) {
-                Logger.getLogger(PLSPProjection2DView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        	nrobjects = Util.countObjectsDistanceFile(pdata.getSourceFile());
         } else if (pdata.getSourceType() == SourceType.POINTS) {
-            try {
-                nrobjects = Util.countObjectsPointsFile(this.pdata.getSourceFile());
-            } catch (IOException ex) {
-                Logger.getLogger(PLSPProjection2DView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        	nrobjects = Util.countObjectsPointsFile(pdata.getSourceFile());
         }
 
         if (nrobjects < 800) {
-            this.numberNeighborsTextField.setText("8");
+            numberNeighborsTextField.setText("8");
         } else if (nrobjects < 1500) {
-            this.numberNeighborsTextField.setText("10");
+            numberNeighborsTextField.setText("10");
         } else if (nrobjects < 15000) {
-            this.numberNeighborsTextField.setText("15");
+            numberNeighborsTextField.setText("15");
         } else if (nrobjects < 200000) {
-            this.numberNeighborsTextField.setText("20");
+            numberNeighborsTextField.setText("20");
         } else {
-            this.numberNeighborsTextField.setText("25");
+            numberNeighborsTextField.setText("25");
         }
     }
 

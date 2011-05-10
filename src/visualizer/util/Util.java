@@ -51,6 +51,7 @@ package visualizer.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -550,36 +551,28 @@ public class Util {
         }
     }
 
-    public static int countFiles(String corpora) {
-        int numberFiles = 0;
+	public static int countFiles(String file)
+	{
+		int numberFiles = 0;
 
-        //Capturing the filenames of the zip file
-        ZipFile zip = null;
-        try {
-            zip = new ZipFile(corpora);
-            Enumeration entries = zip.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry) entries.nextElement();
-                if (!entry.isDirectory()) {
-                    numberFiles++;
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (zip != null) {
-                try {
-                    zip.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+		// Capturing the filenames of the zip file
+		ZipFile zip = null;
+		try {
+			zip = new ZipFile(file);
+			Enumeration<? extends ZipEntry> entries = zip.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (!entry.isDirectory()) {
+					numberFiles++;
+				}
+			}
+			zip.close();
+		} catch (IOException e) {
+			numberFiles = -1;
+		}
 
-        return numberFiles;
-    }
+		return numberFiles;
+	}
 
     public static float[][] transpose(float[][] matrix) {
         float[][] transpMatrix = new float[matrix[0].length][];
@@ -595,59 +588,54 @@ public class Util {
         return transpMatrix;
     }
 
-    public static int countObjectsDistanceFile(String filename) throws IOException {
-        BufferedReader in = null;
-
+    public static int countObjectsDistanceFile(String filename)
+    {
+    	BufferedReader in = null;
+    	int nrObjects;
         try {
-            in = new BufferedReader(new java.io.FileReader(filename));
-            return Integer.parseInt(in.readLine());
-
-        } catch (FileNotFoundException ex) {
-            throw new IOException(ex.getMessage());
-        } catch (IOException ex) {
-            throw new IOException(ex.getMessage());
+            in = new BufferedReader(new FileReader(filename));
+            nrObjects = Integer.parseInt(in.readLine());
+        } catch (Exception e) {
+        	Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, e);
+        	nrObjects = -1;
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        	if (in != null) {
+        		try {
+        			in.close();
+        		} catch (IOException e) {}
+        	}
         }
+        
+        return nrObjects;
     }
 
-    public static int countObjectsPointsFile(String filename) throws IOException {
-        BufferedReader in = null;
-
-        try {
-            in = new BufferedReader(new java.io.FileReader(filename));
+    public static int countObjectsPointsFile(String filename)
+    {
+    	BufferedReader in = null;
+    	int nrObjects;
+    	try {
+        	in = new BufferedReader(new FileReader(filename));
 
             //read the header
             char[] header = in.readLine().trim().toCharArray();
-
-            //checking
             if (header.length != 2) {
                 throw new IOException("Wrong format of header information.");
             }
 
             //read the number of objects
-            int nrobjs = Integer.parseInt(in.readLine());
-            return nrobjs;
-
-        } catch (FileNotFoundException ex) {
-            throw new IOException(ex.getMessage());
-        } catch (IOException ex) {
-            throw new IOException(ex.getMessage());
+            nrObjects = Integer.parseInt(in.readLine());
+        } catch (Exception e) {
+        	Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, e);
+            nrObjects = -1;
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        	if (in != null) {
+        		try {
+        			in.close();
+        		} catch (IOException e) {}
+        	}
         }
+        
+        return nrObjects;
     }
 
     public static void savePrefuseGraph(Graph graph, String filename,

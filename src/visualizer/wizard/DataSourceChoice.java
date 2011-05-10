@@ -44,6 +44,7 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import visualizer.corpus.bibtex.BibTeXCorpus;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.SourceType;
 import visualizer.util.OpenDialog;
@@ -441,7 +442,7 @@ public class DataSourceChoice extends WizardPanel
     @Override
     public void refreshData() {
         if (bibtexRadioButton.isSelected()) {
-            pdata.setSourceFile(bibtexTextField.getText());
+            pdata.setSourceFile(BibTeXCorpus.translateFilename(bibtexTextField.getText()));
         } else if (corporaRadioButton.isSelected()) {
             pdata.setSourceFile(corporaTextField.getText());
         } else if (pointsRadioButton.isSelected()) {

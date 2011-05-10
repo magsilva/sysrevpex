@@ -49,6 +49,8 @@ package visualizer.wizard;
 
 import java.awt.Dimension;
 import javax.swing.JOptionPane;
+
+import visualizer.corpus.CorpusFactory;
 import visualizer.graph.Graph;
 import visualizer.view.ReportView;
 
@@ -150,10 +152,11 @@ public class ProjectionWizardView extends javax.swing.JDialog {
 
         if (this.dataPanel instanceof DataSourceChoice) {
             if (this.graph.getProjectionData().getSourceFile().trim().length() > 0) {
+            	CorpusFactory.getInstance(graph.getProjectionData().getSourceFile(), graph.getProjectionData());
                 this.definePanel(ProjectionWizardCore.NEXT_STATE);
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "A corpus or points file or distance file must be provided!",
+                		"A corpus or points file or distance file must be provided!",
                         "Problems", JOptionPane.ERROR_MESSAGE);
             }
         } else {

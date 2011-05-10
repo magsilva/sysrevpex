@@ -92,6 +92,8 @@ public class InvertedZipCorpus
 {
 	private static final String INVERTED_FILE_PROPERTIES = "inverted.properties";
 	
+	public static final String FILENAME_EXTENSION = ".inv";
+	
 	private static final String invDir = "inv/";
 
 	private String invFilename;

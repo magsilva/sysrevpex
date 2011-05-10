@@ -49,6 +49,8 @@ package visualizer.view.tools;
 
 import java.io.IOException;
 import javax.swing.JOptionPane;
+
+import visualizer.corpus.zip.ZipCorpus;
 import visualizer.util.OpenDialog;
 import visualizer.util.SaveDialog;
 import visualizer.util.TextFromPDF;
@@ -224,7 +226,7 @@ public class CreatePDFCorpora extends javax.swing.JDialog {
         String filename = "corpus.zip";
         if (this.directoryTextField.getText().trim().length() > 0) {
             filename = this.directoryTextField.getText();
-            filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length()) + ".zip";
+            filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length()) + ZipCorpus.FILENAME_EXTENSION;
         }
 
         int result = SaveDialog.showSaveDialog(new ZIPFilter(), this, filename);

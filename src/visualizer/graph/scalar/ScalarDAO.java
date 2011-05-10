@@ -22,9 +22,12 @@ import visualizer.graph.Graph;
 import visualizer.graph.Vertex;
 import visualizer.util.PExConstants;
 
-public class ScalarDAO {
+public class ScalarDAO
+{
 	private Charset charset = Charset.defaultCharset();
 
+	public static final String FILENAME_EXTENSION = ".scalar";
+	
 	public static final String SEPARATOR = ";";
 
 	public static final String REPLACEMENT = "_";

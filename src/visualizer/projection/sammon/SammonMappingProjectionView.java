@@ -46,9 +46,6 @@ address = {Washington, DC, USA},
  * ***** END LICENSE BLOCK ***** */
 package visualizer.projection.sammon;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import visualizer.projection.ProjectionData;
 import visualizer.projection.SourceType;
 import visualizer.util.Util;
@@ -70,17 +67,9 @@ public class SammonMappingProjectionView extends ProjectionView {
         if (this.pdata.getSourceType() == SourceType.CORPUS || pdata.getSourceType().equals(SourceType.BIBTEX)) {
             nrobjects = Util.countFiles(this.pdata.getSourceFile());
         } else if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX) {
-            try {
-                nrobjects = Util.countObjectsDistanceFile(this.pdata.getSourceFile());
-            } catch (IOException ex) {
-                Logger.getLogger(SammonMappingProjectionView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            nrobjects = Util.countObjectsDistanceFile(this.pdata.getSourceFile());
         } else if (pdata.getSourceType() == SourceType.POINTS) {
-            try {
-                nrobjects = Util.countObjectsPointsFile(this.pdata.getSourceFile());
-            } catch (IOException ex) {
-                Logger.getLogger(SammonMappingProjectionView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            nrobjects = Util.countObjectsPointsFile(this.pdata.getSourceFile());
         }
         
         this.nIterationsTextField.setText(Integer.toString(nrobjects));

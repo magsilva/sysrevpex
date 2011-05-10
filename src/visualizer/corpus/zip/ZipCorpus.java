@@ -69,7 +69,7 @@ import visualizer.textprocessing.Ngram;
  */
 public class ZipCorpus extends BaseCorpus
 {
-	public static final String INVERTED_CORPUS_EXTENSION = ".inv";
+	public static final String FILENAME_EXTENSION = ".zip";
 
     private InvertedZipCorpus invertedCorpus;
 	
@@ -93,7 +93,7 @@ public class ZipCorpus extends BaseCorpus
     private void initializeInvertedCorpus()
     {
         // The inverted corpus must be on the same place of corpus
-        String invCorpFilename = url.substring(0, url.lastIndexOf(".")) + INVERTED_CORPUS_EXTENSION;
+        String invCorpFilename = url.substring(0, url.lastIndexOf(".")) + InvertedZipCorpus.FILENAME_EXTENSION;
         invertedCorpus = new InvertedZipCorpus(this, nrGrams, invCorpFilename);
     }
 

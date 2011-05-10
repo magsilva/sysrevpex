@@ -17,6 +17,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
+import visualizer.corpus.zip.ZipCorpus;
+import visualizer.graph.scalar.ScalarDAO;
+
 import com.ironiacorp.sysrev.selection.Argument;
 import com.ironiacorp.sysrev.selection.PublicationSelectionStatus;
 import com.ironiacorp.sysrev.selection.Reason;
@@ -32,12 +35,6 @@ public class BibTeX2Pex
 	
 	private Set<Integer> numbers;
 	
-	public static final String BIBTEX_EXTENSION = ".bib";
-
-	public static final String PEX_DOCUMENT_EXTENSION = ".zip";
-
-	public static final String PEX_SCALAR_EXTENSION = ".scalar";
-
 	private String baseDir;
 
 	private String name;
@@ -69,9 +66,9 @@ public class BibTeX2Pex
 		name = file.getName();
 		name = name.substring(0, name.lastIndexOf("."));
 
-		this.bibtexFile = new File(baseDir, name + BIBTEX_EXTENSION);
-		this.pexFile = new File(baseDir, name + PEX_DOCUMENT_EXTENSION);
-		this.scalarFile = new File(baseDir, name + PEX_SCALAR_EXTENSION);
+		this.bibtexFile = new File(baseDir, name + BibTeXCorpus.FILENAME_EXTENSION);
+		this.pexFile = new File(baseDir, name + ZipCorpus.FILENAME_EXTENSION);
+		this.scalarFile = new File(baseDir, name + ScalarDAO.FILENAME_EXTENSION);
 	}
 	
 
@@ -123,6 +120,17 @@ public class BibTeX2Pex
 		Iterator<BibtexEntry> iterator = entries.iterator();
 		while (iterator.hasNext()) {
 			BibtexEntry bibtexEntry = iterator.next();
+			String statusField = bibtexEntry.getField("status");
+			if (statusField != null) {
+				PublicationSelectionStatus reviewStatus = new PublicationSelectionStatus(statusField);
+				if (reviewStatus.getDecision() == Status.EXCLUDED) {
+					List<Argument> arguments = reviewStatus.getArguments();
+					Reason reason = arguments.get(arguments.size() - 1).getReason(); 
+					if (reason == Reason.TYPE || reason == Reason.LANGUAGE) {
+						continue;
+					}
+				}
+			}
 			bibtexEntry = findInCache(bibtexEntry);
 			String fileName = bibtexEntry.getField("pexid").concat(".txt");
 			StringWriter writer = new StringWriter();
@@ -162,18 +170,19 @@ public class BibTeX2Pex
 				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
 				List<Argument> arguments = status.getArguments();
 				Reason reason = arguments.get(arguments.size() - 1).getReason(); 
-				switch (status.getDecision()) {
+				Status finalStatus = status.getDecision();
+				switch (finalStatus) {
 					case SELECTED:
 						switch (reason) {
 							case FULL_TEXT:
-								scalarwriter.write("0.5");
+								scalarwriter.write("1.0");
 								break;
 							default:
-								scalarwriter.write("0.7");
+								scalarwriter.write("0.5");
 						}
 						break;
 					case EXCLUDED:
-						scalarwriter.write("1.0");
+						scalarwriter.write("0.0");
 						break;
 					default:
 						scalarwriter.write("0.0");
@@ -197,9 +206,7 @@ public class BibTeX2Pex
 			scalarwriter.write(";");
 			if (bibtexEntry.getField("status") != null) {
 				PublicationSelectionStatus status = new PublicationSelectionStatus(bibtexEntry.getField("status"));
-				List<Argument> arguments = status.getArguments();
-				Reason reason = arguments.get(arguments.size() - 1).getReason(); 
-				if (status.getDecision() == Status.EXCLUDED && reason == Reason.ABSTRACT) {
+				if (status.getDecision() == Status.EXCLUDED) {
 					scalarwriter.write("1");
 				} else {
 					scalarwriter.write("0");
