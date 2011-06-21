@@ -93,7 +93,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>[4.8,)</version>
-			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -150,6 +150,7 @@
                        <type>jar</type>
                         <scope>compile</scope>
                 </dependency>
+
                 <dependency>
                 	<groupId>colt</groupId>
                 	<artifactId>colt</artifactId>
@@ -218,8 +219,28 @@
 							<mainClass>visualizer.ProjectionExplorer</mainClass>
 						</manifest>
 					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<mainClass>visualizer.ProjectionExplorer</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+
 		</plugins>			
 	</build>
 

@@ -74,6 +74,7 @@ import com.ironiacorp.resource.Resource;
 
 import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
+import visualizer.util.SystemPropertiesManager;
 
 /**
  *
@@ -197,7 +198,9 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		if (useStopword) {
 			whitespaceWordFilter2.setConsumer(stopwordFilter1);
 			stopwordFilter1.setStopWord(stopwords);
-			stopwordFilter1.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+			SystemPropertiesManager props = SystemPropertiesManager.getInstance();
+			String propsDir = props.getProperty("SPW.DIR");
+			stopwordFilter1.loadLanguage(propsDir, "en");
 			stopwordFilter1.setConsumer(wordSingularizer);
 		} else {
 			whitespaceWordFilter2.setConsumer(wordSingularizer);
@@ -214,7 +217,9 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		if (useStopword) {
 			adverbFilter.setConsumer(stopwordFilter2);
 			stopwordFilter2.setStopWord(stopwords);
-			stopwordFilter2.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+			SystemPropertiesManager props = SystemPropertiesManager.getInstance();
+			String propsDir = props.getProperty("SPW.DIR");
+			stopwordFilter2.loadLanguage(propsDir, "en");
 			stopwordFilter2.setConsumer(wordReplacer);
 		} else {
 			adverbFilter.setConsumer(wordReplacer);
@@ -265,7 +270,9 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		wordReplacer.setConsumer(stopwordFilter3);
 		
 		stopwordFilter3.setStopWord(stopwords);
-		stopwordFilter3.loadLanguage("/home/magsilva/Projects/LabES/Lode/resources", "en");
+		SystemPropertiesManager props = SystemPropertiesManager.getInstance();
+		String propsDir = props.getProperty("SPW.DIR");
+		stopwordFilter3.loadLanguage(propsDir, "en");
 		stopwordFilter3.setConsumer(bufferComponent);
 
 		return bufferComponent;

@@ -49,6 +49,8 @@ package visualizer.util;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import visualizer.corpus.CorpusFactory;
@@ -86,7 +88,11 @@ public class OpenDialog {
         int result = dialog.showOpenDialog(parent);
         if (result == JFileChooser.APPROVE_OPTION) {
             _filename = dialog.getSelectedFile().getAbsolutePath();
-            m.setProperty(filter.getProperty(), dialog.getSelectedFile().getParent());
+            try {
+            	m.setProperty(filter.getProperty(), dialog.getSelectedFile().getParent());
+            } catch (Exception e) {
+            	System.out.println(dialog.getSelectedFile() + "\n" + e.getMessage());
+            }
         }
 
         return result;
