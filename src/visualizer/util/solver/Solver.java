@@ -1,35 +1,15 @@
 package visualizer.util.solver;
 
-public class Solver<T>
+
+public interface Solver<T>
 {
-	private Matrix<T> matrixA;
+	Matrix<T> getMatrixA();
 
-	private Matrix<T> matrixB;
+	void setMatrixA(Matrix<T> matrix);
 
-	public Solver()
-	{
-	}
+	Matrix<T> getMatrixB();
 
-	public Matrix<T> getMatrixA()
-	{
-		return matrixA;
-	}
-	
-	public void setMatrixA(Matrix<Float> matrix)
-	{
-	}
+	void setMatrixB(Matrix<T> matrix);
 
-	public Matrix<T> getMatrixB()
-	{
-		return matrixB;
-	}
-	
-	public void setMatrixB(Matrix<Float> matrix)
-	{
-	}
-	
-	public Matrix<T> solve()
-	{
-		return null;
-	}
+	Matrix<T> solve();
 }

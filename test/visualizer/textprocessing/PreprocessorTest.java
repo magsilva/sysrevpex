@@ -37,9 +37,6 @@ public class PreprocessorTest extends TestCase {
      */
     public void testGetMatrix() throws Exception {
         System.out.println("getMatrix");
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -47,9 +44,6 @@ public class PreprocessorTest extends TestCase {
      */
     public void testGetMatrixSelected() throws Exception {
         System.out.println("getMatrixSelected");
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -57,9 +51,6 @@ public class PreprocessorTest extends TestCase {
      */
     public void testGetNgrams() {
         System.out.println("getNgrams");
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -67,16 +58,13 @@ public class PreprocessorTest extends TestCase {
      */
     public void testGetNgramsAccordingTo() throws Exception {
         System.out.println("getNgramsAccordingTo");
-        ;
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     public void testRegularExpression() {
         System.out.println("testRegularExpression");
 
         String PATCOM = "[0-9]*[\\p{L}\\-]+[0-9]*[\\p{L}\\-]+[0-9]*";
-        String filecontent = "fernando h5n1 relógio calçado 1997, springer-verlag 123ff ff123";
+        String filecontent = "fernando h5n1 relï¿½gio calï¿½ado 1997, springer-verlag 123ff ff123";
         Pattern pattern = Pattern.compile(PATCOM);
         Matcher matcher = pattern.matcher(filecontent);
         while (matcher.find()) {

@@ -224,9 +224,6 @@ public class SparseVectorTest extends TestCase {
      */
     public void testGetValue() {
         System.out.println("getValue");
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -261,9 +258,6 @@ public class SparseVectorTest extends TestCase {
      */
     public void testWrite() throws Exception {
         System.out.println("write");
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**

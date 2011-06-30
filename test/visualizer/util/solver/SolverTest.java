@@ -32,22 +32,37 @@
 
 package visualizer.util.solver;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import visualizer.util.solver.Matrix;
-import visualizer.util.solver.Solver;
 
 /**
  * 
  * @author Fernando Vieira Paulovich
  */
-public class SolverTest {
+public class SolverTest
+{
+	private static SolverFactory factory;
+	
+	private Solver<Float> solver;
+	
+	private Matrix<Float> matrixA;
+	
+	private Matrix<Float> matrixB;
+	
+	@BeforeClass
+	public static void setUpTestSet()
+	{
+		factory = new SolverFactory();
+	}
+	
+	@Test
+	@Ignore
 	public void testSolve_B2() {
-		Solver<Float> solver = new Solver<Float>();
-		Matrix<Float> matrixA = new Matrix<Float>(7, 4);
-		Matrix<Float> matrixB = new Matrix<Float>(7, 2);
+		solver = factory.createSolver();
+		matrixA = factory.createMatrix(7, 4);
+		matrixB = factory.createMatrix(7, 2);
 
 		// creating matrix A
 		matrixA.set(0, 0, 1.0f);
@@ -84,8 +99,12 @@ public class SolverTest {
 		matrixB.set(6, 0, 2.0f);
 		matrixB.set(6, 1, 1.0f);
 
-		Matrix<Float> result = solver.solve();
+		// Configure solver
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 
+		// Solve
+		Matrix<Float> result = solver.solve();
 		for (int i = 0; i < result.getNumCol(); i++) {
 			for (int j = 0; j < result.getNumRow(); j++) {
 				System.out.print(result.get(i, j) + "\t");
@@ -94,10 +113,12 @@ public class SolverTest {
 		}
 	}
 
+	@Test
+	@Ignore
 	public void testSolve_B3() {
-		Solver<Float> solver = new Solver<Float>();
-		Matrix<Float> matrixA = new Matrix<Float>(7, 4);
-		Matrix<Float> matrixB = new Matrix<Float>(7, 3);
+		solver = factory.createSolver();
+		matrixA = factory.createMatrix(7, 4);
+		matrixB = factory.createMatrix(7, 3);
 
 		// creating matrix A
 		matrixA.set(0, 0, 1.0f);
@@ -137,8 +158,12 @@ public class SolverTest {
 		matrixB.set(6, 1, 1.0f);
 		matrixB.set(6, 2, 1.0f);
 
-		Matrix<Float> result = solver.solve();
+		// Configure solver
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 
+		// Solve
+		Matrix<Float> result = solver.solve();
 		for (int i = 0; i < result.getNumCol(); i++) {
 			for (int j = 0; j < result.getNumRow(); j++) {
 				System.out.print(result.get(i, j) + "\t");
@@ -147,180 +172,203 @@ public class SolverTest {
 		}
 	}
 
+	@Test
+	@Ignore
 	public void testConnectivity() {
-		Solver solver = new Solver(24, 15);
+		solver = factory.createSolver();
+		matrixA = factory.createMatrix(24, 15);
+		matrixB = factory.createMatrix(24, 2);
 
 		// creating matrix A
 		for (int i = 0; i < 5; i++) {
-			solver.addToA(i, i, 1);
-
+			matrixA.set(i, i, 1.0f);
 			if (i < 4) {
-				solver.addToA(i, i + 1, -0.5f);
-				solver.addToA(i + 1, i, -0.5f);
+				matrixA.set(i, i + 1, -0.5f);
+				matrixA.set(i + 1, i, -0.5f);
 			}
 		}
-
-		solver.addToA(0, 4, -0.5f);
-		solver.addToA(4, 0, -0.5f);
+		matrixA.set(0, 4, -0.5f);
+		matrixA.set(4, 0, -0.5f);
 
 		for (int i = 5; i < 10; i++) {
-			solver.addToA(i, i, 1);
-
+			matrixA.set(i, i, 1.0f);
 			if (i < 9) {
-				solver.addToA(i, i + 1, -0.5f);
-				solver.addToA(i + 1, i, -0.5f);
+				matrixA.set(i, i + 1, -0.5f);
+				matrixA.set(i + 1, i, -0.5f);
 			}
 		}
-
-		solver.addToA(5, 9, -0.5f);
-		solver.addToA(9, 5, -0.5f);
+		matrixA.set(5, 9, -0.5f);
+		matrixA.set(9, 5, -0.5f);
 
 		for (int i = 10; i < 15; i++) {
-			solver.addToA(i, i, 1);
-
+			matrixA.set(i, i, 1.0f);
 			if (i < 14) {
-				solver.addToA(i, i + 1, -0.5f);
-				solver.addToA(i + 1, i, -0.5f);
+				matrixA.set(i, i + 1, -0.5f);
+				matrixA.set(i + 1, i, -0.5f);
 			}
 		}
+		matrixA.set(10, 14, -0.5f);
+		matrixA.set(14, 10, -0.5f);
 
-		solver.addToA(10, 14, -0.5f);
-		solver.addToA(14, 10, -0.5f);
-
-		solver.addToA(15, 0, 1);
-		solver.addToA(16, 2, 1);
-		solver.addToA(17, 4, 1);
-		solver.addToA(18, 5, 1);
-		solver.addToA(19, 7, 1);
-		solver.addToA(20, 9, 1);
-		solver.addToA(21, 10, 1);
-		solver.addToA(22, 12, 1);
-		solver.addToA(23, 14, 1);
+		matrixA.set(15, 0, 1.0f);
+		matrixA.set(16, 2, 1.0f);
+		matrixA.set(17, 4, 1.0f);
+		matrixA.set(18, 5, 1.0f);
+		matrixA.set(19, 7, 1.0f);
+		matrixA.set(20, 9, 1.0f);
+		matrixA.set(21, 10, 1.0f);
+		matrixA.set(22, 12, 1.0f);
+		matrixA.set(23, 14, 1.0f);
 
 		// creating matrix B
-		solver.addToB(15, 0, 0);
-		solver.addToB(15, 1, 0);
+		matrixB.set(15, 0, 0.0f);
+		matrixB.set(15, 1, 0.0f);
 
-		solver.addToB(16, 0, 1);
-		solver.addToB(16, 1, 0);
+		matrixB.set(16, 0, 1.0f);
+		matrixB.set(16, 1, 0.0f);
 
-		solver.addToB(17, 0, 0.5f);
-		solver.addToB(17, 1, 0.5f);
+		matrixB.set(17, 0, 0.5f);
+		matrixB.set(17, 1, 0.5f);
 
-		solver.addToB(18, 0, 5);
-		solver.addToB(18, 1, 0);
+		matrixB.set(18, 0, 5.0f);
+		matrixB.set(18, 1, 0.0f);
 
-		solver.addToB(19, 0, 6);
-		solver.addToB(19, 1, 0);
+		matrixB.set(19, 0, 6.0f);
+		matrixB.set(19, 1, 0.0f);
 
-		solver.addToB(20, 0, 5.5f);
-		solver.addToB(20, 1, 0.5f);
+		matrixB.set(20, 0, 5.5f);
+		matrixB.set(20, 1, 0.5f);
 
-		solver.addToB(21, 0, 5);
-		solver.addToB(21, 1, 5);
+		matrixB.set(21, 0, 5.0f);
+		matrixB.set(21, 1, 5.0f);
 
-		solver.addToB(22, 0, 6);
-		solver.addToB(22, 1, 5);
+		matrixB.set(22, 0, 6.0f);
+		matrixB.set(22, 1, 5.0f);
 
-		solver.addToB(23, 0, 5.5f);
-		solver.addToB(23, 1, 5.5f);
+		matrixB.set(23, 0, 5.5f);
+		matrixB.set(23, 1, 5.5f);
 
-		float[] result = solver.solve();
+		// Configure solver
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 
-		for (int i = 0; i < result.length; i += 2) {
-			System.out.println(result[i] + " " + result[i + 1]);
+		// Solve
+		Matrix<Float> result = solver.solve();
+		for (int i = 0; i < result.getNumCol(); i++) {
+			for (int j = 0; j < result.getNumRow(); j++) {
+				System.out.print(result.get(i, j) + "\t");
+			}
+			System.out.println();
 		}
 	}
 
+	@Test
+	@Ignore
 	public void testWeight() {
-		Solver solver = new Solver(7, 4);
+		solver = factory.createSolver();
+		matrixA = factory.createMatrix(7, 4);
+		matrixB = factory.createMatrix(7, 2);
 
 		// creating matrix A
-		solver.addToA(0, 0, 1);
-		solver.addToA(0, 1, -1.0f / 3.0f);
-		solver.addToA(0, 2, -1.0f / 3.0f);
-		solver.addToA(0, 3, -1.0f / 3.0f);
+		matrixA.set(0, 0, 1.0f);
+		matrixA.set(0, 1, -1.0f / 3.0f);
+		matrixA.set(0, 2, -1.0f / 3.0f);
+		matrixA.set(0, 3, -1.0f / 3.0f);
 
-		solver.addToA(1, 0, -1.0f / 3.0f);
-		solver.addToA(1, 1, 1);
-		solver.addToA(1, 2, -1.0f / 3.0f);
-		solver.addToA(1, 3, -1.0f / 3.0f);
+		matrixA.set(1, 0, -1.0f / 3.0f);
+		matrixA.set(1, 1, 1.0f);
+		matrixA.set(1, 2, -1.0f / 3.0f);
+		matrixA.set(1, 3, -1.0f / 3.0f);
 
-		solver.addToA(2, 0, -1.0f / 3.0f);
-		solver.addToA(2, 1, -1.0f / 3.0f);
-		solver.addToA(2, 2, 1);
-		solver.addToA(2, 3, -1.0f / 3.0f);
+		matrixA.set(2, 0, -1.0f / 3.0f);
+		matrixA.set(2, 1, -1.0f / 3.0f);
+		matrixA.set(2, 2, 1.0f);
+		matrixA.set(2, 3, -1.0f / 3.0f);
 
-		solver.addToA(3, 0, -1.0f / 3.0f);
-		solver.addToA(3, 1, -1.0f / 3.0f);
-		solver.addToA(3, 2, -1.0f / 3.0f);
-		solver.addToA(3, 3, 1);
+		matrixA.set(3, 0, -1.0f / 3.0f);
+		matrixA.set(3, 1, -1.0f / 3.0f);
+		matrixA.set(3, 2, -1.0f / 3.0f);
+		matrixA.set(3, 3, 1.0f);
 
-		solver.addToA(4, 0, 1);
-		solver.addToA(5, 1, 1);
-		solver.addToA(6, 2, 1);
+		matrixA.set(4, 0, 1.0f);
+		matrixA.set(5, 1, 1.0f);
+		matrixA.set(6, 2, 1.0f);
 
 		// creating matrix B
-		solver.addToB(4, 0, 1);
-		solver.addToB(4, 1, 1);
+		matrixB.set(4, 0, 1.0f);
+		matrixB.set(4, 1, 1.0f);
 
-		solver.addToB(5, 0, 1.5f);
-		solver.addToB(5, 1, 2);
+		matrixB.set(5, 0, 1.5f);
+		matrixB.set(5, 1, 2.0f);
 
-		solver.addToB(6, 0, 2);
-		solver.addToB(6, 1, 1);
+		matrixB.set(6, 0, 2.0f);
+		matrixB.set(6, 1, 1.0f);
 
-		float[] result = solver.solve();
+		// Configure solver
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 
-		for (int i = 0; i < result.length; i += 2) {
-			System.out.println(result[i] + " " + result[i + 1]);
+		// Solve
+		Matrix<Float> result = solver.solve();
+		for (int i = 0; i < result.getNumCol(); i++) {
+			for (int j = 0; j < result.getNumRow(); j++) {
+				System.out.print(result.get(i, j) + "\t");
+			}
+			System.out.println();
 		}
-
 		System.out.println();
 
-		Solver solver = new Solver(7, 4);
+		matrixA = factory.createMatrix(7, 4);
+		matrixB = factory.createMatrix(7, 2);
 
 		// creating matrix A
-		solver.addToA(0, 0, 1);
-		solver.addToA(0, 1, -1.0f / 3.0f);
-		solver.addToA(0, 2, -1.0f / 3.0f);
-		solver.addToA(0, 3, -1.0f / 3.0f);
+		matrixA.set(0, 0, 1.0f);
+		matrixA.set(0, 1, -1.0f / 3.0f);
+		matrixA.set(0, 2, -1.0f / 3.0f);
+		matrixA.set(0, 3, -1.0f / 3.0f);
 
-		solver.addToA(1, 0, -1.0f / 3.0f);
-		solver.addToA(1, 1, 1);
-		solver.addToA(1, 2, -1.0f / 3.0f);
-		solver.addToA(1, 3, -1.0f / 3.0f);
+		matrixA.set(1, 0, -1.0f / 3.0f);
+		matrixA.set(1, 1, 1.0f);
+		matrixA.set(1, 2, -1.0f / 3.0f);
+		matrixA.set(1, 3, -1.0f / 3.0f);
 
-		solver.addToA(2, 0, -1.0f / 3.0f);
-		solver.addToA(2, 1, -1.0f / 3.0f);
-		solver.addToA(2, 2, 1);
-		solver.addToA(2, 3, -1.0f / 3.0f);
+		matrixA.set(2, 0, -1.0f / 3.0f);
+		matrixA.set(2, 1, -1.0f / 3.0f);
+		matrixA.set(2, 2, 1.0f);
+		matrixA.set(2, 3, -1.0f / 3.0f);
 
-		solver.addToA(3, 0, -1.0f / 3.0f);
-		solver.addToA(3, 1, -1.0f / 3.0f);
-		solver.addToA(3, 2, -1.0f / 3.0f);
-		solver.addToA(3, 3, 1);
+		matrixA.set(3, 0, -1.0f / 3.0f);
+		matrixA.set(3, 1, -1.0f / 3.0f);
+		matrixA.set(3, 2, -1.0f / 3.0f);
+		matrixA.set(3, 3, 1.0f);
 
 		float w = 20.0f;
 
-		solver.addToA(4, 0, w);
-		solver.addToA(5, 1, w);
-		solver.addToA(6, 2, w);
+		matrixA.set(4, 0, w);
+		matrixA.set(5, 1, w);
+		matrixA.set(6, 2, w);
 
 		// creating matrix B
-		solver.addToB(4, 0, 1 * w);
-		solver.addToB(4, 1, 1 * w);
+		matrixB.set(4, 0, 1 * w);
+		matrixB.set(4, 1, 1 * w);
 
-		solver.addToB(5, 0, 1.5f * w);
-		solver.addToB(5, 1, 2 * w);
+		matrixB.set(5, 0, 1.5f * w);
+		matrixB.set(5, 1, 2 * w);
 
-		solver.addToB(6, 0, 2 * w);
-		solver.addToB(6, 1, 1 * w);
+		matrixB.set(6, 0, 2 * w);
+		matrixB.set(6, 1, 1 * w);
 
-		float[] result = solver.solve();
+		// Configure solver
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 
-		for (int i = 0; i < result.length; i += 2) {
-			System.out.println(result[i] + " " + result[i + 1]);
+		// Solve
+		result = solver.solve();
+		for (int i = 0; i < result.getNumCol(); i++) {
+			for (int j = 0; j < result.getNumRow(); j++) {
+				System.out.print(result.get(i, j) + "\t");
+			}
+			System.out.println();
 		}
 	}
 }

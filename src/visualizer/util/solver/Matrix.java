@@ -1,43 +1,14 @@
 package visualizer.util.solver;
 
-public class Matrix<T>
+public interface Matrix<T>
 {
-	private int numcol;
-	
-	private int numrow;
-	
-	private void setNumCol(int numcol)
-	{
-		this.numcol = numcol;
-	}
+	T get(long col, long row);
 
-	private void setNumRow(int numrow)
-	{
-		this.numrow = numrow;
-	}
+	void set(long col, long row, T value);
 
-	public Matrix(int numcol, int numrow)
-	{
-		setNumCol(numcol);
-		setNumRow(numrow);
-	}
+	long getNumCol();
+
+	long getNumRow();
 	
-	public T get(int col, int row)
-	{
-		return null;
-	}
-	
-	public void set(int col, int row, T value)
-	{
-	}
-	
-	public int getNumCol()
-	{
-		return numcol;
-	}
-	
-	public int getNumRow()
-	{
-		return numrow;
-	}
+	Object getRealImplementation();
 }

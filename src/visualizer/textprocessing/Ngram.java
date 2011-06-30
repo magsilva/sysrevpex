@@ -56,7 +56,13 @@ import java.io.Serializable;
  */
 public class Ngram implements Comparable, Serializable
 {
+	private static final String[] PARSING_SEPARATORS = { " ", "<>" }; 
+
+	private static final String SEPARATOR = " "; 
+	
     private String ngram;
+    
+    private String[] words;
     
     private int frequency;
     
@@ -64,17 +70,29 @@ public class Ngram implements Comparable, Serializable
     
     private static final long serialVersionUID = 1L;
 	
+    private boolean pedantic = false;
+    
     public Ngram(String ngram, int n) {
         this(ngram, n, 1);
     }
 
-    public Ngram(String ngram, int n, int frequency) {
+    public Ngram(String ngram, int n, int frequency) {  	
         setNgram(ngram);
         setN(n);
         setFrequency(frequency);
     }
 
-    public String getNgram()
+    public boolean isPedantic()
+	{
+		return pedantic;
+	}
+
+	public void setPedantic(boolean pedantic)
+	{
+		this.pedantic = pedantic;
+	}
+
+	public String getNgram()
 	{
 		return ngram;
 	}
@@ -99,6 +117,23 @@ public class Ngram implements Comparable, Serializable
 		if (n <= 0) {
 			throw new IllegalArgumentException("Invalid size for the N-gram");
 		}
+		
+    	String[] words = null;	
+    	for (String separator : PARSING_SEPARATORS) {
+    		words = ngram.split(separator);
+    		if (words.length > 1) {
+    			if (n != words.length) {
+    				throw new IllegalArgumentException("Invalid ngram: " + ngram + " has an order " + (words.length + 1) + ", but you said it was " + n);
+    			}
+    			this.words = words;
+    			break;
+    		}
+    	}
+    	if (n == 1) {
+    		words = new String[1];
+    		words[0] = ngram;
+    	}
+		
 		this.n = n;
 	}
 	
@@ -106,12 +141,8 @@ public class Ngram implements Comparable, Serializable
 	public int compareTo(Object o)
 	{
 		Ngram otherNgram = (Ngram) o;
-		if (equals(otherNgram)) {
-			return 0;
-		}
-		
-		if (o == null) {
-			return - frequency;
+		if (! equals(otherNgram)) {
+			throw new UnsupportedOperationException("Cannot compara ngrams which values are different");
 		}
 		
 		return otherNgram.frequency - frequency;
@@ -142,13 +173,14 @@ public class Ngram implements Comparable, Serializable
 			return false;
 		
 		Ngram other = (Ngram) obj;
-		/*
-		if (frequency != other.frequency)
-			return false;
 		
-		if (n != other.n)
-			return false;
-		*/
+		if (pedantic) {
+			if (frequency != other.frequency)
+				return false;
+			
+			if (n != other.n)
+				return false;
+		}
 		
 		if (ngram == null) {
 			if (other.ngram != null)
@@ -161,7 +193,18 @@ public class Ngram implements Comparable, Serializable
 
 	@Override
     public String toString() {
-        return ngram;
+		if (n == 1) {
+			return ngram;
+		} else {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < words.length; i++) {
+				sb.append(words[i]);
+				if (i < (words.length - 1)) {
+					sb.append(SEPARATOR);
+				}
+			}
+			return sb.toString();
+		}
     }
 
 	public void setNgram(String text)

@@ -129,8 +129,7 @@ public class BKmeansTest extends TestCase {
                     if (nullvector) {
                         if ((clusters.get(i).get(j) / 50) != 0) {
                             System.out.println("diss: " + diss.toString());
-                            System.out.println("distance: " + diss.calculate(matrix.getRow(i),
-                                    matrix.getRow(clusters.get(i).get(j))));
+                            System.out.println("distance: " + diss.calculate(matrix.getRow(i), matrix.getRow(clusters.get(i).get(j))));
                             assertFalse("Null vector on wrong cluster.", true);
                         }
                     } else {

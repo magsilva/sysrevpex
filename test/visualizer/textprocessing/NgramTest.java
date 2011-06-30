@@ -2,7 +2,6 @@ package visualizer.textprocessing;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class NgramTest
@@ -102,7 +101,17 @@ public class NgramTest
 	@Test
 	public void testDiffersObject()
 	{
-		assertFalse(new Ngram("software", 1).equals(new Ngram("software", 1, 2)));
+		// That's a behaviour specifc to ngram
+		assertTrue(new Ngram("software", 1).equals(new Ngram("software", 1, 2)));
+	}
+
+	@Test
+	public void testDiffersObject_Pedantic()
+	{
+		// That's a behaviour specifc to ngram
+		Ngram ngram = new Ngram("software", 1);
+		ngram.setPedantic(true);
+		assertFalse(ngram.equals(new Ngram("software", 1, 2)));
 	}
 	
 	@Test
@@ -116,6 +125,4 @@ public class NgramTest
 	{
 		assertEquals("software testing", new Ngram("software<>testing", 2).toString());
 	}
-
-	
 }

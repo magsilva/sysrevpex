@@ -309,7 +309,7 @@ public class ANNTest extends TestCase {
     public void testExecute5() throws Exception {
         System.out.println("execute5 : percentage [cbr-ilp-ir.data]");
 
-        String matrixfilename = ".\\test\\data\\cbr-ilp-ir.data";
+        String matrixfilename = "/home/magsilva/Projects/LabES/SysRevPEx/test-resource/cbr-ilp-ir.data";
         Matrix matrix = MatrixFactory.getInstance(matrixfilename);
 
         Dissimilarity diss = new CosineBased();
@@ -347,7 +347,7 @@ public class ANNTest extends TestCase {
     public void testExecute6() throws Exception {
         System.out.println("execute1 : percentage increasing the number of clusters [cbr-ilp-ir.data]");
 
-        String matrixfilename = ".\\test\\data\\cbr-ilp-ir.data";
+        String matrixfilename = "/home/magsilva/Projects/LabES/SysRevPEx/test-resource/cbr-ilp-ir.data";
         Matrix matrix = MatrixFactory.getInstance(matrixfilename);
 
         Dissimilarity diss = new CosineBased();

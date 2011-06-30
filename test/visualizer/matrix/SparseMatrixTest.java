@@ -5,7 +5,11 @@
 
 package visualizer.matrix;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import visualizer.projection.distance.CosineBased;
 import visualizer.projection.distance.DistanceMatrix;
 import visualizer.projection.distance.Dissimilarity;
@@ -14,78 +18,61 @@ import visualizer.projection.distance.Dissimilarity;
  *
  * @author Fernando Paulovich
  */
-public class SparseMatrixTest extends TestCase {
-
-    public SparseMatrixTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class SparseMatrixTest {
 
     /**
      * Test of addRow method, of class SparseMatrix.
      */
+	@Test
     public void testAddRow() {
         System.out.println("addRow");
         Vector vector = null;
         SparseMatrix instance = new SparseMatrix();
         instance.addRow(vector);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of setRow method, of class SparseMatrix.
      */
+	@Test
     public void testSetRow() {
         System.out.println("setRow");
         int index = 0;
         Vector vector = null;
         SparseMatrix instance = new SparseMatrix();
         instance.setRow(index, vector);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of load method, of class SparseMatrix.
      */
+	@Test
     public void testLoad() throws Exception {
         System.out.println("load");
         String filename = "";
         SparseMatrix instance = new SparseMatrix();
         instance.load(filename);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of save method, of class SparseMatrix.
      */
+	@Test
     public void testSave() throws Exception {
         System.out.println("save");
         String filename = "";
         SparseMatrix instance = new SparseMatrix();
         instance.save(filename);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    public void testEquality() throws Exception {
+	@Test
+    public void testEquality() throws IOException {
         System.out.println("equality between matrix and distance matrix");
 
-        String dmatfilename = ".\\test\\data\\cbr-ilp-ir.dmat";
+        String dmatfilename = "/home/magsilva/Projects/LabES/SysRevPEx/test-resource/cbr-ilp-ir.dmat";
         DistanceMatrix dmat = new DistanceMatrix(dmatfilename);
 
-        String matrixfilename = ".\\test\\data\\cbr-ilp-ir.data";
+        String matrixfilename = "/home/magsilva/Projects/LabES/SysRevPEx/test-resource/cbr-ilp-ir.data";
         Matrix matrix = MatrixFactory.getInstance(matrixfilename);
 
         Dissimilarity diss = new CosineBased();
@@ -99,5 +86,4 @@ public class SparseMatrixTest extends TestCase {
             }
         }
     }
-
 }

@@ -36,16 +36,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * 
  * @author Fernando Vieira Paulovich
  */
-public class SolverMemoryUsageTest {
-
-	public static void main(String args[]) {
+public class SolverMemoryUsageTest
+{
+	@Ignore
+	@Test
+	public void testMemoryUsage() throws IOException
+	{
 		BufferedReader in = null;
 		String filename = "lsp.tmp";
 
@@ -55,20 +59,19 @@ public class SolverMemoryUsageTest {
 		int lin = Integer.parseInt(in.readLine());
 		int col = Integer.parseInt(in.readLine());
 
-		Solver solver = new Solver(lin, col);
+		SolverFactory factory = new SolverFactory();
+		Solver solver = factory.createSolver();
+		Matrix<Float> matrixA = factory.createMatrix(col, lin);
+		Matrix<Float> matrixB = factory.createMatrix(col, lin);
 
 		// creating matrix A
-		while ((line = in.readLine()) != null
-				&& !line.trim().equals("-1 -1 -1")) {
+		while ((line = in.readLine()) != null && !line.trim().equals("-1 -1 -1")) {
 			StringTokenizer t = new StringTokenizer(line, " \t");
-
-			// System.out.println(line);
-
 			int i = Integer.parseInt(t.nextToken());
 			int j = Integer.parseInt(t.nextToken());
 			float value = Float.parseFloat(t.nextToken());
 
-			solver.addToA(i, j, value);
+			matrixA.set(i, j, value);
 		}
 
 		in.readLine();
@@ -77,30 +80,30 @@ public class SolverMemoryUsageTest {
 		// creating matrix B
 		while ((line = in.readLine()) != null) {
 			StringTokenizer t = new StringTokenizer(line, " \t");
-
 			int i = Integer.parseInt(t.nextToken());
 			int j = Integer.parseInt(t.nextToken());
 			float value = Float.parseFloat(t.nextToken());
 
-			solver.addToB(i, j, value);
+			matrixB.set(i, j, value);
 		}
 
+		solver.setMatrixA(matrixA);
+		solver.setMatrixB(matrixB);
 		Runtime r = Runtime.getRuntime();
-		double usedMemory = (r.totalMemory() / 1024.0 / 1024.0)
-				- (r.freeMemory() / 1024.0 / 1024.0);
+		double usedMemory = (r.totalMemory() / 1024.0 / 1024.0)	- (r.freeMemory() / 1024.0 / 1024.0);
 		NumberFormat form = NumberFormat.getInstance();
 		form.setMaximumFractionDigits(2);
 		form.setMinimumFractionDigits(2);
 		System.out.println(form.format(usedMemory) + " MB");
 
-		float[] result = solver.solve();
-
+		Matrix<Float> result = solver.solve();
 		usedMemory = (r.totalMemory() / 1024.0 / 1024.0) - (r.freeMemory() / 1024.0 / 1024.0);
 		System.out.println(form.format(usedMemory) + " MB");
-
-		for (int i = 0; i < result.length; i += 2) {
-			System.out.println((i / 2) + ";" + result[i] + ";" + result[i + 1]
-					+ ";0");
+		for (int i = 0; i < result.getNumCol(); i++) {
+			for (int j = 0; j < result.getNumRow(); j++) {
+				System.out.print(result.get(i, j) + "\t");
+			}
+			System.out.println();
 		}
 	}
 

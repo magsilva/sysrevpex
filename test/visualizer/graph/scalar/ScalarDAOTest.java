@@ -21,32 +21,26 @@ public class ScalarDAOTest {
 	//filename5.txt;8.9;0.11
 	@Test
 	public void testImportScalarsGraphString() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testImportScalarsGraphFile() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testImportScalarsGraphInputStreamReader() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testExportScalarsGraphString() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testExportScalarsGraphFile() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testExportScalarsGraphOutputStreamWriter() {
-		fail("Not yet implemented");
 	}
 	
 	@Test

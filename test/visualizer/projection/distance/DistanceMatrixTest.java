@@ -8,6 +8,7 @@ package visualizer.projection.distance;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
@@ -274,7 +275,7 @@ public class DistanceMatrixTest extends TestCase {
 
                 DistanceMatrix dmat2 = new DistanceMatrix(filename);
                 float[] cdata2 = dmat2.getClassData();
-                ArrayList<String> ids2 = dmat2.getIds();
+                List<String> ids2 = dmat2.getIds();
 
                 for (int i = 0; i < cdata2.length; i++) {
                     assertEquals(cdata1[i], cdata2[i], DELTA);
