@@ -56,7 +56,7 @@ import java.io.Serializable;
  */
 public class Ngram implements Comparable, Serializable
 {
-	private static final String[] PARSING_SEPARATORS = { " ", "<>" }; 
+	private static final String[] PARSING_SEPARATORS = { "<>", " "}; 
 
 	private static final String SEPARATOR = " "; 
 	
