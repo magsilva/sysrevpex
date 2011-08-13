@@ -65,7 +65,9 @@ import com.ironiacorp.miner.preprocessing.text.NumberInWordRemover;
 import com.ironiacorp.miner.preprocessing.text.PunctuationFilter;
 import com.ironiacorp.miner.preprocessing.text.WhiteSpaceFilter;
 import com.ironiacorp.miner.preprocessing.text.WordReplacer;
-import com.ironiacorp.miner.preprocessing.text.WordSingularizer;
+import com.ironiacorp.miner.preprocessing.text.normalizer.LodeNormalizer;
+import com.ironiacorp.miner.preprocessing.text.normalizer.Normalizer;
+import com.ironiacorp.miner.preprocessing.text.normalizer.NormalizerComponent;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopNgramFilter;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopWord;
 import com.ironiacorp.miner.preprocessing.text.stopword.StopWordFilter;
@@ -167,7 +169,8 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		InvalidCharRemover invalidCharRemover = new InvalidCharRemover();
 		LUCuts luCutWordFilter = new LUCuts();
 		PunctuationFilter punctuationFilter = new PunctuationFilter();
-		WordSingularizer wordSingularizer = new WordSingularizer();
+		NormalizerComponent wordSingularizer = new NormalizerComponent();
+		Normalizer normalizer = new LodeNormalizer();
 		NgramReducerFilter ngramReducerFilter = new NgramReducerFilter();
 		WordReplacer wordReplacer = new WordReplacer();
 		BufferComponent bufferComponent = new BufferComponent();
@@ -206,6 +209,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
 			whitespaceWordFilter2.setConsumer(wordSingularizer);
 		}
 			
+		wordSingularizer.setNormalizer(normalizer);
 		wordSingularizer.setConsumer(whitespaceWordFilter3);
 		
 		whitespaceWordFilter3.setConsumer(luCutWordFilter);
