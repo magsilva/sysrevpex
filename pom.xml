@@ -50,8 +50,11 @@
 	</issueManagement>
 
 	<scm>
+		<connection>scm:git:https://www.ironiacorp.com/git/projects/SysRevPEx</connection>
+		<url>https://www.ironiacorp.com/git/projects/SysRevPEx</url>
+		
 	</scm>
-
+	
 	<ciManagement>
 		<system>Hudson</system>
 		<url>http://www.ironiacorp.com/Apps/Hudson/job/SysRevPEx</url>
