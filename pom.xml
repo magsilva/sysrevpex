@@ -10,6 +10,7 @@
 
 	<name>Projection Explorer (PEx)</name>
 	<inceptionYear>2007</inceptionYear>
+	<url>http://infoserver.lcad.icmc.usp.br/infovis2/PEx</url>
 
 	<organization>
 		<name>VICG-ICMC-USP</name>
@@ -43,7 +44,6 @@
 
 	<description>Projection Explorer (PEx) is a Java based tool which can be used to create and explore visual representations of document collections, helping the user to understand their contents.</description>
 	
-	<url>http://infoserver.lcad.icmc.usp.br/infovis2/PEx</url>
 	<issueManagement>
 		<system>Bugzilla</system>
 		<url>http://www.ironiacorp.com/Apps/Bugzilla/</url>
