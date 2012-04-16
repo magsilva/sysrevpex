@@ -51,7 +51,7 @@
 
 	<scm>
 		<connection>scm:git:https://www.ironiacorp.com/git/projects/SysRevPEx</connection>
-		<url>https://www.ironiacorp.com/git/projects/SysRevPEx</url>
+		<url>http://www.ironiacorp.com/Apps/GitPHP/?p=SysRevPEx.git</url>
 		
 	</scm>
 	
@@ -104,13 +104,6 @@
 		</repository>
 	</repositories>
 
-	<properties>
-		<sonar.host.url>http://www.ironiacorp.com/Apps/Sonar/</sonar.host.url>
-		<!--
-			<sonar.core.codeCoveragePlugin>emma</sonar.core.codeCoveragePlugin>
-		-->
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -131,7 +124,7 @@
 		<dependency>
 			<groupId>labes</groupId>
 			<artifactId>lode-miner</artifactId>
-			<version>[0.3.0,)</version>
+			<version>[0.3.1,)</version>
 		</dependency>
 		
 		<dependency>
