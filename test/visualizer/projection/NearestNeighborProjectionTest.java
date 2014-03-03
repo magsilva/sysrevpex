@@ -46,7 +46,7 @@ public class NearestNeighborProjectionTest extends TestCase {
             DistanceMatrix dmat = new DistanceMatrix(matrix, new CosineBased());            
             
             NearestNeighborProjection nnp = new NearestNeighborProjection();
-            float[][] projection = nnp.project(dmat);
+            double[][] projection = nnp.project(dmat);
             
             for(int i=0; i < projection.length; i++) {
                 assertTrue(projection[i][0] == projection[i][0]);

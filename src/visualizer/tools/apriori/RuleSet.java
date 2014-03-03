@@ -76,7 +76,7 @@ public class RuleSet implements TopicInterface {
 
     public Set<ItemSet> rules;
     public boolean[] coveredPoints;
-    float[][] allPoints;
+    double[][] allPoints;
     private Set<String> termSet;
     private int supportGlobal = 0;
     private String strongPhrase = null;
@@ -85,9 +85,9 @@ public class RuleSet implements TopicInterface {
     
     
     /** Creates a new instance of RuleSet */
-    public RuleSet(float[][] allPoints) {
-        this.allPoints = allPoints;
-        int corpusSize = allPoints.length;
+    public RuleSet(double[][] allPoints2) {
+        this.allPoints = allPoints2;
+        int corpusSize = allPoints2.length;
         this.coveredPoints = new boolean[corpusSize];
         for (int j = 0; j < coveredPoints.length; j++) {
             this.coveredPoints[j] = false;
@@ -105,9 +105,9 @@ public class RuleSet implements TopicInterface {
     public String extractStrongestPhrase(String fullText, List<String> ngramList, TopicData tdata, boolean isShortPhrase) {
         String[] phrases = NLPTools.simplePhraseSpliter(fullText);
         String strongPhrase = null;
-        Float strongestWeight = Float.MIN_VALUE;
+        double strongestWeight = Double.MIN_VALUE;
         for (String phrase : phrases) {
-            float contains = phraseWeight(phrase, ngramList, tdata, isShortPhrase);
+            double contains = phraseWeight(phrase, ngramList, tdata, isShortPhrase);
             if (contains > strongestWeight) {
                 strongPhrase = phrase;
                 strongestWeight = contains;
@@ -116,8 +116,8 @@ public class RuleSet implements TopicInterface {
         return strongPhrase;
     }
 
-    public float phraseWeight(String phrase, List<String> ngramList, TopicData tdata, boolean isShortPhrase) {
-        float contains = 0f;
+    public double phraseWeight(String phrase, List<String> ngramList, TopicData tdata, boolean isShortPhrase) {
+        double contains = 0f;
         for (String ngram : ngramList) {
             contains += (phrase.toLowerCase().indexOf(ngram.toLowerCase()) != -1) ? 1 : 0;
         }
@@ -129,12 +129,12 @@ public class RuleSet implements TopicInterface {
         }
     }
 
-    public String computeStrongPhrase(float[][] allPoints, TopicData tdata, boolean isShortPhrase) {
+    public String computeStrongPhrase(double[][] allPoints, TopicData tdata, boolean isShortPhrase) {
 
         Corpus datasource = tdata.getCorpus();
         String phrase = null;
         String strongPhrase = null;
-        Float strongestWeight = Float.MIN_VALUE;
+        double strongestWeight = Double.MIN_VALUE;
 
         for (int i = 0; i < allPoints.length; i++) {
             if (coveredPoints[i]) { //Current line supports 
@@ -144,7 +144,7 @@ public class RuleSet implements TopicInterface {
                 phrase = extractStrongestPhrase(fullText, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
 
 
-                float phraseWeight = phraseWeight(phrase, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
+                double phraseWeight = phraseWeight(phrase, new ArrayList<String>(this.termSet), tdata, isShortPhrase);
                 if (phrase != null && phraseWeight > strongestWeight) {
                     strongPhrase = phrase;
                     strongestWeight = phraseWeight;
@@ -220,8 +220,8 @@ public class RuleSet implements TopicInterface {
         return supportGlobal;
     }
 
-    public float getMaxConfidence() {
-        float maxConfidence = Float.MIN_VALUE;
+    public double getMaxConfidence() {
+        double maxConfidence = Float.MIN_VALUE;
         ItemSet ruleArray[] = rules.toArray(new ItemSet[0]);
         for (int i = 0; i < ruleArray.length; i++) {
             if (ruleArray[i].getMaxConfidence() > maxConfidence) {
@@ -231,8 +231,8 @@ public class RuleSet implements TopicInterface {
         return maxConfidence;
     }
 
-    public float getMinConfidence() {
-        float minConfidence = Float.MAX_VALUE;
+    public double getMinConfidence() {
+        double minConfidence = Float.MAX_VALUE;
         ItemSet ruleArray[] = rules.toArray(new ItemSet[0]);
         for (int i = 0; i < ruleArray.length; i++) {
             if (ruleArray[i].getMaxConfidence() < minConfidence) {
@@ -242,8 +242,8 @@ public class RuleSet implements TopicInterface {
         return minConfidence;
     }
 
-    public float getAvgWeight() {
-        float weightSum = 0f;
+    public double getAvgWeight() {
+        double weightSum = 0f;
         ItemSet ruleArray[] = rules.toArray(new ItemSet[0]);
         for (int i = 0; i < ruleArray.length; i++) {
             weightSum += ruleArray[i].getSumTfIdf();

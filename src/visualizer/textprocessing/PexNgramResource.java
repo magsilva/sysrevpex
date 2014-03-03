@@ -1,6 +1,7 @@
 package visualizer.textprocessing;
 
-import com.ironiacorp.resource.mining.UnformattedTextResource;
+import lode.model.text.UnformattedTextResource;
+
 
 public class PexNgramResource extends UnformattedTextResource implements Cloneable
 {

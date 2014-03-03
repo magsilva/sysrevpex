@@ -64,18 +64,18 @@ public class Fastmap extends DimensionalityReduction {
     }
 
     @Override
-    protected float[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
+    protected double[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
         //creating the projection
-        float[][] projection = new float[matrix.getRowCount()][];
+        double[][] projection = new double[matrix.getRowCount()][];
         for (int i = 0; i < matrix.getRowCount(); i++) {
-            projection[i] = new float[this.targetDimension];
+            projection[i] = new double[this.targetDimension];
             Arrays.fill(projection[i], 0.0f);
         }
 
         for (int curDim = 0; curDim < this.targetDimension; curDim++) {
             //choosen pivots for this recursion
             int[] pivots = this.chooseDistantObjects(matrix, projection, curDim, diss);
-            float pDistance = this.distance(matrix.getRow(pivots[0]), matrix.getRow(pivots[1]),
+            double pDistance = this.distance(matrix.getRow(pivots[0]), matrix.getRow(pivots[1]),
                     projection[pivots[0]], projection[pivots[1]], curDim, diss);
 
             //if the distance between the pivots is 0, then set 0 for each instance for this dimension
@@ -91,7 +91,7 @@ public class Fastmap extends DimensionalityReduction {
                     //                       (distance between the instance and the secod pivot)^2)
                     //                        all divided by 2 times the (distance between both pivots)
 
-                    float lvxi = (float) ((Math.pow(this.distance(matrix.getRow(pivots[0]), matrix.getRow(i),
+                    double lvxi = (double) ((Math.pow(this.distance(matrix.getRow(pivots[0]), matrix.getRow(i),
                             projection[pivots[0]], projection[i], curDim, diss), 2) +
                             Math.pow(this.distance(matrix.getRow(pivots[0]), matrix.getRow(pivots[1]),
                             projection[pivots[0]], projection[pivots[1]], curDim, diss), 2) -
@@ -108,31 +108,31 @@ public class Fastmap extends DimensionalityReduction {
         return projection;
     }
 
-    private float distance(Vector vectA, Vector vectB, float[] projA,
-            float[] projB, int dimension, Dissimilarity diss) throws IOException {
+    private double distance(Vector vectA, Vector vectB, double[] projA,
+            double[] projB, int dimension, Dissimilarity diss) throws IOException {
         //original distance
-        float dist = diss.calculate(vectA, vectB);
+        double dist = diss.calculate(vectA, vectB);
 
         //transforming the distance if necessary
         for (int i = 0; i < dimension; i++) {
-            dist = (float) (Math.sqrt(Math.abs(Math.pow(dist, 2) - Math.pow((projA[i] - projB[i]), 2))));
+            dist = (double) (Math.sqrt(Math.abs(Math.pow(dist, 2) - Math.pow((projA[i] - projB[i]), 2))));
         }
 
         return dist;
     }
 
-    private int[] chooseDistantObjects(Matrix matrix, float[][] projection,
+    private int[] chooseDistantObjects(Matrix matrix, double[][] projection,
             int dimension, Dissimilarity diss) throws IOException {
 
         int[] choosen = new int[2];
 
         //chossing the first object randomly
         int x = (int) (Math.random() * (matrix.getRowCount() - 1));
-        float maxdist = Float.MIN_VALUE;
+        double maxdist = Double.MIN_VALUE;
 
         //for each instance
         for (int i = 0; i < matrix.getRowCount(); i++) {
-            float aux = this.distance(matrix.getRow(x), matrix.getRow(i),
+            double aux = this.distance(matrix.getRow(x), matrix.getRow(i),
                     projection[x], projection[i], dimension, diss);
             if (aux > maxdist) {
                 maxdist = aux;
@@ -141,10 +141,10 @@ public class Fastmap extends DimensionalityReduction {
         }
 
         int y = 0;
-        maxdist = Float.MIN_VALUE;
+        maxdist = Double.MIN_VALUE;
 
         for (int i = 0; i < matrix.getRowCount(); i++) {
-            float aux = this.distance(matrix.getRow(x), matrix.getRow(i),
+            double aux = this.distance(matrix.getRow(x), matrix.getRow(i),
                     projection[x], projection[i], dimension, diss);
 
             if (aux > maxdist) {

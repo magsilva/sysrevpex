@@ -55,41 +55,41 @@ import java.awt.Color;
  */
 public abstract class ColorScale
 {
-    private float min = 0.0f;
+    private double min = 0.0f;
 
-    private float max = 1.0f;
+    private double max = 1.0f;
     
     private  boolean reverse = false;
     
-	public Color getColor(float value)
+	public Color getColor(double d)
     {
-        float maxlength = ((getNumberColors() - 1) / 2) + (max * ((getNumberColors() - 1) / 2));
-        float minlength = (min * ((getNumberColors() - 1) / 2));
+        double maxlength = ((getNumberColors() - 1) / 2) + (max * ((getNumberColors() - 1) / 2));
+        double minlength = (min * ((getNumberColors() - 1) / 2));
 
         if (reverse) {
-            value = 1 - value;
+            d = 1 - d;
             maxlength = ((getNumberColors() - 1) / 2) + ((1 - min) * ((getNumberColors() - 1) / 2));
             minlength = ((1 - max) * ((getNumberColors() - 1) / 2));
         }
 
-        int index = (int) ((value * (maxlength - minlength)) + minlength);
+        int index = (int) ((d * (maxlength - minlength)) + minlength);
 
         return (getNumberColors() >= index) ? getIndexedColor(index) : getIndexedColor(getNumberColors() - 1);
     }
 
-    public float getMin() {
+    public double getMin() {
         return min;
     }
 
-    public void setMin(float min) {
+    public void setMin(double min) {
         this.min = min;
     }
 
-    public float getMax() {
+    public double getMax() {
         return max;
     }
 
-    public void setMax(float max) {
+    public void setMax(double max) {
         this.max = max;
     }
 

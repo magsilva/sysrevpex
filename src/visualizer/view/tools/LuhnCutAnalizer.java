@@ -48,8 +48,14 @@ address = {Washington, DC, USA},
 
 package visualizer.view.tools;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,13 +68,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+
+import opennlp.tools.util.StringUtil;
+
 import visualizer.corpus.CorpusFactory;
 import visualizer.corpus.Corpus;
 import visualizer.textprocessing.BasicPreProcessor;
 import visualizer.textprocessing.Ngram;
-import visualizer.textprocessing.PipelinePreprocessor;
 import visualizer.textprocessing.PreProcessorFactory;
 import visualizer.projection.ProjectionData;
 import visualizer.textprocessing.stemmer.Stemmer;
@@ -85,56 +107,63 @@ import visualizer.topic.TopicData;
  *
  * @author  Fernando Vieira Paulovich
  */
-public class LuhnCutAnalizer extends javax.swing.JDialog
+public class LuhnCutAnalizer extends JDialog
 {
 
     private ProjectionData pdata;
+    
     private TopicData tdata;
+    
     private static LuhnCutAnalizer instance;
-    private DefaultTableModel tableModel;
+
     private Corpus corpus;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyzeButton;
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton changeStartwordsButton;
-    private javax.swing.JButton changeStopwordsButton;
-    protected javax.swing.JButton closeButton;
-    private javax.swing.JPanel cutConfigurationPanel;
-    private javax.swing.JButton exportStartwordsButton;
-    private javax.swing.JButton exportStopwordsButton;
-    private javax.swing.JButton loerCutMinusButton;
-    private javax.swing.JPanel lowerCutButtonPanel;
-    private javax.swing.JLabel lowerCutLabel;
-    private javax.swing.JPanel lowerCutPanel;
-    private javax.swing.JButton lowerCutPlusButton;
-    protected javax.swing.JSlider lowerCutSlider;
-    protected javax.swing.JTextField lowerCutTextField;
-    private javax.swing.JPanel luhnPanel;
-    private javax.swing.JLabel ngramsLabel;
-    private javax.swing.JPanel ngramsPanel;
-    private javax.swing.JScrollPane ngramsScrollPane;
-    protected javax.swing.JTable ngramsTable;
-    protected javax.swing.JTextField ngramsTextField;
-    private javax.swing.JPanel numberGramsPanel;
-    private javax.swing.JPanel upperCutButtonPanel;
-    private javax.swing.JLabel upperCutLabel;
-    private javax.swing.JButton upperCutMinusButton;
-    private javax.swing.JPanel upperCutPanel;
-    private javax.swing.JButton upperCutPlusButton;
-    protected javax.swing.JSlider upperCutSlider;
-    protected javax.swing.JTextField upperCutTextField;
-    protected javax.swing.JPanel zipfCurvePanel;
-    private javax.swing.JPanel zipfPanel;
-    // End of variables declaration//GEN-END:variables
+  
+    private DefaultTableModel tableModel;
 
     private boolean useStartword = false;
+
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton analyzeButton;
+    private JPanel buttonPanel;
+    private JButton changeStartwordsButton;
+    private JButton changeStopwordsButton;
+    protected JButton closeButton;
+    private JPanel cutConfigurationPanel;
+    private JButton exportStartwordsButton;
+    private JButton exportStopwordsButton;
+    private JButton loerCutMinusButton;
+    private JPanel lowerCutButtonPanel;
+    private JLabel lowerCutLabel;
+    private JPanel lowerCutPanel;
+    private JButton lowerCutPlusButton;
+    protected JSlider lowerCutSlider;
+    protected JTextField lowerCutTextField;
+    private JPanel luhnPanel;
+    private JLabel ngramsLabel;
+    private JPanel ngramsPanel;
+    private JScrollPane ngramsScrollPane;
+    protected JTable ngramsTable;
+    protected JTextField ngramsTextField;
+    private JPanel numberGramsPanel;
+    private JPanel upperCutButtonPanel;
+    private JLabel upperCutLabel;
+    private JButton upperCutMinusButton;
+    private JPanel upperCutPanel;
+    private JButton upperCutPlusButton;
+    protected JSlider upperCutSlider;
+    protected JTextField upperCutTextField;
+    protected ZipfCurve zipfCurvePanel;
+    private JPanel zipfPanel;
+    // End of variables declaration//GEN-END:variables
+
     
 	/**
 	 * Creates new form LuhnCutAnalizer
 	 * 
      * @param parent 
      */
-    protected LuhnCutAnalizer(javax.swing.JDialog parent) {
+    protected LuhnCutAnalizer(JDialog parent) {
         super(parent);
         initModels();
         initComponents();
@@ -143,7 +172,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         this.setSize(700, 550);
     }
 
-    protected LuhnCutAnalizer(javax.swing.JFrame parent) {
+    protected LuhnCutAnalizer(JFrame parent) {
         super(parent);
         initModels();
         initComponents();
@@ -152,180 +181,177 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         this.setSize(700, 550);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /** 
+     * This method is called from within the constructor to initialize the form.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+        GridBagConstraints gridBagConstraints;
 
-        luhnPanel = new javax.swing.JPanel();
-        zipfPanel = new javax.swing.JPanel();
+        luhnPanel = new JPanel();
+        zipfPanel = new JPanel();
         zipfCurvePanel = new ZipfCurve();
-        cutConfigurationPanel = new javax.swing.JPanel();
-        upperCutPanel = new javax.swing.JPanel();
-        upperCutSlider = new javax.swing.JSlider();
-        upperCutLabel = new javax.swing.JLabel();
-        upperCutButtonPanel = new javax.swing.JPanel();
-        upperCutTextField = new javax.swing.JTextField();
-        upperCutPlusButton = new javax.swing.JButton();
-        upperCutMinusButton = new javax.swing.JButton();
-        lowerCutPanel = new javax.swing.JPanel();
-        lowerCutSlider = new javax.swing.JSlider();
-        lowerCutButtonPanel = new javax.swing.JPanel();
-        lowerCutTextField = new javax.swing.JTextField();
-        lowerCutPlusButton = new javax.swing.JButton();
-        loerCutMinusButton = new javax.swing.JButton();
-        lowerCutLabel = new javax.swing.JLabel();
-        ngramsPanel = new javax.swing.JPanel();
-        numberGramsPanel = new javax.swing.JPanel();
-        ngramsLabel = new javax.swing.JLabel();
-        ngramsTextField = new javax.swing.JTextField();
-        ngramsScrollPane = new javax.swing.JScrollPane();
-        ngramsTable = new javax.swing.JTable();
-        changeStopwordsButton = new javax.swing.JButton();
-        changeStartwordsButton = new javax.swing.JButton();
-        exportStopwordsButton = new javax.swing.JButton();
-        exportStartwordsButton = new javax.swing.JButton();
-        buttonPanel = new javax.swing.JPanel();
-        analyzeButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
+        cutConfigurationPanel = new JPanel();
+        upperCutPanel = new JPanel();
+        upperCutSlider = new JSlider();
+        upperCutLabel = new JLabel();
+        upperCutButtonPanel = new JPanel();
+        upperCutTextField = new JTextField();
+        upperCutPlusButton = new JButton();
+        upperCutMinusButton = new JButton();
+        lowerCutPanel = new JPanel();
+        lowerCutSlider = new JSlider();
+        lowerCutButtonPanel = new JPanel();
+        lowerCutTextField = new JTextField();
+        lowerCutPlusButton = new JButton();
+        loerCutMinusButton = new JButton();
+        lowerCutLabel = new JLabel();
+        ngramsPanel = new JPanel();
+        numberGramsPanel = new JPanel();
+        ngramsLabel = new JLabel();
+        ngramsTextField = new JTextField();
+        ngramsScrollPane = new JScrollPane();
+        ngramsTable = new JTable();
+        changeStopwordsButton = new JButton();
+        changeStartwordsButton = new JButton();
+        exportStopwordsButton = new JButton();
+        exportStartwordsButton = new JButton();
+        buttonPanel = new JPanel();
+        analyzeButton = new JButton();
+        closeButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Luhn's cut-off Analysis");
         setModal(true);
 
-        luhnPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Data"));
-        luhnPanel.setLayout(new java.awt.BorderLayout());
+        luhnPanel.setBorder(BorderFactory.createTitledBorder("Data"));
+        luhnPanel.setLayout(new BorderLayout());
 
-        zipfPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Zipf's Curve"));
-        zipfPanel.setLayout(new java.awt.BorderLayout());
-        zipfPanel.add(zipfCurvePanel, java.awt.BorderLayout.CENTER);
+        zipfPanel.setBorder(BorderFactory.createTitledBorder("Zipf's Curve"));
+        zipfPanel.setLayout(new BorderLayout());
+        zipfPanel.add(zipfCurvePanel, BorderLayout.CENTER);
 
-        luhnPanel.add(zipfPanel, java.awt.BorderLayout.CENTER);
+        luhnPanel.add(zipfPanel, BorderLayout.CENTER);
 
-        cutConfigurationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Cut-off Configuration"));
-        cutConfigurationPanel.setLayout(new java.awt.BorderLayout());
+        cutConfigurationPanel.setBorder(BorderFactory.createTitledBorder("Cut-off Configuration"));
+        cutConfigurationPanel.setLayout(new BorderLayout());
 
-        upperCutPanel.setLayout(new java.awt.BorderLayout());
+        upperCutPanel.setLayout(new BorderLayout());
 
         upperCutSlider.setMajorTickSpacing(1);
         upperCutSlider.setSnapToTicks(true);
         upperCutSlider.setValue(0);
-        upperCutSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        upperCutSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
                 upperCutSliderStateChanged(evt);
             }
         });
-        upperCutPanel.add(upperCutSlider, java.awt.BorderLayout.CENTER);
+        upperCutPanel.add(upperCutSlider, BorderLayout.CENTER);
 
         upperCutLabel.setText("Upper Cut");
-        upperCutPanel.add(upperCutLabel, java.awt.BorderLayout.WEST);
+        upperCutPanel.add(upperCutLabel, BorderLayout.WEST);
 
-        upperCutButtonPanel.setLayout(new java.awt.GridBagLayout());
+        upperCutButtonPanel.setLayout(new GridBagLayout());
 
         upperCutTextField.setColumns(5);
         upperCutTextField.setEditable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         upperCutButtonPanel.add(upperCutTextField, gridBagConstraints);
 
         upperCutPlusButton.setText("+");
-        upperCutPlusButton.setPreferredSize(new java.awt.Dimension(43, 15));
-        upperCutPlusButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        upperCutPlusButton.setPreferredSize(new Dimension(43, 15));
+        upperCutPlusButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
                 upperCutPlusButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         upperCutButtonPanel.add(upperCutPlusButton, gridBagConstraints);
 
         upperCutMinusButton.setText("-");
-        upperCutMinusButton.setPreferredSize(new java.awt.Dimension(39, 15));
-        upperCutMinusButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        upperCutMinusButton.setPreferredSize(new Dimension(39, 15));
+        upperCutMinusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 upperCutMinusButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         upperCutButtonPanel.add(upperCutMinusButton, gridBagConstraints);
 
-        upperCutPanel.add(upperCutButtonPanel, java.awt.BorderLayout.EAST);
+        upperCutPanel.add(upperCutButtonPanel, BorderLayout.EAST);
 
-        cutConfigurationPanel.add(upperCutPanel, java.awt.BorderLayout.SOUTH);
+        cutConfigurationPanel.add(upperCutPanel, BorderLayout.SOUTH);
 
-        lowerCutPanel.setLayout(new java.awt.BorderLayout());
+        lowerCutPanel.setLayout(new BorderLayout());
 
         lowerCutSlider.setMajorTickSpacing(1);
         lowerCutSlider.setSnapToTicks(true);
         lowerCutSlider.setValue(0);
-        lowerCutSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        lowerCutSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
                 lowerCutSliderStateChanged(evt);
             }
         });
-        lowerCutPanel.add(lowerCutSlider, java.awt.BorderLayout.CENTER);
+        lowerCutPanel.add(lowerCutSlider, BorderLayout.CENTER);
 
-        lowerCutButtonPanel.setLayout(new java.awt.GridBagLayout());
+        lowerCutButtonPanel.setLayout(new GridBagLayout());
 
         lowerCutTextField.setColumns(5);
         lowerCutTextField.setEditable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         lowerCutButtonPanel.add(lowerCutTextField, gridBagConstraints);
 
         lowerCutPlusButton.setText("+");
-        lowerCutPlusButton.setPreferredSize(new java.awt.Dimension(43, 15));
-        lowerCutPlusButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        lowerCutPlusButton.setPreferredSize(new Dimension(43, 15));
+        lowerCutPlusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 lowerCutPlusButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         lowerCutButtonPanel.add(lowerCutPlusButton, gridBagConstraints);
 
         loerCutMinusButton.setText("-");
-        loerCutMinusButton.setPreferredSize(new java.awt.Dimension(39, 15));
-        loerCutMinusButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loerCutMinusButtonActionPerformed(evt);
+        loerCutMinusButton.setPreferredSize(new Dimension(39, 15));
+        loerCutMinusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                lowerCutMinusButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         lowerCutButtonPanel.add(loerCutMinusButton, gridBagConstraints);
 
-        lowerCutPanel.add(lowerCutButtonPanel, java.awt.BorderLayout.EAST);
+        lowerCutPanel.add(lowerCutButtonPanel, BorderLayout.EAST);
 
         lowerCutLabel.setText("Lower Cut");
-        lowerCutPanel.add(lowerCutLabel, java.awt.BorderLayout.WEST);
+        lowerCutPanel.add(lowerCutLabel, BorderLayout.WEST);
 
-        cutConfigurationPanel.add(lowerCutPanel, java.awt.BorderLayout.NORTH);
+        cutConfigurationPanel.add(lowerCutPanel, BorderLayout.NORTH);
 
-        luhnPanel.add(cutConfigurationPanel, java.awt.BorderLayout.SOUTH);
+        luhnPanel.add(cutConfigurationPanel, BorderLayout.SOUTH);
 
-        ngramsPanel.setLayout(new java.awt.GridBagLayout());
+        ngramsPanel.setLayout(new GridBagLayout());
 
         ngramsLabel.setText("Number ngrams");
         numberGramsPanel.add(ngramsLabel);
@@ -334,97 +360,98 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         ngramsTextField.setEditable(false);
         numberGramsPanel.add(ngramsTextField);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         ngramsPanel.add(numberGramsPanel, gridBagConstraints);
 
-        ngramsScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder("Ngrams and Frequency"));
-        ngramsScrollPane.setPreferredSize(new java.awt.Dimension(230, 275));
+        ngramsScrollPane.setBorder(BorderFactory.createTitledBorder("Ngrams and Frequency"));
+        ngramsScrollPane.setPreferredSize(new Dimension(230, 275));
 
         ngramsTable.setModel(this.tableModel);
         ngramsTable.setEnabled(false);
         ngramsScrollPane.setViewportView(ngramsTable);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
         ngramsPanel.add(ngramsScrollPane, gridBagConstraints);
 
         changeStopwordsButton.setText("Change Stopwords");
-        changeStopwordsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        changeStopwordsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 changeStopwordsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         ngramsPanel.add(changeStopwordsButton, gridBagConstraints);
 
         changeStartwordsButton.setText("Change Startwords");
-        changeStartwordsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        changeStartwordsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 changeStartwordsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         ngramsPanel.add(changeStartwordsButton, gridBagConstraints);
 
         exportStopwordsButton.setText("Export Stopwords");
-        exportStopwordsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exportStopwordsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 exportStopwordsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         ngramsPanel.add(exportStopwordsButton, gridBagConstraints);
 
         exportStartwordsButton.setText("Export Startwords");
-        exportStartwordsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exportStartwordsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 exportStartwordsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         ngramsPanel.add(exportStartwordsButton, gridBagConstraints);
 
-        luhnPanel.add(ngramsPanel, java.awt.BorderLayout.EAST);
+        luhnPanel.add(ngramsPanel, BorderLayout.EAST);
 
-        getContentPane().add(luhnPanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(luhnPanel, BorderLayout.CENTER);
 
         analyzeButton.setText("Analyze");
-        analyzeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        analyzeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 analyzeButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(analyzeButton);
 
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(closeButton);
 
-        getContentPane().add(buttonPanel, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
-    private void exportStartwordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportStartwordsButtonActionPerformed
+    }
+    
+    private void exportStartwordsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_exportStartwordsButtonActionPerformed
         try {
             int result = SaveDialog.showSaveDialog(new STARTFilter(), this, "startwords.stw");
 
@@ -438,7 +465,7 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         }
     }//GEN-LAST:event_exportStartwordsButtonActionPerformed
 
-    private void exportStopwordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportStopwordsButtonActionPerformed
+    private void exportStopwordsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_exportStopwordsButtonActionPerformed
         try {
             int result = SaveDialog.showSaveDialog(new STOPFilter(), this, "stopwords.spw");
 
@@ -452,78 +479,73 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
         }
     }//GEN-LAST:event_exportStopwordsButtonActionPerformed
 
-    private void changeStartwordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeStartwordsButtonActionPerformed
+    private void changeStartwordsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeStartwordsButtonActionPerformed
         WordsManager.getInstance(this, false).display();
     }//GEN-LAST:event_changeStartwordsButtonActionPerformed
 
-    private void upperCutMinusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upperCutMinusButtonActionPerformed
-        int upperCut = this.upperCutSlider.getValue();
-        this.upperCutSlider.setValue(upperCut + 1);
-    }//GEN-LAST:event_upperCutMinusButtonActionPerformed
+    private void upperCutMinusButtonActionPerformed(ActionEvent evt) {
+        int upperCut = upperCutSlider.getValue();
+        upperCutSlider.setValue(upperCut - 1);
+    }
 
-    private void upperCutPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upperCutPlusButtonActionPerformed
-        int upperCut = this.upperCutSlider.getValue();
-        this.upperCutSlider.setValue(upperCut - 1);
-    }//GEN-LAST:event_upperCutPlusButtonActionPerformed
+    private void upperCutPlusButtonActionPerformed(ActionEvent evt) {
+        int upperCut = upperCutSlider.getValue();
+        upperCutSlider.setValue(upperCut + 1);
+    }
 
-    private void loerCutMinusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loerCutMinusButtonActionPerformed
-        int lowerCut = this.lowerCutSlider.getValue();
-        this.lowerCutSlider.setValue(lowerCut + 1);
-    }//GEN-LAST:event_loerCutMinusButtonActionPerformed
+    private void lowerCutMinusButtonActionPerformed(ActionEvent evt) {
+        int lowerCut = lowerCutSlider.getValue();
+        lowerCutSlider.setValue(lowerCut - 1);
+    }
 
-    private void lowerCutPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lowerCutPlusButtonActionPerformed
-        int lowerCut = this.lowerCutSlider.getValue();
-        this.lowerCutSlider.setValue(lowerCut - 1);
-    }//GEN-LAST:event_lowerCutPlusButtonActionPerformed
+    private void lowerCutPlusButtonActionPerformed(ActionEvent evt) {
+        int lowerCut = lowerCutSlider.getValue();
+        lowerCutSlider.setValue(lowerCut + 1);
+    }
 
-    private void changeStopwordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeStopwordsButtonActionPerformed
+    private void changeStopwordsButtonActionPerformed(ActionEvent evt) {
         WordsManager.getInstance(this, true).display();
-    }//GEN-LAST:event_changeStopwordsButtonActionPerformed
+    }
 
-    private void lowerCutSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lowerCutSliderStateChanged
-        int upperCut = this.upperCutSlider.getValue();
-        int lowerCut = this.lowerCutSlider.getValue();
-
-        int[] freqs = ((ZipfCurve) this.zipfCurvePanel).setCutLines(lowerCut, upperCut);
-        this.lowerCutTextField.setText(Integer.toString(freqs[0]));
-        this.upperCutTextField.setText(Integer.toString(freqs[1]));
-        this.ngramsTable.setRowSelectionInterval(upperCut, lowerCut);
-        this.ngramsTextField.setText(Integer.toString(lowerCut - upperCut + 1));
-
-        if (this.lowerCutSlider.getValue() < this.upperCutSlider.getValue()) {
-            this.upperCutSlider.setValue(this.lowerCutSlider.getValue());
+    private void lowerCutSliderStateChanged(ChangeEvent evt) {
+    	updateLowerUpperSlider();
+        if (lowerCutSlider.getValue() > upperCutSlider.getValue()) {
+            upperCutSlider.setValue(lowerCutSlider.getValue());
         }
-    }//GEN-LAST:event_lowerCutSliderStateChanged
+    }
 
-    private void upperCutSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_upperCutSliderStateChanged
-        int upperCut = this.upperCutSlider.getValue();
-        int lowerCut = this.lowerCutSlider.getValue();
-
-        int[] freqs = ((ZipfCurve) this.zipfCurvePanel).setCutLines(lowerCut, upperCut);
-        this.lowerCutTextField.setText(Integer.toString(freqs[0]));
-        this.upperCutTextField.setText(Integer.toString(freqs[1]));
-        this.ngramsTable.setRowSelectionInterval(upperCut, lowerCut);
-        this.ngramsTextField.setText(Integer.toString(lowerCut - upperCut + 1));
-
-        if (this.upperCutSlider.getValue() > this.lowerCutSlider.getValue()) {
-            this.lowerCutSlider.setValue(this.upperCutSlider.getValue());
+    private void upperCutSliderStateChanged(ChangeEvent evt) {
+    	updateLowerUpperSlider();
+        if (upperCutSlider.getValue() < lowerCutSlider.getValue()) {
+            lowerCutSlider.setValue(upperCutSlider.getValue());
         }
-    }//GEN-LAST:event_upperCutSliderStateChanged
+    }
+    
+    private void updateLowerUpperSlider() {
+        int lowerCut = lowerCutSlider.getValue();
+        int upperCut = upperCutSlider.getValue();
 
-    private void analyzeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeButtonActionPerformed
+        int[] freqs = zipfCurvePanel.setCutLines(lowerCut, upperCut);
+        lowerCutTextField.setText(Integer.toString(freqs[0]));
+        upperCutTextField.setText(Integer.toString(freqs[1]));
+        ngramsTable.setRowSelectionInterval(lowerCut, upperCut);
+        ngramsTextField.setText(Integer.toString(upperCut - lowerCut + 1));
+    }
+
+    private void analyzeButtonActionPerformed(ActionEvent evt) {
         analizeButtonAction(evt);
-    }//GEN-LAST:event_analyzeButtonActionPerformed
+    }
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void closeButtonActionPerformed(ActionEvent evt) {
         closeButtonAction(evt);
-    }//GEN-LAST:event_closeButtonActionPerformed
+    }
 
-    public static LuhnCutAnalizer getInstance(java.awt.Container parent) {
+    public static LuhnCutAnalizer getInstance(Container parent) {
         if (instance == null || instance.getParent() != parent) {
-            if (parent instanceof javax.swing.JFrame) {
-                instance = new LuhnCutAnalizer((javax.swing.JFrame) parent);
+            if (parent instanceof JFrame) {
+                instance = new LuhnCutAnalizer((JFrame) parent);
             } else {
-                instance = new LuhnCutAnalizer((javax.swing.JDialog) parent);
+                instance = new LuhnCutAnalizer((JDialog) parent);
             }
         }
 
@@ -533,72 +555,84 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
     public void display(ProjectionData pdata, TopicData ldata) {
         this.tdata = ldata;
         this.pdata = pdata;
-        this.upperCutTextField.setText("");
-        this.lowerCutTextField.setText("");
-        this.ngramsTextField.setText("");
+        
+        int lowercut = pdata.getLunhLowerCut();
+        if (tdata != null) {
+            lowercut = tdata.getLunhLowerCut();
+        }
 
-        this.lowerCutSlider.setEnabled(false);
-        this.lowerCutSlider.setValue(0);
-        this.upperCutSlider.setEnabled(false);
-        this.upperCutSlider.setValue(0);
+        int uppercut = pdata.getLunhUpperCut();
+        if (tdata != null) {
+        	uppercut = tdata.getLunhLowerCut();
+        }
+        
+        upperCutTextField.setText("");
+        lowerCutTextField.setText("");
+        ngramsTextField.setText("");
 
-        ((ZipfCurve) this.zipfCurvePanel).setNgrams(null);
+        lowerCutSlider.setEnabled(false);
+        lowerCutSlider.setValue(lowercut);
+        upperCutSlider.setEnabled(false);
+        upperCutSlider.setValue(uppercut);
 
-        this.initModels();
-        this.ngramsTable.setModel(this.tableModel);
+        zipfCurvePanel.setNgrams(null);
 
-        this.corpus = CorpusFactory.getInstance(pdata.getSourceFile(), pdata);
+        initModels();
+        ngramsTable.setModel(this.tableModel);
 
-        this.setLocationRelativeTo(this.getParent());
-        this.setVisible(true);
+        corpus = CorpusFactory.getInstance(pdata.getSourceFile(), pdata);
+
+        setLocationRelativeTo(getParent());
+        setVisible(true);
     }
 
     public void display(ProjectionData pdata) {
         this.pdata = pdata;
-        this.tdata = null;
-        this.upperCutTextField.setText("");
-        this.lowerCutTextField.setText("");
-        this.ngramsTextField.setText("");
+        
+        tdata = null;
+        upperCutTextField.setText("");
+        lowerCutTextField.setText("");
+        ngramsTextField.setText("");
 
-        this.lowerCutSlider.setEnabled(false);
-        this.lowerCutSlider.setValue(0);
-        this.upperCutSlider.setEnabled(false);
-        this.upperCutSlider.setValue(0);
+        lowerCutSlider.setEnabled(false);
+        lowerCutSlider.setValue(pdata.getLunhLowerCut());
+        upperCutSlider.setEnabled(false);
+        upperCutSlider.setValue(pdata.getLunhUpperCut());
 
-        ((ZipfCurve) this.zipfCurvePanel).setNgrams(null);
+        zipfCurvePanel.setNgrams(null);
 
-        this.initModels();
-        this.ngramsTable.setModel(this.tableModel);
+        initModels();
+        ngramsTable.setModel(tableModel);
 
-        this.corpus = CorpusFactory.getInstance(pdata.getSourceFile(), pdata);
+        corpus = CorpusFactory.getInstance(pdata.getSourceFile(), pdata);
 
-        this.pack();
-        this.setLocationRelativeTo(this.getParent());
-        this.setVisible(true);
+        pack();
+        setLocationRelativeTo(getParent());
+        setVisible(true);
     }
 
     public void display(ProjectionData pdata, Corpus corpus) {
         this.pdata = pdata;
-        this.tdata = null;
-        this.upperCutTextField.setText("");
-        this.lowerCutTextField.setText("");
-        this.ngramsTextField.setText("");
-
-        this.lowerCutSlider.setEnabled(false);
-        this.lowerCutSlider.setValue(0);
-        this.upperCutSlider.setEnabled(false);
-        this.upperCutSlider.setValue(0);
-
-        ((ZipfCurve) this.zipfCurvePanel).setNgrams(null);
-
-        this.initModels();
-        this.ngramsTable.setModel(this.tableModel);
-
         this.corpus = corpus;
+        
+        tdata = null;
+        upperCutTextField.setText("");
+        lowerCutTextField.setText("");
+        ngramsTextField.setText("");
 
-        this.pack();
-        this.setLocationRelativeTo(this.getParent());
-        this.setVisible(true);
+        lowerCutSlider.setEnabled(false);
+        lowerCutSlider.setValue(pdata.getLunhLowerCut());
+        upperCutSlider.setEnabled(false);
+        upperCutSlider.setValue(pdata.getLunhUpperCut());
+
+        zipfCurvePanel.setNgrams(null);
+
+        initModels();
+        ngramsTable.setModel(tableModel);
+
+        pack();
+        setLocationRelativeTo(getParent());
+        setVisible(true);
     }
 
     protected void analizeButtonAction(ActionEvent evt)
@@ -611,11 +645,17 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
             lowercut = tdata.getLunhLowerCut();
         }
 
-        // Remove the ngrams which occurs less than LUHN-LOWER-CUT times
+        int uppercut = pdata.getLunhUpperCut();
+        if (tdata != null) {
+        	uppercut = tdata.getLunhLowerCut();
+        }
+        
+        // Apply LU-cut
         List<Ngram> ngrams = new ArrayList<Ngram>();
         for (String key : corporaNgrams.keySet()) {
             Ngram n = corporaNgrams.get(key);
-            if (n.getFrequency() >= lowercut) {
+            int frequency = n.getFrequency();
+            if (frequency >= lowercut && (uppercut == -1 || frequency <= uppercut)) {
                 ngrams.add(n);
             }
         }
@@ -625,41 +665,48 @@ public class LuhnCutAnalizer extends javax.swing.JDialog
 
         initModels();
         ngramsTable.setModel(tableModel);
-
-        for (Ngram ngram : ngrams) {
+        for (int i = ngrams.size() - 1; i >= 0; i--) {
+        	Ngram ngram = ngrams.get(i);
             String[] label = new String[2];
             label[0] = ngram.getNgram();
             label[1] = Integer.toString(ngram.getFrequency());
             tableModel.addRow(label);
         }
 
-        ((ZipfCurve) zipfCurvePanel).setNgrams(ngrams);
+        zipfCurvePanel.setNgrams(ngrams);
 
+        lowerCutSlider.setValue(lowercut);
         lowerCutSlider.setMaximum(ngrams.size() - 1);
-        //this.lowerCutSlider.setMajorTickSpacing(ngrams.size()/100);
         lowerCutSlider.setEnabled(true);
 
+        if (uppercut == -1) {
+        	upperCutSlider.setValue(ngrams.size() - 1);
+        } else {
+        	upperCutSlider.setValue(uppercut);
+        }
         upperCutSlider.setMaximum(ngrams.size() - 1);
-        //this.upperCutSlider.setMajorTickSpacing(ngrams.size()/100);
         upperCutSlider.setEnabled(true);
     }
 
-    protected void closeButtonAction(java.awt.event.ActionEvent evt) {
-        if (this.lowerCutTextField.getText().trim().length() > 0) {
-            if (this.tdata != null) {
-                this.tdata.setLunhLowerCut(Integer.parseInt(this.lowerCutTextField.getText()));
+    protected void closeButtonAction(ActionEvent evt) {
+        if (! StringUtil.isEmpty(lowerCutTextField.getText())) {
+        	int lower = Integer.parseInt(lowerCutTextField.getText());
+            if (tdata != null) {
+                tdata.setLunhLowerCut(lower);
             } else {
-                this.pdata.setLunhLowerCut(Integer.parseInt(this.lowerCutTextField.getText()));
+                pdata.setLunhLowerCut(lower);
             }
         }
 
-        if (this.upperCutTextField.getText().trim().length() > 0) {
-            if (this.tdata != null) {
-                this.tdata.setLunhUpperCut(Integer.parseInt(this.upperCutTextField.getText()));
+        if (! StringUtil.isEmpty(upperCutTextField.getText())) {
+        	int upper = Integer.parseInt(this.upperCutTextField.getText());
+            if (tdata != null) {
+                tdata.setLunhUpperCut(upper);
             } else {
-                this.pdata.setLunhUpperCut(Integer.parseInt(this.upperCutTextField.getText()));
+                pdata.setLunhUpperCut(upper);
             }
         }
+        
         this.setVisible(false);
     }
 

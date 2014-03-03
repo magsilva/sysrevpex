@@ -69,16 +69,16 @@ import visualizer.util.Util;
 public class SammonStress extends Stress {
 
     @Override
-    public float calculate(Matrix matrix, Dissimilarity diss, Matrix projection) throws IOException {
+    public double calculate(Matrix matrix, Dissimilarity diss, Matrix projection) throws IOException {
         LightWeightDistanceMatrix dmat = new LightWeightDistanceMatrix(matrix, diss);
         return this.calculate(dmat, projection);
     }
 
     @Override
-    public float calculate(DistanceMatrix dmat, Matrix projection) throws IOException {
+    public double calculate(DistanceMatrix dmat, Matrix projection) throws IOException {
         LightWeightDistanceMatrix dmatprj = new LightWeightDistanceMatrix(projection, new Euclidean());
 
-        float num = 0.0f;
+        double num = 0.0f;
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = i + 1; j < dmat.getElementCount(); j++) {
                 num += ((dmat.getDistance(i, j) - dmatprj.getDistance(i, j)) *
@@ -87,7 +87,7 @@ public class SammonStress extends Stress {
             }
         }
 
-        float den = 0.0f;
+        double den = 0.0f;
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = i + 1; j < dmat.getElementCount(); j++) {
                 den += dmat.getDistance(i, j) * dmat.getDistance(i, j);
@@ -98,17 +98,17 @@ public class SammonStress extends Stress {
     }
 
     @Override
-    public float calculate(Matrix matrix, Dissimilarity diss, Graph graph) throws IOException {
+    public double calculate(Matrix matrix, Dissimilarity diss, Graph graph) throws IOException {
         LightWeightDistanceMatrix dmat = new LightWeightDistanceMatrix(matrix, diss);
         return this.calculate(dmat, graph);
     }
 
     @Override
-    public float calculate(DistanceMatrix dmat, Graph graph) throws IOException {
+    public double calculate(DistanceMatrix dmat, Graph graph) throws IOException {
         DenseMatrix projection = new DenseMatrix();
 
         for (int i = 0; i < graph.getVertex().size(); i++) {
-            float[] vect = new float[2];
+            double[] vect = new double[2];
             vect[0] = graph.getVertex().get(i).getX();
             vect[1] = graph.getVertex().get(i).getY();
             projection.addRow(new DenseVector(vect));
@@ -141,7 +141,7 @@ public class SammonStress extends Stress {
             }
 
             SammonStress stress = new SammonStress();
-            float value = stress.calculate(points, diss, projection);
+            double value = stress.calculate(points, diss, projection);
 
             System.out.println("---");
             System.out.println("Points: " + pointsfilename);

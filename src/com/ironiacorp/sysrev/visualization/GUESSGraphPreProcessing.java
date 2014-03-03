@@ -32,12 +32,12 @@ import java.util.Map;
 import au.com.bytecode.opencsv.CSVParser;
 
 import com.ironiacorp.io.IoUtil;
-import com.ironiacorp.miner.extraction.bibtex.BibtexParser;
-import com.ironiacorp.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
-import com.ironiacorp.resource.library.Collection;
-import com.ironiacorp.resource.library.EventArticle;
-import com.ironiacorp.resource.library.Person;
-import com.ironiacorp.resource.library.Publication;
+import lode.miner.extraction.bibtex.BibtexParser;
+import lode.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
+import lode.model.publication.Collection;
+import lode.model.publication.EventArticle;
+import lode.model.publication.Person;
+import lode.model.publication.Publication;
 
 
 public class GUESSGraphPreProcessing

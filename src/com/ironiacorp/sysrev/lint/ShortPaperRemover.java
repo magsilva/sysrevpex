@@ -24,24 +24,22 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ironiacorp.miner.BufferComponent;
-import com.ironiacorp.miner.ConsumerComponent;
-import com.ironiacorp.miner.PipelineComponent;
-import com.ironiacorp.miner.ProducerComponent;
-import com.ironiacorp.miner.TypicalPipelineComponent;
-import com.ironiacorp.miner.extraction.bibtex.BibtexParser;
-import com.ironiacorp.miner.extraction.bibtex.BibtexWriter;
-import com.ironiacorp.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
-import com.ironiacorp.miner.preprocessing.bibtex.PageCountBasedLUCut;
-import com.ironiacorp.miner.preprocessing.text.AbbreviatedNameSorter;
-import com.ironiacorp.miner.preprocessing.text.WordReplacer;
-import com.ironiacorp.resource.Resource;
-import com.ironiacorp.resource.library.Collection;
-import com.ironiacorp.resource.library.EventArticle;
-import com.ironiacorp.resource.library.Person;
-import com.ironiacorp.resource.library.Publication;
-import com.ironiacorp.resource.mining.TextResource;
-import com.ironiacorp.resource.mining.UnformattedTextResource;
+import lode.miner.BufferComponent;
+import lode.miner.ConsumerComponent;
+import lode.miner.PipelineComponent;
+import lode.miner.ProducerComponent;
+import lode.miner.TypicalPipelineComponent;
+import lode.miner.extraction.bibtex.BibtexParser;
+import lode.miner.extraction.bibtex.BibtexWriter;
+import lode.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
+import lode.miner.preprocessing.bibtex.PageCountBasedLUCut;
+import lode.miner.preprocessing.text.AbbreviatedNameSorter;
+import lode.miner.preprocessing.text.WordReplacer;
+import lode.model.Element;
+import lode.model.publication.Collection;
+import lode.model.publication.EventArticle;
+import lode.model.publication.Publication;
+
 import com.ironiacorp.sysrev.selection.Argument;
 import com.ironiacorp.sysrev.selection.PublicationSelectionStatus;
 import com.ironiacorp.sysrev.selection.Reason;
@@ -122,7 +120,7 @@ public class ShortPaperRemover
 			}
 		}
 		
-		for (Resource resource : buffer.getResources()) {
+		for (Element resource : buffer.getResources()) {
 			if (resource instanceof Publication) {
 				collection.add((Publication) resource);
 			}

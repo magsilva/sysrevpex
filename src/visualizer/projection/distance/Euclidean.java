@@ -55,14 +55,14 @@ import visualizer.matrix.Vector;
  */
 public class Euclidean implements Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2) {
+    public double calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
         
-        float n1 = v1.norm();
-        float n2 = v2.norm();
-        float dot = v1.dot(v2);
+        double n1 = v1.norm();
+        double n2 = v2.norm();
+        double dot = v1.dot(v2);
         
-        return (float) Math.sqrt(Math.abs(n1 * n1 + n2 * n2 - 2 * dot));
+        return (double) Math.sqrt(Math.abs(n1 * n1 + n2 * n2 - 2 * dot));
     }
 
 }

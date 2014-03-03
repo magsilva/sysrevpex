@@ -45,11 +45,6 @@ address = {Washington, DC, USA},
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*
- * ZipfCurve.java
- *
- * Created on 27 de Agosto de 2006, 13:31
- */
 package visualizer.view.tools;
 
 import java.awt.AlphaComposite;
@@ -68,14 +63,26 @@ import javax.swing.JPanel;
 import visualizer.textprocessing.Ngram;
 
 /**
- *
- * @author Fernando Vieira Paulovich
+ * Panel to plot Zipf-like data.
+ * 
+ * The X axis uses a linear scale while the Y axis uses a logarithm scale.
+ * The Y represents the frequency of the term (ngram) and that value is
+ * normalized using the minimum and maximum frequencies of the ngrams.
  */
 public class ZipfCurve extends JPanel
 {
+    public static final int DEFAULT_GRID_SIZE = 40;
+    
+    public static final int DEFAULT_MARGIN_SIZE = 10;
+
     private int upperLine;
     
     private int lowerLine;
+    
+    private int gridSize = DEFAULT_GRID_SIZE;
+    
+    private int marginSize = DEFAULT_MARGIN_SIZE;
+
     
     private BufferedImage imageBuffer;
     
@@ -109,84 +116,82 @@ public class ZipfCurve extends JPanel
 
     public int[] setCutLines(int lowerLine, int upperLine)
     {
-        this.upperLine = upperLine;
         this.lowerLine = lowerLine;
+        this.upperLine = upperLine;
         drawImage();
         repaint();
 
-        int[] freqs = new int[2];
-        freqs[0] = ngrams.get(lowerLine).getFrequency();
-        freqs[1] = ngrams.get(upperLine).getFrequency();
+    	int[] freqs = {0, 0};
+        if (ngrams != null) {
+        	freqs[0] = ngrams.get(lowerLine).getFrequency();
+        	freqs[1] = ngrams.get(upperLine).getFrequency();
+        }
 
         return freqs;
     }
 
     private void drawImage()
     {
-        imageBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics gBuffer = imageBuffer.createGraphics();
-
-        Dimension size = getSize();
+    	Graphics2D gBuffer;
+    	Dimension size;
+        
+    	imageBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        gBuffer = imageBuffer.createGraphics();
+        size = getSize();
         gBuffer.setColor(Color.WHITE);
         gBuffer.fillRect(0, 0, size.width, size.height);
 
-        int grid = 40;
-        for (int i = 0; i < grid; i++) {
+        // Draw the grid
+        for (int i = 0; i < gridSize; i++) {
+        	int column, line;
+        	
             gBuffer.setColor(Color.LIGHT_GRAY);
-
-            int col = (int) ((((float) size.width) / grid) * (i + 1));
-            gBuffer.drawLine(col, 0, col, size.height);
-
-            int lin = (int) ((((float) size.height) / grid) * (i + 1));
-            gBuffer.drawLine(0, lin, size.width, lin);
+            column = (size.width * (i + 1)) / gridSize;
+            line = (size.height * (i + 1)) / gridSize;
+            gBuffer.drawLine(column, 0, column, size.height);
+            gBuffer.drawLine(0, line, size.width, line);
         }
 
+        // Draw the points and link them (one by one). We use a logarithm scale for the frequency (y) and linear scale for x
         gBuffer.setColor(Color.BLACK);
         gBuffer.drawRect(0, 0, size.width - 1, size.height - 1);
-
         if (ngrams != null) {
             int nelements = ngrams.size();
-            float maxf = ngrams.get(0).getFrequency();
-            float minf = ngrams.get(0).getFrequency();
+            int nFrequency;
+            int pos1x, pos1y, pos2x, pos2y;
+            double maxf = ngrams.get(0).getFrequency();
+            double minf = ngrams.get(0).getFrequency();
 
             for (int i = 1; i < nelements; i++) {
-                if (ngrams.get(i).getFrequency() > maxf) {
-                    maxf = ngrams.get(i).getFrequency();
-                } else if (ngrams.get(i).getFrequency() < minf) {
-                    minf = ngrams.get(i).getFrequency();
+            	nFrequency = ngrams.get(i).getFrequency();
+                if (nFrequency > maxf) {
+                    maxf = nFrequency;
+                } else if (nFrequency < minf) {
+                    minf = nFrequency;
                 }
             }
 
-            maxf = (float) Math.log(maxf);
-            minf = (float) Math.log(minf);
-
-            for (int i = 0; i < nelements - 1; i++) {
-                int posx1 = (int) ((((float) i) / nelements) * (size.width - 40)) + 20;
-                int posy1 = (int) ((((Math.log(ngrams.get(i).getFrequency()) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
-
-                int posx2 = (int) ((((float) (i + 1)) / nelements) * (size.width - 40)) + 20;
-                int posy2 = (int) ((((Math.log(ngrams.get(i + 1).getFrequency()) - minf)) / (maxf - minf)) * (size.height - 40)) + 20;
-
-                gBuffer.setColor(Color.RED);
-                gBuffer.drawLine(posx1, size.height - posy1, posx2, size.height - posy2);
+            // We normalize using maxf and minf for the y axis
+            maxf = Math.log(maxf);
+            minf = Math.log(minf);
+            gBuffer.setColor(Color.RED);
+            for (int i = nelements - 1, j = 0; i > 0; i--, j++) {
+                pos1x = (j * (size.width - (2 * marginSize))) / nelements + marginSize;
+                pos1y = (int) (((Math.log(ngrams.get(i).getFrequency()) - minf) * (size.height - (2 * marginSize))) / (maxf - minf)) + marginSize;
+                pos2x = (j + 1) * (size.width - (2 * marginSize)) / nelements + marginSize;
+                pos2y = (int) (((Math.log(ngrams.get(i - 1).getFrequency()) - minf) * (size.height - (2 * marginSize))) / (maxf - minf)) + marginSize;
+                gBuffer.drawLine(pos1x, size.height - pos1y, pos2x, size.height - pos2y);
             }
 
-            int posL1 = (int) ((((float) upperLine) / nelements) * (size.width - 40)) + 20;
-            int posL2 = (int) ((((float) lowerLine) / nelements) * (size.width - 40)) + 20;
+            
+            int posL1 = (int) (( upperLine * (size.width - marginSize)) / nelements) + marginSize;
+            int posL2 = (int) (( lowerLine * (size.width - marginSize)) / nelements) + marginSize;
 
-            if ((posL2 - posL1) >= 0) {
+            if (posL2 > posL1) {
                 gBuffer.setColor(Color.BLUE);
-                //gBuffer.drawLine(posL1, 20, posL1, size.height-10);
-                //gBuffer.drawString("UPPER", posL1+5, 40);
-                //gBuffer.drawLine(posL2, 20, posL2, size.height-10);
-                //gBuffer.drawString("LOWER", posL2+5, size.height-20);
-
-                Graphics2D g2 = (Graphics2D) gBuffer;
-                gBuffer.drawRect(posL1, 20, Math.abs(posL2 - posL1), size.height - 30);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-                g2.fill(new Rectangle(posL1, 20, Math.abs(posL2 - posL1), size.height - 30));
-            } else {
-                gBuffer.drawString("ERROR", size.width / 2, size.height / 2);
+                gBuffer.drawRect(posL1, marginSize, Math.abs(posL2 - posL1), size.height - marginSize);
+                gBuffer.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+                gBuffer.fill(new Rectangle(posL1, marginSize, Math.abs(posL2 - posL1), size.height - marginSize));
             }
         }
     }

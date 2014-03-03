@@ -92,13 +92,13 @@ public class LSPProjection2D extends Projection
 {
 
 	@Override
-	public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view)
+	public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view)
 	{
 		this.matrix = matrix;
 
 		long start = System.currentTimeMillis();
 
-		float projection[][] = null;
+		double[][] projection = null;
 		ArrayList<ArrayList<Integer>> clusters = null;
 		Matrix centroids = null;
 
@@ -212,7 +212,7 @@ public class LSPProjection2D extends Projection
 	}
 
 	@Override
-	public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view)
+	public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view)
 	{
 		this.dmat = dmat;
 
@@ -311,11 +311,9 @@ public class LSPProjection2D extends Projection
 
 	// //////////////////////////////////////////////////////////////////////////////
 	// USING POINTS
-	private float[][] createFinalProjection(Pair[][] neighbors, Matrix matrix, ProjectionData pdata)
-					throws IOException
+	private double[][] createFinalProjection(Pair[][] neighbors, Matrix matrix, ProjectionData pdata)	throws IOException
 	{
-
-		float projection[][] = new float[matrix.getRowCount()][];
+		double projection[][] = new double[matrix.getRowCount()][];
 
 		if (System.getProperty("os.name").toLowerCase().equals("windows xp")
 						|| System.getProperty("os.name").toLowerCase().equals("windows vista")
@@ -324,18 +322,15 @@ public class LSPProjection2D extends Projection
 		} else {
 			this.projectUsingColt(pdata, neighbors, projection);
 		}
-
-		Runtime.getRuntime().gc();
 
 		return projection;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////
 	// USING DISTANCE MATRIX
-	private float[][] createFinalProjection(Pair[][] neighbors, DistanceMatrix dmat,
-					ProjectionData pdata)
+	private double[][] createFinalProjection(Pair[][] neighbors, DistanceMatrix dmat, ProjectionData pdata)
 	{
-		float projection[][] = new float[dmat.getElementCount()][];
+		double projection[][] = new double[dmat.getElementCount()][];
 
 		if (System.getProperty("os.name").toLowerCase().equals("windows xp")
 						|| System.getProperty("os.name").toLowerCase().equals("windows vista")
@@ -350,7 +345,7 @@ public class LSPProjection2D extends Projection
 		return projection;
 	}
 
-	private void projectUsingColt(ProjectionData pdata, Pair[][] neighbors, float[][] projection)
+	private void projectUsingColt(ProjectionData pdata, Pair[][] neighbors, double[][] projection)
 	{
 		long start = System.currentTimeMillis();
 
@@ -366,8 +361,8 @@ public class LSPProjection2D extends Projection
 			// A.setQuick(i, neighbors[i][j].index, (-(1.0f / neighbors[i].length)));
 			// }
 
-			float max = Float.NEGATIVE_INFINITY;
-			float min = Float.POSITIVE_INFINITY;
+			double max = Double.NEGATIVE_INFINITY;
+			double min = Double.POSITIVE_INFINITY;
 
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max < neighbors[i][j].value) {
@@ -382,14 +377,14 @@ public class LSPProjection2D extends Projection
 			float sum = 0;
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max > min) {
-					float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+					double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
 					sum += (1 / dist);
 				}
 			}
 
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max > min) {
-					float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+					double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
 					A.setQuick(i, neighbors[i][j].index, (-((1 / dist) / sum)));
 				} else {
 					A.setQuick(i, neighbors[i][j].index, (-(1.0f / neighbors[i].length)));
@@ -417,9 +412,9 @@ public class LSPProjection2D extends Projection
 		DoubleMatrix2D X = chol.solve(AtB);
 
 		for (int i = 0; i < X.rows(); i++) {
-			projection[i] = new float[2];
-			projection[i][0] = (float) X.getQuick(i, 0);
-			projection[i][1] = (float) X.getQuick(i, 1);
+			projection[i] = new double[2];
+			projection[i][0] = (double) X.getQuick(i, 0);
+			projection[i][1] = (double) X.getQuick(i, 1);
 		}
 
 		long finish = System.currentTimeMillis();
@@ -428,7 +423,7 @@ public class LSPProjection2D extends Projection
 						"Solving the system using Colt time: " + (finish - start) / 1000.0f + "s");
 	}
 
-	private void projectUsingProgram(ProjectionData pdata, Pair[][] neighbors, float[][] projection)
+	private void projectUsingProgram(ProjectionData pdata, Pair[][] neighbors, double[][] projection)
 	{
 		long start = System.currentTimeMillis();
 
@@ -445,8 +440,8 @@ public class LSPProjection2D extends Projection
 			// new approach to increase the neighborhood precision
 			solverMatrixA.setAsFloat(1.0f, i, i);
 
-			float max = Float.NEGATIVE_INFINITY;
-			float min = Float.POSITIVE_INFINITY;
+			double max = Float.NEGATIVE_INFINITY;
+			double min = Float.POSITIVE_INFINITY;
 
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max < neighbors[i][j].value) {
@@ -461,18 +456,17 @@ public class LSPProjection2D extends Projection
 			float sum = 0;
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max > min) {
-					float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+					double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
 					sum += (1 / dist);
 				}
 			}
 
 			for (int j = 0; j < neighbors[i].length; j++) {
 				if (max > min) {
-					float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
-					solverMatrixA.setAsFloat(-((1 / dist) / sum), i, neighbors[i][j].index);
+					double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+					solverMatrixA.setAsDouble(-((1 / dist) / sum), i, neighbors[i][j].index);
 				} else {
-					solverMatrixA.setAsFloat(-(1.0f / neighbors[i].length), i,
-									neighbors[i][j].index);
+					solverMatrixA.setAsDouble(-(1.0f / neighbors[i].length), i, neighbors[i][j].index);
 				}
 			}
 		}
@@ -484,13 +478,13 @@ public class LSPProjection2D extends Projection
 		// //////////////////////////////////////////
 		// creating matrix B
 		for (int i = 0; i < this.projection_cp.length; i++) {
-			solverMatrixB.setAsFloat(this.projection_cp[i][0], neighbors.length + i, 0);
-			solverMatrixB.setAsFloat(this.projection_cp[i][1], neighbors.length + i, 1);
+			solverMatrixB.setAsDouble(this.projection_cp[i][0], neighbors.length + i, 0);
+			solverMatrixB.setAsDouble(this.projection_cp[i][1], neighbors.length + i, 1);
 		}
 
 		org.ujmp.core.Matrix result = solver.calc(solverMatrixA, solverMatrixB);
 		for (int i = 0; i < projection.length; i++) {
-			projection[i] = new float[2];
+			projection[i] = new double[2];
 			projection[i][0] = result.getAsFloat(i, 0);
 			projection[i][1] = result.getAsFloat(i, 1);
 		}
@@ -534,7 +528,7 @@ public class LSPProjection2D extends Projection
 			pdata.setSourceFile(filename);
 
 			LSPProjection2D lsp2D = new LSPProjection2D();
-			float[][] projection = lsp2D.project(matrix, pdata, null);
+			double[][] projection = lsp2D.project(matrix, pdata, null);
 
 			BufferedWriter out = null;
 			try {
@@ -568,7 +562,7 @@ public class LSPProjection2D extends Projection
 		}
 	}
 
-	private float[][] projection_cp;
+	private double[][] projection_cp;
 	private int[] controlPoints;
 	private Dissimilarity diss;
 }

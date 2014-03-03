@@ -48,8 +48,16 @@ address = {Washington, DC, USA},
 
 package visualizer.topic;
 
+import gnu.trove.list.array.TIntArrayList;
+
 import java.util.ArrayList;
 
+import topicevolutionvis.graph.TemporalGraph;
+import topicevolutionvis.projection.temporal.TemporalProjection;
+import topicevolutionvis.topic.CovarianceTopic;
+import topicevolutionvis.topic.LDATopic;
+import topicevolutionvis.topic.PCATopic;
+import topicevolutionvis.topic.Topic;
 import visualizer.corpus.Corpus;
 import visualizer.graph.Graph;
 import visualizer.graph.Vertex;
@@ -61,14 +69,18 @@ import visualizer.topic.TopicData.TopicType;
  */
 public class TopicFactory {
 
-    public static Topic getInstance(Graph graph, TopicData tdata,
-            Corpus corpus, ArrayList<Vertex> selectedVertices) {
+    public static Topic getInstance(Graph graph, TopicData tdata, Corpus corpus, ArrayList<Vertex> selectedVertices) {
         if (tdata.getTopicType() == TopicType.COVARIANCE) {
             return new CovarianceTopic(graph, selectedVertices, corpus, tdata);
         } else if (tdata.getTopicType() == TopicType.RULE) {
             return new RuleTopic(selectedVertices, corpus, tdata);
+        } else if (tdata.getTopicType() == TopicType.PCA) {
+            return new PCATopic(selectedVertices, projection, graph);
+        } else if (tdata.getTopicType() == TopicType.LDA) {
+            return new LDATopic(selectedVertices, projection, graph, projection.getProjectionData().getLDAMatrices());
         }
         return null;
     }
 
+    
 }

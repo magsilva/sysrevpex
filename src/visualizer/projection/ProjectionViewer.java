@@ -772,13 +772,13 @@ public class ProjectionViewer extends Viewer {
         return this.font;
     }
 
-    private void zoom(float rate) {
+    private void zoom(double rate) {
         if (this.graph != null) {
             ArrayList<Vertex> vertex = this.graph.getVertex();
-            float maxX = vertex.get(0).getX();
-            float minX = vertex.get(0).getX();
-            float maxY = vertex.get(0).getY();
-            float minY = vertex.get(0).getY();
+            double maxX = vertex.get(0).getX();
+            double minX = vertex.get(0).getX();
+            double maxY = vertex.get(0).getY();
+            double minY = vertex.get(0).getY();
 
             //Encontra o maior e menor valores para X e Y
             for (Vertex v : vertex) {
@@ -796,8 +796,8 @@ public class ProjectionViewer extends Viewer {
 
             }
 
-            float endX = maxX * rate;
-            float endY = maxY * rate;
+            double endX = maxX * rate;
+            double endY = maxY * rate;
 
             //Normalizo
             for (Vertex v : vertex) {
@@ -1039,21 +1039,21 @@ public class ProjectionViewer extends Viewer {
         }
 
         public void adjustPanel() {
-            float iniX = graph.getVertex().get(0).getX();
-            float iniY = graph.getVertex().get(0).getY();
-            float max_x = iniX, max_y = iniX;
-            float min_x = iniY, min_y = iniY;
+            double iniX = graph.getVertex().get(0).getX();
+            double iniY = graph.getVertex().get(0).getY();
+            double max_x = iniX, max_y = iniX;
+            double min_x = iniY, min_y = iniY;
             int zero = Vertex.getRayBase() * 5 + 10;
 
             for (int i = 1; i < graph.getVertex().size(); i++) {
-                float x = graph.getVertex().get(i).getX();
+                double x = graph.getVertex().get(i).getX();
                 if (max_x < x) {
                     max_x = x;
                 } else if (min_x > x) {
                     min_x = x;
                 }
 
-                float y = graph.getVertex().get(i).getY();
+                double y = graph.getVertex().get(i).getY();
                 if (max_y < y) {
                     max_y = y;
                 } else if (min_y > y) {
@@ -1197,11 +1197,11 @@ public class ProjectionViewer extends Viewer {
         }
 
         public Topic getTopicByPosition(java.awt.Point point) {
-            float dist = Float.MAX_VALUE;
+            double dist = Float.MAX_VALUE;
             Topic topic = null;
 
             for (Topic t : this.topics) {
-                float aux = t.weightDistance(point);
+                double aux = t.weightDistance(point);
                 if (aux != -1 && dist > aux) {
                     dist = aux;
                     topic = t;
@@ -1314,8 +1314,8 @@ public class ProjectionViewer extends Viewer {
                     if (ViewPanel.this.selectedVertices != null &&
                             ViewPanel.this.selectedVertices.size() > 0 &&
                             ViewPanel.this.selectedVertices.contains(ViewPanel.this.selectedVertex)) {
-                        float x = evt.getX() - ViewPanel.this.selectedVertex.getX();
-                        float y = evt.getY() - ViewPanel.this.selectedVertex.getY();
+                        double x = evt.getX() - ViewPanel.this.selectedVertex.getX();
+                        double y = evt.getY() - ViewPanel.this.selectedVertex.getY();
 
                         for (Vertex v : ViewPanel.this.selectedVertices) {
                             v.setX(x + v.getX());

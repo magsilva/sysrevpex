@@ -71,8 +71,8 @@ public class PCA extends DimensionalityReduction {
     }
 
     @Override
-    protected float[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
-        float[][] points = matrix.toMatrix();
+    protected double[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
+        double[][] points = matrix.toMatrix();
         double[][] covmatrix_aux = this.createCovarianceMatrix(points);
 
         DoubleMatrix2D covmatrix = new DenseDoubleMatrix2D(covmatrix_aux);
@@ -80,10 +80,10 @@ public class PCA extends DimensionalityReduction {
         DoubleMatrix2D decomp = dec.getV();
 
         //storing the eigenvalues
-        this.eigenvalues = new float[covmatrix_aux.length];
+        this.eigenvalues = new double[covmatrix_aux.length];
         DoubleMatrix1D eigenvalues_aux = dec.getRealEigenvalues();
         for (int i = 0; i < covmatrix_aux.length; i++) {
-            this.eigenvalues[i] = (float) eigenvalues_aux.get((covmatrix_aux.length - i - 1));
+            this.eigenvalues[i] = (double) eigenvalues_aux.get((covmatrix_aux.length - i - 1));
         }
 
         double[][] points_aux2 = new double[points.length][];
@@ -108,13 +108,13 @@ public class PCA extends DimensionalityReduction {
         DoubleMatrix2D proj = points_aux.zMult(decompostion, null, 1.0, 1.0, false, false);
 
         //copying the projection
-        float[][] projection = new float[points.length][];
+        double[][] projection = new double[points.length][];
         double[][] projection_aux = proj.toArray();
 
         for (int i = 0; i < projection_aux.length; i++) {
-            projection[i] = new float[targetDimension];
+            projection[i] = new double[targetDimension];
             for (int j = 0; j < projection_aux[i].length; j++) {
-                projection[i][j] = (float) projection_aux[i][j];
+                projection[i][j] = (double) projection_aux[i][j];
             }
         }
 
@@ -125,12 +125,12 @@ public class PCA extends DimensionalityReduction {
         this.useSamples = useSamples;
     }
 
-    public float[] getEigenvalues() {
+    public double[] getEigenvalues() {
         return eigenvalues;
     }
 
-    private float[][] useSamples(float[][] points) {
-        float[][] samples = new float[points.length / 4][];
+    private double[][] useSamples(double[][] points) {
+        double[][] samples = new double[points.length / 4][];
         ArrayList<Integer> indexes = new ArrayList<Integer>();
 
         int i = 0;
@@ -146,7 +146,7 @@ public class PCA extends DimensionalityReduction {
         return samples;
     }
 
-    private double[][] createCovarianceMatrix(float[][] points) {
+    private double[][] createCovarianceMatrix(double[][] points) {
         if (this.useSamples) {
             points = this.useSamples(points);
         }
@@ -187,8 +187,8 @@ public class PCA extends DimensionalityReduction {
     }
 
     //calculate the covariance between columns a and b
-    private float covariance(float[][] points, int a, int b) {
-        float covariance = 0.0f;
+    private double covariance(double[][] points, int a, int b) {
+        double covariance = 0.0f;
         for (int i = 0; i < points.length; i++) {
             covariance += points[i][a] * points[i][b];
         }
@@ -203,15 +203,15 @@ public class PCA extends DimensionalityReduction {
 
             PCA pca = new PCA(200);
             pca.execute(matrix, null);
-            float[] eigenvalues1 = pca.getEigenvalues();
+            double[] eigenvalues1 = pca.getEigenvalues();
             
-            float total=0.0f;
+            double total=0.0f;
             for(int i=0; i < eigenvalues1.length; i++) {
                 total += eigenvalues1[i];
             }
             
             
-            float partial=0.0f;
+            double partial=0.0f;
             for(int i=0; i < eigenvalues1.length; i++) {
                 partial += eigenvalues1[i];
                 
@@ -224,5 +224,5 @@ public class PCA extends DimensionalityReduction {
     
     
     private boolean useSamples = false;
-    private float[] eigenvalues;
+    private double[] eigenvalues;
 }

@@ -64,7 +64,7 @@ public class A_Arestas {
 
     int source;
     int target;
-    float dist;
+    double dist;
     /** Creates a new instance of A_Arestas */
     public A_Arestas() {
         source = 0;
@@ -72,14 +72,14 @@ public class A_Arestas {
         dist = 0;
     }
 
-    public void addiele(float dist, int x, int y) {
-        this.dist = dist;
+    public void addiele(double m_pDis_F, int x, int y) {
+        this.dist = m_pDis_F;
         this.source = x;
         this.target = y;
 
     }
 
-    public float get_dist() {
+    public double get_dist() {
         return this.dist;
     }
 

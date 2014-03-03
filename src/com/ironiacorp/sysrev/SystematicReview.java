@@ -27,13 +27,14 @@ import java.io.Writer;
 import java.util.Iterator;
 
 import com.ironiacorp.io.IoUtil;
-import com.ironiacorp.language.bibtex.BibTeX;
-import com.ironiacorp.miner.acquisition.filesystem.FilesystemPDFFetcher;
-import com.ironiacorp.miner.extraction.bibtex.BibtexParser;
-import com.ironiacorp.miner.extraction.bibtex.BibtexWriter;
-import com.ironiacorp.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
-import com.ironiacorp.resource.library.Collection;
-import com.ironiacorp.resource.library.Publication;
+import lode.miner.acquisition.filesystem.FilesystemPDFFetcher;
+import lode.miner.extraction.bibtex.BibtexParser;
+import lode.miner.extraction.bibtex.BibtexWriter;
+import lode.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
+import lode.model.bibtex.BibTeX;
+import lode.model.publication.Collection;
+import lode.model.publication.Publication;
+
 import com.ironiacorp.sysrev.selection.PublicationSelectionStatus;
 import com.ironiacorp.sysrev.selection.Status;
 
@@ -87,7 +88,7 @@ public class SystematicReview
 			PublicationSelectionStatus pubStatus = new PublicationSelectionStatus(pub.getStatus());
 			if (pubStatus.getDecision() == Status.SELECTED) {
 				selectedCollection.add(pub);
-				fetcher.getOrUpdate(pub);
+				// TODO: Fix: fetcher.getOrUpdate(pub);
 				try {
 					IoUtil.copyFile(pub.getCachedCopy(), new File(selectedFilesDir,pub.getCachedCopy().getName()));
 				} catch (NullPointerException e) {

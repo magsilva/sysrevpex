@@ -1,27 +1,6 @@
-/* ***** BEGIN LICENSE BLOCK *****
+/*
+ * Copyright (c) 2011 Marco Aurélio Graciotto Silva <magsilva@gmail.com>
  *
- * Copyright (c) 2005-2007 Universidade de Sao Paulo, Sao Carlos/SP, Brazil.
- * All Rights Reserved.
- *
- * This file is part of Projection Explorer (PEx).
- *
- * How to cite this work:
- *  
-@inproceedings{paulovich2007pex,
-author = {Fernando V. Paulovich and Maria Cristina F. Oliveira and Rosane 
-Minghim},
-title = {The Projection Explorer: A Flexible Tool for Projection-based 
-Multidimensional Visualization},
-booktitle = {SIBGRAPI '07: Proceedings of the XX Brazilian Symposium on 
-Computer Graphics and Image Processing (SIBGRAPI 2007)},
-year = {2007},
-isbn = {0-7695-2996-8},
-pages = {27--34},
-doi = {http://dx.doi.org/10.1109/SIBGRAPI.2007.39},
-publisher = {IEEE Computer Society},
-address = {Washington, DC, USA},
-}
- *  
  * PEx is free software: you can redistribute it and/or modify it under 
  * the terms of the GNU General Public License as published by the Free 
  * Software Foundation, either version 3 of the License, or (at your option) 
@@ -32,33 +11,33 @@ address = {Washington, DC, USA},
  * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
  * for more details.
  *
- * This code was developed by members of Computer Graphics and Image
- * Processing Group (http://www.lcad.icmc.usp.br) at Instituto de Ciencias
- * Matematicas e de Computacao - ICMC - (http://www.icmc.usp.br) of 
- * Universidade de Sao Paulo, Sao Carlos/SP, Brazil. The initial developer 
- * of the original code is Fernando Vieira Paulovich <fpaulovich@gmail.com>.
- *
- * Contributor(s): Rosane Minghim <rminghim@icmc.usp.br>, 
- *                 Roberto Pinho <robertopinho@yahoo.com.br>
- *
  * You should have received a copy of the GNU General Public License along 
  * with PEx. If not, see <http://www.gnu.org/licenses/>.
- *
- * ***** END LICENSE BLOCK ***** */
+ */
 
 package visualizer.textprocessing;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import com.ironiacorp.string.StringUtil;
 
 /**
  *
  * @author Fernando Vieira Paulovich
  */
-public class Ngram implements Comparable, Serializable
+public class Ngram implements Comparable<Ngram>, Serializable
 {
-	private static final String[] PARSING_SEPARATORS = { "<>", " "}; 
-
-	private static final String SEPARATOR = " "; 
+	/**
+	 * Default behaviour. For compability with ordered structures, it must be
+	 * set to false.
+	 */
+	public static final boolean DEFAULT_BEHAVIOUR_PEDANTIC = false;
+	
+	public static final String SEPARATOR = " "; 
 	
     private String ngram;
     
@@ -70,15 +49,15 @@ public class Ngram implements Comparable, Serializable
     
     private static final long serialVersionUID = 1L;
 	
-    private boolean pedantic = false;
+    private boolean pedantic = DEFAULT_BEHAVIOUR_PEDANTIC;
     
-    public Ngram(String ngram, int n) {
-        this(ngram, n, 1);
+    public Ngram(String ngram) {
+    	this(ngram, 1);
     }
-
-    public Ngram(String ngram, int n, int frequency) {  	
+    
+    public Ngram(String ngram, int frequency) {  	
         setNgram(ngram);
-        setN(n);
+        discoverN();
         setFrequency(frequency);
     }
 
@@ -104,6 +83,9 @@ public class Ngram implements Comparable, Serializable
 
 	public void setFrequency(int frequency)
 	{
+		if (frequency < 0) {
+			throw new IllegalArgumentException("Cannot set the frequency to a negative value: " + frequency);
+		}
 		this.frequency = frequency;
 	}
 
@@ -111,42 +93,52 @@ public class Ngram implements Comparable, Serializable
 	{
 		return n;
 	}
-	
-	private void setN(int n)
+
+	private void discoverN()
 	{
-		if (n <= 0) {
-			throw new IllegalArgumentException("Invalid size for the N-gram");
+		List<String> newWords = new ArrayList<String>();
+		Iterator<String> i;
+
+		String[] wordsTemp = ngram.split(SEPARATOR);
+   		for (int j = 0; j < wordsTemp.length; j++) {
+   			newWords.add(wordsTemp[j]);
+   		}
+    		
+   		i = newWords.iterator();
+   		while (i.hasNext()) { 
+   			String newWord = i.next();
+   			if (StringUtil.isEmpty(newWord)) {
+   				i.remove();
+   			}
 		}
-		
-    	String[] words = null;	
-    	for (String separator : PARSING_SEPARATORS) {
-    		words = ngram.split(separator);
-    		if (words.length > 1) {
-    			if (n != words.length) {
-    				throw new IllegalArgumentException("Invalid ngram: " + ngram + " has an order " + (words.length + 1) + ", but you said it was " + n);
-    			}
-    			this.words = words;
-    			break;
-    		}
-    	}
-    	if (n == 1) {
-    		words = new String[1];
-    		words[0] = ngram;
+
+   		words = new String[newWords.size()];
+   		i = newWords.iterator();
+   		for (int j = 0; j < words.length; j++) {
+   			words[j] = i.next();
     	}
 		
-		this.n = n;
+		this.n = words.length;
 	}
 	
-
-	public int compareTo(Object o)
+	
+	public int compareTo(Ngram o)
 	{
-		Ngram otherNgram = (Ngram) o;
-		if (! equals(otherNgram)) {
-			throw new UnsupportedOperationException("Cannot compara ngrams which values are different");
+		return compareTo(o, pedantic);
+	}
+
+	public int compareTo(Ngram otherNgram, boolean pedantic)
+	{
+		if (pedantic) {
+			if (! ngram.equals(otherNgram.ngram)) {
+				throw new UnsupportedOperationException("Cannot compare ngrams which values are different");
+			} 
 		}
 		
-		return otherNgram.frequency - frequency;
+		return frequency - otherNgram.frequency;
     }
+	
+	
 	
 
     @Override
@@ -155,13 +147,17 @@ public class Ngram implements Comparable, Serializable
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + frequency;
-		result = prime * result + n;
 		result = prime * result + ((ngram == null) ? 0 : ngram.hashCode());
 		return result;
 	}
 
-	@Override
+    @Override
 	public boolean equals(Object obj)
+	{
+    	return equals(obj, pedantic);
+	}
+    
+	public boolean equals(Object obj, boolean pedantic)
 	{
 		if (this == obj)
 			return true;
@@ -173,20 +169,20 @@ public class Ngram implements Comparable, Serializable
 			return false;
 		
 		Ngram other = (Ngram) obj;
-		
-		if (pedantic) {
-			if (frequency != other.frequency)
-				return false;
 			
-			if (n != other.n)
+		if (ngram == null) {
+			if (other.ngram != null) {
 				return false;
+			}
+		} else if (! ngram.equals(other.ngram)) {
+			return false;
 		}
 		
-		if (ngram == null) {
-			if (other.ngram != null)
+		if (pedantic) {
+			if (frequency != other.frequency) {
 				return false;
-		} else if (! ngram.equals(other.ngram))
-			return false;
+			}
+		}
 		
 		return true;
 	}
@@ -213,5 +209,21 @@ public class Ngram implements Comparable, Serializable
 			throw new IllegalArgumentException("Invalid text");
 		}
 		this.ngram = text;
+	}
+	
+	public static class PedandicComparator implements Comparator<Ngram> {
+
+		@Override
+		public int compare(Ngram o1, Ngram o2) {
+			return o1.compareTo(o2, true);
+		}
+	}
+	
+	public static class ForgivingComparator implements Comparator<Ngram> {
+
+		@Override
+		public int compare(Ngram o1, Ngram o2) {
+			return o1.compareTo(o2, false);
+		}
 	}
 }

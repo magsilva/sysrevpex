@@ -83,7 +83,7 @@ public class HierarchicalClustering extends Clustering {
     public ArrayList<ArrayList<Integer>> execute(DistanceMatrix dmat) throws IOException {
         this.init(dmat);
 
-        //Inicialmente todos os pontos devem ser clusters unitários
+        //Inicialmente todos os pontos devem ser clusters unitï¿½rios
         ArrayList<ArrayList<Integer>> clusters = new ArrayList<ArrayList<Integer>>();
 
         for (int i = 0; i < this.distances.size(); i++) {
@@ -91,24 +91,24 @@ public class HierarchicalClustering extends Clustering {
             clusters.get(i).add(i);
         }
 
-        //Forma os clusters até alcançar o número pré-determinado
+        //Forma os clusters atï¿½ alcanï¿½ar o nï¿½mero prï¿½-determinado
         while (clusters.size() > nrclusters) {
             int[] cmin = this.joinNearestClusters(clusters);
 
-            //Faço o update da matriz de distâncias
+            //Faï¿½o o update da matriz de distï¿½ncias
             this.updateDistanceMatrix(cmin);
         }
 
         return clusters;
     }
 
-    public float[] getPointsHeight(Matrix matrix, Dissimilarity diss) throws IOException {
+    public double[] getPointsHeight(Matrix matrix, Dissimilarity diss) throws IOException {
         DistanceMatrix dmat = new DistanceMatrix(matrix, diss);
         this.init(dmat);
 
-        //Inicialmente todos os pontos devem ser clusters unitários
+        //Inicialmente todos os pontos devem ser clusters unitï¿½rios
         ArrayList<ArrayList<Integer>> clusters = new ArrayList<ArrayList<Integer>>();
-        float[] height = new float[this.distances.size()];
+        double[] height = new double[this.distances.size()];
 
         for (int i = 0; i < this.distances.size(); i++) {
             clusters.add(new ArrayList<Integer>());
@@ -116,16 +116,16 @@ public class HierarchicalClustering extends Clustering {
             height[i] = 0.0f;
         }
 
-        //Forma os clusters até alcançar o número pré-determinado
+        //Forma os clusters atï¿½ alcanï¿½ar o nï¿½mero prï¿½-determinado
         while (clusters.size() > 1) {
             int[] cmin = this.joinNearestClusters(clusters);
 
-            //Armazeno a distância entre os clusters
+            //Armazeno a distï¿½ncia entre os clusters
             for (int i = 0; i < clusters.get(cmin[0]).size(); i++) {
                 height[clusters.get(cmin[0]).get(i)] += 1;
             }
 
-            //Faço o update da matriz de distâncias
+            //Faï¿½o o update da matriz de distï¿½ncias
             this.updateDistanceMatrix(cmin);
         }
 
@@ -133,23 +133,23 @@ public class HierarchicalClustering extends Clustering {
     }
 
     private void init(DistanceMatrix dmat) throws IOException {
-        //Cria a matriz de distâncias
+        //Cria a matriz de distï¿½ncias
         for (int i = 0; i < dmat.getElementCount(); i++) {
-            ArrayList<Float> lin = new ArrayList<Float>();
+            ArrayList<Double> lin = new ArrayList<Double>();
             for (int j = 0; j < dmat.getElementCount() - 1; j++) {
-                lin.add(0.0f);
+                lin.add(0.0);
             }
 
             this.distances.add(lin);
         }
 
-        //Calcula e preenche a matriz com as distâncias
+        //Calcula e preenche a matriz com as distï¿½ncias
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = 0; j < dmat.getElementCount(); j++) {
                 if (i == j) {
-                    this.distances.get(i).add(j, 0.0f);
+                    this.distances.get(i).add(j, 0.0);
                 } else {
-                    float distance = dmat.getDistance(i, j);
+                    double distance = dmat.getDistance(i, j);
                     this.distances.get(i).set(j, distance);
                     this.distances.get(j).set(i, distance);
                 }
@@ -158,12 +158,12 @@ public class HierarchicalClustering extends Clustering {
     }
 
     private int[] joinNearestClusters(ArrayList<ArrayList<Integer>> clusters) {
-        float minDistance = distances.get(0).get(1);
+        double minDistance = distances.get(0).get(1);
         int[] cmin = new int[2];
         cmin[0] = 0;
         cmin[1] = 1;
 
-        //Procurar os clusters mais próximos c1 e c2
+        //Procurar os clusters mais prï¿½ximos c1 e c2
         for (int c1 = 0; c1 < clusters.size(); c1++) {
             for (int c2 = c1 + 1; c2 < clusters.size(); c2++) {
                 if (minDistance > distances.get(c1).get(c2)) {
@@ -174,7 +174,7 @@ public class HierarchicalClustering extends Clustering {
             }
         }
 
-        //Agrupe os dois clusters mais próximos: c1min e c2min
+        //Agrupe os dois clusters mais prï¿½ximos: c1min e c2min
         //coloco dentro de c1min o c2min
         for (int i = 0; i < clusters.get(cmin[1]).size(); i++) {
             clusters.get(cmin[0]).add(clusters.get(cmin[1]).get(i));
@@ -188,7 +188,7 @@ public class HierarchicalClustering extends Clustering {
 
     private void updateDistanceMatrix(int[] cmin) {
         if (this.type == HierarchicalClusteringType.SLINK) {
-            //Linha: copia a menor/maior distância entre os clusters c1min e c2min para o cluster c1min
+            //Linha: copia a menor/maior distï¿½ncia entre os clusters c1min e c2min para o cluster c1min
             for (int i = 0; i < distances.get(0).size(); i++) {
                 //distances[c1min][i] = (distances[c1min][i] < distances[c2min][i]) ? distances[c1min][i] : distances[c2min][i]; //single-link
                 if (distances.get(cmin[0]).get(i) < distances.get(cmin[1]).get(i)) {
@@ -204,7 +204,7 @@ public class HierarchicalClustering extends Clustering {
                 }
             }
         } else if (this.type == HierarchicalClusteringType.CLINK) {
-            //Linha: copia a menor/maior distância entre os clusters c1min e c2min para o cluster c1min
+            //Linha: copia a menor/maior distï¿½ncia entre os clusters c1min e c2min para o cluster c1min
             for (int i = 0; i < distances.get(0).size(); i++) {
                 //distances[c1min][i] = (distances[c1min][i] > distances[c2min][i]) ? distances[c1min][i] : distances[c2min][i]; //complete-link
                 if (distances.get(cmin[0]).get(i) > distances.get(cmin[1]).get(i)) {
@@ -221,7 +221,7 @@ public class HierarchicalClustering extends Clustering {
                 }
             }
         } else if (this.type == HierarchicalClusteringType.ALINK) {
-            //Linha: copia a menor/maior distância entre os clusters c1min e c2min para o cluster c1min
+            //Linha: copia a menor/maior distï¿½ncia entre os clusters c1min e c2min para o cluster c1min
             for (int i = 0; i < distances.get(0).size(); i++) {
                 //distances[c1min][i] = (distances[c1min][i]*2 + distances[c2min][i]) / 2; //average-link
                 distances.get(cmin[0]).set(i, (distances.get(cmin[0]).get(i) * 2 + distances.get(cmin[1]).get(i)) / 2);
@@ -231,15 +231,15 @@ public class HierarchicalClustering extends Clustering {
             }
         }
 
-        //Apago a linha das distâncias do cluster c2min
+        //Apago a linha das distï¿½ncias do cluster c2min
         distances.remove(cmin[1]);
 
-        //Apago a coluna das distâncias do cluster c2min
+        //Apago a coluna das distï¿½ncias do cluster c2min
         for (int k = 0; k < distances.size(); k++) {
             distances.get(k).remove(cmin[1]);
         }
     }
 
     private HierarchicalClusteringType type = HierarchicalClusteringType.CLINK;
-    private ArrayList<ArrayList<Float>> distances = new ArrayList<ArrayList<Float>>();
+    private ArrayList<ArrayList<Double>> distances = new ArrayList<ArrayList<Double>>();
 }

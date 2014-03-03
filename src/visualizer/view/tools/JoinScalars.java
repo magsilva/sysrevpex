@@ -121,7 +121,7 @@ public class JoinScalars extends javax.swing.JDialog {
         Scalar scalar = graph.addScalar(PExConstants.JOIN);
 
         for(Vertex v : graph.getVertex()) {
-            float max = Float.NEGATIVE_INFINITY;
+            double max = Float.NEGATIVE_INFINITY;
             for (int i = 0; i < this.tojoin.size(); i++) {
                 max = Math.max(max, v.getScalar(this.tojoin.get(i)));
             }

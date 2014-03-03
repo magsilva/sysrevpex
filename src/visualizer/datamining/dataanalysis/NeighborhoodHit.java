@@ -273,12 +273,12 @@ public class NeighborhoodHit extends javax.swing.JDialog {
                 KNN knn = new KNN(n + 1);
                 Pair[][] neighbors = knn.execute(dmat);
 
-                float percentage = 0.0f;
+                double percentage = 0.0f;
 
                 for (int i = 0; i < points.getRowCount(); i++) {
-                    float c = points.getRow(i).getKlass();
+                    double c = points.getRow(i).getKlass();
 
-                    float total = 0.0f;
+                    double total = 0.0f;
                     for (int j = 0; j < n + 1; j++) {
                         if (c == points.getRow(neighbors[i][j].index).getKlass()) {
                             total++;

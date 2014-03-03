@@ -62,13 +62,13 @@ public class MatrixUtils {
         assert (matrix.getRowCount() > 0) : "More than zero vectors must be used!";
 
         if (matrix instanceof SparseMatrix) {
-            float[] mean = new float[matrix.getDimensions()];
+            double[] mean = new double[matrix.getDimensions()];
             Arrays.fill(mean, 0.0f);
 
             int size = matrix.getRowCount();
             for (int i = 0; i < size; i++) {
                 int[] index = ((SparseVector) matrix.getRow(i)).getIndex();
-                float[] values = matrix.getRow(i).getValues();
+                double[] values = matrix.getRow(i).getValues();
 
                 for (int j = 0; j < index.length; j++) {
                     mean[index[j]] += values[j];
@@ -82,12 +82,12 @@ public class MatrixUtils {
             return new SparseVector(mean);
 
         } else if (matrix instanceof DenseMatrix) {
-            float[] mean = new float[matrix.getDimensions()];
+            double[] mean = new double[matrix.getDimensions()];
             Arrays.fill(mean, 0.0f);
 
             int size = matrix.getRowCount();
             for (int i = 0; i < size; i++) {
-                float[] values = matrix.getRow(i).getValues();
+                double[] values = matrix.getRow(i).getValues();
 
                 for (int j = 0; j < values.length; j++) {
                     mean[j] += values[j];

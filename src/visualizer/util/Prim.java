@@ -158,7 +158,7 @@ public class Prim {
         st[] flag = new st[nrnodes];
         MinHeap.HeapEntry smallest; // reference is returned from MinHeap
         MinHeap.HeapEntry changing = new MinHeap.HeapEntry();  // gets passed to MinHeap
-        float[] priority = new float[nrnodes];
+        double[] priority = new double[nrnodes];
         int[] bestSneighbor = new int[nrnodes];
 
         // Vertex 0 starts in S.  Other vertices start in T.
@@ -225,7 +225,7 @@ public class Prim {
 
     public static class Edge {
 
-        public Edge(int node1, int node2, float len) {
+        public Edge(int node1, int node2, double len) {
             this.node1 = node1;
             this.node2 = node2;
             this.len = len;
@@ -233,7 +233,7 @@ public class Prim {
 
         public int node1;
         public int node2;
-        public float len;
+        public double len;
         public int next;  // subscript of next Edge with same node1 
     }
 

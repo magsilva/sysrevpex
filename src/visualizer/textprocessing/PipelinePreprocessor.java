@@ -1,52 +1,4 @@
-/* ***** BEGIN LICENSE BLOCK *****
- *
- * Copyright (c) 2005-2007 Universidade de Sao Paulo, Sao Carlos/SP, Brazil.
- * All Rights Reserved.
- *
- * This file is part of Projection Explorer (PEx).
- *
- * How to cite this work:
- *  
-@inproceedings{paulovich2007pex,
-author = {Fernando V. Paulovich and Maria Cristina F. Oliveira and Rosane 
-Minghim},
-title = {The Projection Explorer: A Flexible Tool for Projection-based 
-Multidimensional Visualization},
-booktitle = {SIBGRAPI '07: Proceedings of the XX Brazilian Symposium on 
-Computer Graphics and Image Processing (SIBGRAPI 2007)},
-year = {2007},
-isbn = {0-7695-2996-8},
-pages = {27--34},
-doi = {http://dx.doi.org/10.1109/SIBGRAPI.2007.39},
-publisher = {IEEE Computer Society},
-address = {Washington, DC, USA},
-}
- *  
- * PEx is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
- * any later version.
- *
- * PEx is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
- * for more details.
- *
- * This code was developed by members of Computer Graphics and Image
- * Processing Group (http://www.lcad.icmc.usp.br) at Instituto de Ciencias
- * Matematicas e de Computacao - ICMC - (http://www.icmc.usp.br) of 
- * Universidade de Sao Paulo, Sao Carlos/SP, Brazil. The initial developer 
- * of the original code is Fernando Vieira Paulovich <fpaulovich@gmail.com>, 
- * Roberto Pinho <robertopinho@yahoo.com.br>.
- *
- * Contributor(s): Rosane Minghim <rminghim@icmc.usp.br>
- *
- * You should have received a copy of the GNU General Public License along 
- * with PEx. If not, see <http://www.gnu.org/licenses/>.
- *
- * ***** END LICENSE BLOCK ***** */
-
-package visualizer.textprocessing;
+package br.edu.utfpr.cm.scienceevol;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,25 +6,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ironiacorp.miner.BufferComponent;
-import com.ironiacorp.miner.ProducerAsListAdapter;
-import com.ironiacorp.miner.preprocessing.text.AdverbFilter;
-import com.ironiacorp.miner.preprocessing.text.HyphenizationUndoer;
-import com.ironiacorp.miner.preprocessing.text.InvalidCharRemover;
-import com.ironiacorp.miner.preprocessing.text.LUCuts;
-import com.ironiacorp.miner.preprocessing.text.LowerCaseTransformer;
-import com.ironiacorp.miner.preprocessing.text.NumberInWordRemover;
-import com.ironiacorp.miner.preprocessing.text.PunctuationFilter;
-import com.ironiacorp.miner.preprocessing.text.WhiteSpaceFilter;
-import com.ironiacorp.miner.preprocessing.text.WordReplacer;
-import com.ironiacorp.miner.preprocessing.text.normalizer.LodeNormalizer;
-import com.ironiacorp.miner.preprocessing.text.normalizer.Normalizer;
-import com.ironiacorp.miner.preprocessing.text.normalizer.NormalizerComponent;
-import com.ironiacorp.miner.preprocessing.text.stopword.StopNgramFilter;
-import com.ironiacorp.miner.preprocessing.text.stopword.StopWord;
-import com.ironiacorp.miner.preprocessing.text.stopword.StopWordFilter;
-import com.ironiacorp.miner.preprocessing.text.stopword.exact.SetStopword;
-import com.ironiacorp.resource.Resource;
+import lode.miner.BufferComponent;
+import lode.miner.ProducerAsListAdapter;
+import lode.miner.preprocessing.text.AdverbFilter;
+import lode.miner.preprocessing.text.HyphenizationUndoer;
+import lode.miner.preprocessing.text.InvalidCharRemover;
+import lode.miner.preprocessing.text.LUCuts;
+import lode.miner.preprocessing.text.LowerCaseTransformer;
+import lode.miner.preprocessing.text.NumberInWordRemover;
+import lode.miner.preprocessing.text.PunctuationFilter;
+import lode.miner.preprocessing.text.WhiteSpaceFilter;
+import lode.miner.preprocessing.text.WordReplacer;
+import lode.miner.preprocessing.text.normalizer.LodeNormalizer;
+import lode.miner.preprocessing.text.normalizer.Normalizer;
+import lode.miner.preprocessing.text.normalizer.NormalizerComponent;
+import lode.miner.preprocessing.text.stopword.StopNgramFilter;
+import lode.miner.preprocessing.text.stopword.StopWord;
+import lode.miner.preprocessing.text.stopword.StopWordFilter;
+import lode.miner.preprocessing.text.stopword.StopWordLoader;
+import lode.miner.preprocessing.text.stopword.exact.SetStopword;
+
+import lode.model.Element;
 
 import visualizer.textprocessing.stemmer.Stemmer;
 import visualizer.textprocessing.stemmer.StemmerFactory;
@@ -100,7 +54,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
         }
         inputComponent.start();
         inputComponent.stop();
-        for (Resource resource : resultBuffer.getResources()) {
+        for (Element resource : resultBuffer.getResources()) {
         	PexNgramResource pexNgramResource = (PexNgramResource) resource;
        		Ngram ngram = pexNgramResource.getNgram();
         	String token = stemmer.stem(ngram.getNgram());
@@ -114,7 +68,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
         for (String key : corpusNgrams_aux.keySet()) {
             int freq = corpusNgrams_aux.get(key);
             if (freq >= lowerCut && freq <= upperCut) {
-                ngrams_aux.add(new Ngram(key, numberGrams, freq));
+                ngrams_aux.add(new Ngram(key, freq));
             }
         }
         
@@ -137,7 +91,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
         inputComponent.start();
         inputComponent.stop();
         
-        for (Resource resource : resultBuffer.getResources()) {
+        for (Element resource : resultBuffer.getResources()) {
         	Ngram ngram;
        		PexNgramResource pexNgramResource = (PexNgramResource) resource;
        		ngram = pexNgramResource.getNgram();
@@ -159,6 +113,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		LowerCaseTransformer lowercaseTransformer = new LowerCaseTransformer();
 		NumberInWordRemover numberRemover = new NumberInWordRemover();
 		AdverbFilter adverbFilter = new AdverbFilter();
+		StopWordLoader stopwordLoader = new StopWordLoader();
 		StopWordFilter stopwordFilter1;
 		StopWordFilter stopwordFilter2;
 		StopWordFilter stopwordFilter3;
@@ -174,7 +129,10 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		NgramReducerFilter ngramReducerFilter = new NgramReducerFilter();
 		WordReplacer wordReplacer = new WordReplacer();
 		BufferComponent bufferComponent = new BufferComponent();
-
+		SystemPropertiesManager props = SystemPropertiesManager.getInstance();
+		String propsDir = props.getProperty("SPW.DIR");
+		System.setProperty("user.dir", propsDir);
+		
 		if (numberGrams == 1) {
 			stopwordFilter1 = new StopWordFilter();
 			stopwordFilter2 = new StopWordFilter();
@@ -184,7 +142,8 @@ public class PipelinePreprocessor extends BasicPreProcessor
 			stopwordFilter2 = new StopNgramFilter();
 			stopwordFilter3 = new StopNgramFilter();
 		}
-		
+		stopwordLoader.loadLanguage(stopwords, "en");
+
 		
 		inputComponent.setConsumer(lowercaseTransformer);
 		
@@ -201,9 +160,6 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		if (useStopword) {
 			whitespaceWordFilter2.setConsumer(stopwordFilter1);
 			stopwordFilter1.setStopWord(stopwords);
-			SystemPropertiesManager props = SystemPropertiesManager.getInstance();
-			String propsDir = props.getProperty("SPW.DIR");
-			stopwordFilter1.loadLanguage(propsDir, "en");
 			stopwordFilter1.setConsumer(wordSingularizer);
 		} else {
 			whitespaceWordFilter2.setConsumer(wordSingularizer);
@@ -221,9 +177,6 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		if (useStopword) {
 			adverbFilter.setConsumer(stopwordFilter2);
 			stopwordFilter2.setStopWord(stopwords);
-			SystemPropertiesManager props = SystemPropertiesManager.getInstance();
-			String propsDir = props.getProperty("SPW.DIR");
-			stopwordFilter2.loadLanguage(propsDir, "en");
 			stopwordFilter2.setConsumer(wordReplacer);
 		} else {
 			adverbFilter.setConsumer(wordReplacer);
@@ -231,6 +184,7 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		
 		// ngramReducerFilter.setConsumer(wordReplacer);
 		
+		/*
 		wordReplacer.addSynonym("learning object", "LO");
 		wordReplacer.addSynonym("learning object", "RLO");
 		wordReplacer.addSynonym("learning object", "GLO");
@@ -270,13 +224,11 @@ public class PipelinePreprocessor extends BasicPreProcessor
 		
 		wordReplacer.addSynonym("software", "tool");
 		wordReplacer.addSynonym("software", "application");
+		*/
 
 		wordReplacer.setConsumer(stopwordFilter3);
 		
 		stopwordFilter3.setStopWord(stopwords);
-		SystemPropertiesManager props = SystemPropertiesManager.getInstance();
-		String propsDir = props.getProperty("SPW.DIR");
-		stopwordFilter3.loadLanguage(propsDir, "en");
 		stopwordFilter3.setConsumer(bufferComponent);
 
 		return bufferComponent;

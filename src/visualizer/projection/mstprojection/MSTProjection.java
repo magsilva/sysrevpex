@@ -77,7 +77,7 @@ import visualizer.wizard.ProjectionView;
 public class MSTProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         this.matrix = matrix;
 
         try {
@@ -143,9 +143,9 @@ public class MSTProjection extends Projection {
             RadialLayout layout = new RadialLayout();
             ArrayList<RadialLayout.Node> nodes = layout.execute(neighborhood);
 
-            float[][] projection = new float[nodes.size()][];
+            double[][] projection = new double[nodes.size()][];
             for (int i = 0; i < nodes.size(); i++) {
-                projection[i] = new float[2];
+                projection[i] = new double[2];
                 projection[i][0] = nodes.get(i).x;
                 projection[i][1] = nodes.get(i).y;
             }
@@ -159,7 +159,7 @@ public class MSTProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         this.dmat = dmat;
 
         try {
@@ -201,9 +201,9 @@ public class MSTProjection extends Projection {
             RadialLayout layout = new RadialLayout();
             ArrayList<RadialLayout.Node> nodes = layout.execute(neighborhood);
 
-            float[][] projection = new float[nodes.size()][];
+            double[][] projection = new double[nodes.size()][];
             for (int i = 0; i < nodes.size(); i++) {
-                projection[i] = new float[2];
+                projection[i] = new double[2];
                 projection[i][0] = nodes.get(i).x;
                 projection[i][1] = nodes.get(i).y;
             }
@@ -258,7 +258,7 @@ public class MSTProjection extends Projection {
             DistanceMatrix dmat = new DistanceMatrix(filename);
 
             MSTProjection mstproj = new MSTProjection();
-            float[][] project = mstproj.project(dmat, null, null);
+            double[][] project = mstproj.project(dmat, null, null);
 
             for (int i = 0; i < project.length; i++) {
                 System.out.println(project[i][0] + " " + project[i][1]);

@@ -68,6 +68,8 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+
+import visualizer.corpus.Corpus;
 import visualizer.graph.Connectivity;
 import visualizer.graph.Graph;
 import visualizer.graph.Vertex;
@@ -502,14 +504,14 @@ public class SimilarityMatrixViewer extends Viewer {
 //        int[] index = new int[dmat.getElementCount()];
 //
 ////        //creating the uni-dimensional projection
-////        float[] proj = new float[dmat.getElementCount()];
+////        double[] proj = new double[dmat.getElementCount()];
 ////
 ////        for (int i = 0; i < proj.length; i++) {
 ////            proj[i] = dmat.getDistance(0, i) / dmat.getMaxDistance();
 ////        }
 ////
 ////        int nrit = 100;
-////        float fracdelta = 8.0f;
+////        double fracdelta = 8.0f;
 ////
 ////        for (int k = 0; k < nrit; k++) {
 ////            for (int i = 0; i < proj.length; i++) {
@@ -518,13 +520,13 @@ public class SimilarityMatrixViewer extends Viewer {
 ////                        continue;
 ////                    }
 ////
-////                    float dr1 = Math.abs(proj[i] - proj[j]);
+////                    double dr1 = Math.abs(proj[i] - proj[j]);
 ////
-////                    float drn = dmat.getDistance(i, j);
-////                    float normdrn = (drn - dmat.getMinDistance()) /
+////                    double drn = dmat.getDistance(i, j);
+////                    double normdrn = (drn - dmat.getMinDistance()) /
 ////                            (dmat.getMaxDistance() - dmat.getMinDistance());
 ////
-////                    float delta = normdrn - dr1;
+////                    double delta = normdrn - dr1;
 ////                    delta *= Math.abs(delta);
 ////                    delta /= fracdelta;
 ////
@@ -535,10 +537,10 @@ public class SimilarityMatrixViewer extends Viewer {
 ////        }
 //
 //        ClassicalScalingProjection mds = new ClassicalScalingProjection();
-//        float[][] project = mds.project(dmat, new ProjectionData(), null);
+//        double[][] project = mds.project(dmat, new ProjectionData(), null);
 //
 //        //creating the uni-dimensional projection
-//        float[] proj = new float[project.length];
+//        double[] proj = new double[project.length];
 //
 //        for (int i = 0; i < proj.length; i++) {
 //            proj[i] = project[i][0];
@@ -562,8 +564,8 @@ public class SimilarityMatrixViewer extends Viewer {
         int[] index_aux = new int[dmat.getElementCount()];
 
         //getting the classes
-        float[] cdata = dmat.getClassData();
-        ArrayList<Float> classes = new ArrayList<Float>();
+        double[] cdata = dmat.getClassData();
+        ArrayList<Double> classes = new ArrayList<Double>();
 
         for (int i = 0; i < cdata.length; i++) {
             if (!classes.contains(cdata[i])) {
@@ -577,7 +579,7 @@ public class SimilarityMatrixViewer extends Viewer {
         int ini = 0;
 
         for (int i = 0; i < classes.size(); i++) {
-            float klass = classes.get(i);
+            double klass = classes.get(i);
 
             for (int j = 0; j < cdata.length; j++) {
                 if (cdata[j] == klass) {
@@ -588,11 +590,11 @@ public class SimilarityMatrixViewer extends Viewer {
 
             Pair[] indexes = new Pair[n - ini];
             int pivot = 0;
-            float max = Float.NEGATIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
 
             for (int j = 0; j < indexes.length; j++) {
                 for (int k = indexes.length - 1; k >= 0; k--) {
-                    float distance = dmat.getDistance(index_aux[j + ini],
+                    double distance = dmat.getDistance(index_aux[j + ini],
                             index_aux[k + ini]);
 
                     if (max < distance) {
@@ -793,7 +795,7 @@ public class SimilarityMatrixViewer extends Viewer {
                 for (int j = 0; j < vertex.size(); j++) {
                     Vertex v2 = vertex.get(j);
 
-                    float colorvalue = 0.0f;
+                    double colorvalue = 0.0f;
 
                     if (i != j) {
                         colorvalue = (dmat.getDistance((int) v1.getId(), (int) v2.getId()) - dmat.getMinDistance())
@@ -809,9 +811,9 @@ public class SimilarityMatrixViewer extends Viewer {
             }
 
             //draw the class color legend
-            float[] cdata = dmat.getClassData();
-            float min = Float.POSITIVE_INFINITY;
-            float max = Float.NEGATIVE_INFINITY;
+            double[] cdata = dmat.getClassData();
+            double min = Double.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
 
             for (int i = 0; i < cdata.length; i++) {
                 if (min > cdata[i]) {
@@ -828,7 +830,7 @@ public class SimilarityMatrixViewer extends Viewer {
             for (int i = 0; i < vertex.size(); i++) {
                 Vertex v = vertex.get(i);
 
-                float colorvalue = (cdata[(int) v.getId()] - min) / (max - min);
+                double colorvalue = (cdata[(int) v.getId()] - min) / (max - min);
                 g2Buffer.setColor(legendColorTable.getColor(colorvalue));
 
                 g2Buffer.fillRect(0, i, cBorder, i + 1);
@@ -841,7 +843,7 @@ public class SimilarityMatrixViewer extends Viewer {
             g2Buffer.dispose();
         }
 
-        public void zoom(float factor) {
+        public void zoom(double factor) {
             this.zoomfactor *= factor;
             this.cleanImage();
             this.repaint();
@@ -974,7 +976,7 @@ public class SimilarityMatrixViewer extends Viewer {
                             ViewPanel.this.toolTipLabel += vertices.get(i).toString();
 
                             if (i < vertices.size() - 1) {
-                                ViewPanel.this.toolTipLabel += " <> ";
+                                ViewPanel.this.toolTipLabel += Corpus.NGRAM_SEPARATOR;
                             }
                         }
 
@@ -1095,7 +1097,7 @@ public class SimilarityMatrixViewer extends Viewer {
         private String toolTipLabel;
         private java.awt.Point toolTipPosition;
         //The image which will be drawn as a graph
-        private float zoomfactor = 1.0f;
+        private double zoomfactor = 1.0f;
         private Image redimage;
         private BufferedImage origimage;
         //Font used to create the label
@@ -1121,10 +1123,10 @@ public class SimilarityMatrixViewer extends Viewer {
             }
         }
 
-        public static final float EPSILON = 0.00001f;
+        public static final double EPSILON = 0.00001f;
         public int begin;
         public int end;
-        public float value;
+        public double value;
     }
 
     private DefaultComboBoxModel coordComboModel = new DefaultComboBoxModel();

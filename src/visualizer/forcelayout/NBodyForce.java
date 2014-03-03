@@ -64,17 +64,17 @@ import visualizer.graph.Vertex;
  */
 public class NBodyForce extends Force {
 
-    private float[] params;
+    private double[] params;
     private static String[] pnames = new String[]{"GravitationalConstant",
         "MinimumDistance", "BarnesHutTheta"
     };
-    public static final float DEFAULT_GRAV_CONSTANT = -0.4f;
-    public static final float DEFAULT_MIN_DISTANCE = -1f;
-    public static final float DEFAULT_THETA = 0.9f;
+    public static final double DEFAULT_GRAV_CONSTANT = -0.4f;
+    public static final double DEFAULT_MIN_DISTANCE = -1f;
+    public static final double DEFAULT_THETA = 0.9f;
     public static final int GRAVITATIONAL_CONST = 0;
     public static final int MIN_DISTANCE = 1;
     public static final int BARNES_HUT_THETA = 1;
-    private float xMin,  xMax,  yMin,  yMax;
+    private double xMin,  xMax,  yMin,  yMax;
     private QuadTreeNodeFactory factory = new QuadTreeNodeFactory();
     private QuadTreeNode root;
     private Random rand = new Random(12345678L); // deterministic randomness
@@ -82,8 +82,8 @@ public class NBodyForce extends Force {
         this(DEFAULT_GRAV_CONSTANT, DEFAULT_MIN_DISTANCE, DEFAULT_THETA);
     }
 
-    public NBodyForce(float gravConstant, float minDistance, float theta) {
-        params = new float[]{gravConstant, minDistance, theta};
+    public NBodyForce(double gravConstant, double minDistance, double theta) {
+        params = new double[]{gravConstant, minDistance, theta};
         root = factory.getQuadTreeNode();
     }
 
@@ -194,7 +194,7 @@ public class NBodyForce extends Force {
         }
     }
 
-    private void insert(Vertex p, QuadTreeNode n, float x1, float y1, float x2, float y2) {
+    private void insert(Vertex p, QuadTreeNode n, double x1, double y1, double x2, double y2) {
         // try to insert particle p at node n in the quadtree
         // by construction, each leaf will contain either 1 or 0 particles
         if (n.hasChildren) {
@@ -217,16 +217,16 @@ public class NBodyForce extends Force {
     }
 
     private static boolean isSameLocation(Vertex f1, Vertex f2) {
-        float dx = Math.abs(f1.fdata.location[0] - f2.fdata.location[0]);
-        float dy = Math.abs(f1.fdata.location[1] - f2.fdata.location[1]);
+        double dx = Math.abs(f1.fdata.location[0] - f2.fdata.location[0]);
+        double dy = Math.abs(f1.fdata.location[1] - f2.fdata.location[1]);
         return (dx < 0.01 && dy < 0.01);
     }
 
     private void insertHelper(Vertex p, QuadTreeNode n,
-            float x1, float y1, float x2, float y2) {
-        float x = p.fdata.location[0], y = p.fdata.location[1];
-        float splitx = x1 + ((x2 - x1) / 2);
-        float splity = y1 + ((y2 - y1) / 2);
+            double x1, double y1, double x2, double y2) {
+        double x = p.fdata.location[0], y = p.fdata.location[1];
+        double splitx = x1 + ((x2 - x1) / 2);
+        double splity = y1 + ((y2 - y1) / 2);
         int i = (x >= splitx ? 1 : 0) + (y >= splity ? 2 : 0);
         // create new child node, if necessary
         if (n.children[i] == null) {
@@ -249,7 +249,7 @@ public class NBodyForce extends Force {
     }
 
     private void calcMass(QuadTreeNode n) {
-        float xcom = 0, ycom = 0;
+        double xcom = 0, ycom = 0;
         n.mass = 0;
         if (n.hasChildren) {
             for (int i = 0; i < n.children.length; i++) {
@@ -289,16 +289,16 @@ public class NBodyForce extends Force {
     }
 
     private void forceHelper(Vertex vertex, QuadTreeNode n,
-            float x1, float y1, float x2, float y2) {
-        float dx = n.com[0] - vertex.fdata.location[0];
-        float dy = n.com[1] - vertex.fdata.location[1];
-        float r = (float) Math.sqrt(dx * dx + dy * dy);
+            double x1, double y1, double x2, double y2) {
+        double dx = n.com[0] - vertex.fdata.location[0];
+        double dy = n.com[1] - vertex.fdata.location[1];
+        double r = (double) Math.sqrt(dx * dx + dy * dy);
         boolean same = false;
         if (r == 0.0) {
             // if items are in the exact same place, add some noise
-            dx = (rand.nextFloat() - 0.5f) / 50.0f;
-            dy = (rand.nextFloat() - 0.5f) / 50.0f;
-            r = (float) Math.sqrt(dx * dx + dy * dy);
+            dx = (rand.nextDouble() - 0.5f) / 50.0f;
+            dy = (rand.nextDouble() - 0.5f) / 50.0f;
+            r = Math.sqrt(dx * dx + dy * dy);
             same = true;
         }
         boolean minDist = params[MIN_DISTANCE] > 0f && r > params[MIN_DISTANCE];
@@ -313,13 +313,13 @@ public class NBodyForce extends Force {
             }
             // either only 1 particle or we meet criteria
             // for Barnes-Hut approximation, so calc force
-            float v = params[GRAVITATIONAL_CONST] * vertex.fdata.mass * n.mass / (r * r * r);
+            double v = params[GRAVITATIONAL_CONST] * vertex.fdata.mass * n.mass / (r * r * r);
             vertex.fdata.force[0] += v * dx;
             vertex.fdata.force[1] += v * dy;
         } else if (n.hasChildren) {
             // recurse for more accurate calculation
-            float splitx = x1 + ((x2 - x1) / 2);
-            float splity = y1 + ((y2 - y1) / 2);
+            double splitx = x1 + ((x2 - x1) / 2);
+            double splity = y1 + ((y2 - y1) / 2);
             for (int i = 0; i < n.children.length; i++) {
                 if (n.children[i] != null) {
                     forceHelper(vertex, n.children[i],
@@ -331,7 +331,7 @@ public class NBodyForce extends Force {
                 return;
             }
             if (n.value != null && n.value != vertex) {
-                float v = params[GRAVITATIONAL_CONST] * vertex.fdata.mass * n.value.fdata.mass / (r * r * r);
+                double v = params[GRAVITATIONAL_CONST] * vertex.fdata.mass * n.value.fdata.mass / (r * r * r);
                 vertex.fdata.force[0] += v * dx;
                 vertex.fdata.force[1] += v * dy;
             }
@@ -344,12 +344,12 @@ public class NBodyForce extends Force {
     public final class QuadTreeNode {
 
         boolean hasChildren = false;
-        float mass; // total mass held by this node
-        float[] com; // center of mass of this node
+        double mass; // total mass held by this node
+        double[] com; // center of mass of this node
         Vertex value; // ForceItem in this node, null if node has children
         QuadTreeNode[] children; // children nodes
         public QuadTreeNode() {
-            com = new float[]{0.0f, 0.0f};
+            com = new double[]{0.0f, 0.0f};
             children = new QuadTreeNode[4]; //creates an array of QuadTreeNode
         }
 

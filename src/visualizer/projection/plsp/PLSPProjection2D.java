@@ -85,12 +85,12 @@ import visualizer.wizard.ProjectionView;
 public class PLSPProjection2D extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         this.matrix = matrix;
 
         long start = System.currentTimeMillis();
 
-        float[][] projection = null;
+        double[][] projection = null;
 
         try {
             Dissimilarity diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
@@ -112,7 +112,7 @@ public class PLSPProjection2D extends Projection {
             this.cpoints = getControlPoints(matrix, diss, clusters);
 
             //projecting the control points
-            ArrayList<ArrayList<float[]>> cpointsproj = projectControlPoints(matrix, pdata, cpoints, view);
+            ArrayList<ArrayList<double[]>> cpointsproj = projectControlPoints(matrix, pdata, cpoints, view);
 
 
             if (view != null) {
@@ -120,10 +120,10 @@ public class PLSPProjection2D extends Projection {
             }
 
             //projecting each patch
-            projection = new float[matrix.getRowCount()][];
+            projection = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < clusters.size(); i++) {
-                float[][] projcluster = projectCluster(pdata, matrix,
+                double[][] projcluster = projectCluster(pdata, matrix,
                         clusters.get(i), cpoints.get(i), cpointsproj.get(i));
 
                 for (int j = 0; j < clusters.get(i).size(); j++) {
@@ -152,7 +152,7 @@ public class PLSPProjection2D extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -176,9 +176,9 @@ public class PLSPProjection2D extends Projection {
         }
     }
 
-    private float[][] projectCluster(ProjectionData pdata, Matrix matrix,
+    private double[][] projectCluster(ProjectionData pdata, Matrix matrix,
             ArrayList<Integer> cluster, ArrayList<Integer> cpoints,
-            ArrayList<float[]> cpointsproj) throws IOException {
+            ArrayList<double[]> cpointsproj) throws IOException {
         long start = System.currentTimeMillis();
 
         //getting the dissimilarity
@@ -225,8 +225,8 @@ public class PLSPProjection2D extends Projection {
             //new approach to increase the neighborhood precision
             solverMatrixA.setAsFloat(1.0f, i, i);
 
-            float max = Float.NEGATIVE_INFINITY;
-            float min = Float.POSITIVE_INFINITY;
+            double max = Float.NEGATIVE_INFINITY;
+            double min = Float.POSITIVE_INFINITY;
 
             for (int j = 0; j < neighbors[i].length; j++) {
                 if (max < neighbors[i][j].value) {
@@ -238,44 +238,44 @@ public class PLSPProjection2D extends Projection {
                 }
             }
 
-            float sum = 0;
+            double sum = 0;
             for (int j = 0; j < neighbors[i].length; j++) {
                 if (max > min) {
-                    float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+                    double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
                     sum += (1 / dist);
                 }
             }
 
             for (int j = 0; j < neighbors[i].length; j++) {
                 if (max > min) {
-                    float dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
-                    solverMatrixA.setAsFloat(-((1 / dist) / sum), i, neighbors[i][j].index);
+                    double dist = (((neighbors[i][j].value - min) / (max - min)) * (0.9f)) + 0.1f;
+                    solverMatrixA.setAsDouble(-((1 / dist) / sum), i, neighbors[i][j].index);
                 } else {
-                    solverMatrixA.setAsFloat((-(1.0f / neighbors[i].length)), i, neighbors[i][j].index);
+                    solverMatrixA.setAsDouble((-(1.0f / neighbors[i].length)), i, neighbors[i][j].index);
                 }
             }
         }
 
-        float w = 1.0f; //weigthing the control points
+        double w = 1.0f; //weigthing the control points
 
         for (int i = 0; i < cpoints.size(); i++) {
-            solverMatrixA.setAsFloat(w, cluster.size() + i, indexes.get(cpoints.get(i)));
+            solverMatrixA.setAsDouble(w, cluster.size() + i, indexes.get(cpoints.get(i)));
         }
 
         ////////////////////////////////////////////
         //creating matrix B
         for (int i = 0; i < cpoints.size(); i++) {
-            solverMatrixB.setAsFloat(cpointsproj.get(i)[0] * w, cluster.size() + i, 0);
-            solverMatrixB.setAsFloat(cpointsproj.get(i)[1] * w, cluster.size() + i, 1);
+            solverMatrixB.setAsDouble(cpointsproj.get(i)[0] * w, cluster.size() + i, 0);
+            solverMatrixB.setAsDouble(cpointsproj.get(i)[1] * w, cluster.size() + i, 1);
         }
 
         ///////////////////////////////////////////
         //soling the system
-        float[][] projection = new float[cluster.size()][];
+        double[][] projection = new double[cluster.size()][];
 
         org.ujmp.core.Matrix result = solver.calc(solverMatrixA, solverMatrixB);
         for (int i = 0; i < projection.length; i++) {
-            projection[i] = new float[2];
+            projection[i] = new double[2];
             projection[i][0] = result.getAsFloat(i, 0);
             projection[i][1] = result.getAsFloat(i, 1);
         }
@@ -293,7 +293,7 @@ public class PLSPProjection2D extends Projection {
         ArrayList<ArrayList<Integer>> controlpoints = new ArrayList<ArrayList<Integer>>();
 
         //percentage of points of each cluster to use
-        float perc = (float) Math.pow(matrix.getRowCount(), 0.65) / matrix.getRowCount();
+        double perc = (double) Math.pow(matrix.getRowCount(), 0.65) / matrix.getRowCount();
 
         //for each patch
         for (int i = 0; i < clusters.size(); i++) {
@@ -322,7 +322,7 @@ public class PLSPProjection2D extends Projection {
         return controlpoints;
     }
 
-    private ArrayList<ArrayList<float[]>> projectControlPoints(Matrix matrix,
+    private ArrayList<ArrayList<double[]>> projectControlPoints(Matrix matrix,
             ProjectionData pdata, ArrayList<ArrayList<Integer>> controlpoints,
             ProjectionView view) throws IOException {
 
@@ -354,13 +354,13 @@ public class PLSPProjection2D extends Projection {
         pdatalsp.setNumberControlPoints(projmatrix.getRowCount() / 5);
 
         LSPProjection2D lsp = new LSPProjection2D();
-        float[][] project = lsp.project(projmatrix, pdatalsp, view);
+        double[][] project = lsp.project(projmatrix, pdatalsp, view);
 
         //store the projection regarding the patches
-        ArrayList<ArrayList<float[]>> projection = new ArrayList<ArrayList<float[]>>();
+        ArrayList<ArrayList<double[]>> projection = new ArrayList<ArrayList<double[]>>();
         int count = 0;
         for (int i = 0; i < controlpoints.size(); i++) {
-            ArrayList<float[]> patchproj = new ArrayList<float[]>();
+            ArrayList<double[]> patchproj = new ArrayList<double[]>();
             for (int j = 0; j < controlpoints.get(i).size(); j++) {
                 patchproj.add(project[count]);
                 count++;
@@ -400,7 +400,7 @@ public class PLSPProjection2D extends Projection {
             pdata.setSourceFile(filename);
 
             PLSPProjection2D plsp2D = new PLSPProjection2D();
-            float[][] projection = plsp2D.project(matrix, pdata, null);
+            double[][] projection = plsp2D.project(matrix, pdata, null);
 
             BufferedWriter out = null;
             try {

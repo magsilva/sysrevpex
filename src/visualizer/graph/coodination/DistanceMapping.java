@@ -175,13 +175,13 @@ public class DistanceMapping extends Mapping
                 Pair[] pairList = new Pair[this.nrNeighbors];
 
                 for (int j = 0; j < this.nrNeighbors; j++) {
-                    float distance = diss.calculate(new_outer_points.getRow(i), new_local_points.getRow(j));
+                    double distance = diss.calculate(new_outer_points.getRow(i), new_local_points.getRow(j));
                     pairList[j] = new Pair(j, distance);
                 }
 
                 //find the nearest points between the local points
                 for (int j = this.nrNeighbors; j < new_local_points.getRowCount(); j++) {
-                    float distance = diss.calculate(new_outer_points.getRow(i), new_local_points.getRow(j));
+                    double distance = diss.calculate(new_outer_points.getRow(i), new_local_points.getRow(j));
                     this.addDistance(pairList, new Pair(j, distance));
                 }
 
@@ -237,7 +237,7 @@ public class DistanceMapping extends Mapping
         }
 
         for (i = 0; i < old_matrix.getRowCount(); i++) {
-            float[] vector = new float[index.length];
+            double[] vector = new double[index.length];
             Arrays.fill(vector, 0.0f);
 
             for (int j = 0; j < vector.length; j++) {

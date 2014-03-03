@@ -79,8 +79,8 @@ public class SparseMatrixTest {
 
         for (int i = 0; i < dmat.getElementCount(); i++) {
             for (int j = 0; j < dmat.getElementCount(); j++) {
-                float dmatvalue = dmat.getDistance(i, j);
-                float matrixvalue = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                double dmatvalue = dmat.getDistance(i, j);
+                double matrixvalue = diss.calculate(matrix.getRow(i), matrix.getRow(j));
 
                 assertEquals(dmatvalue, matrixvalue, 0.00001f);
             }

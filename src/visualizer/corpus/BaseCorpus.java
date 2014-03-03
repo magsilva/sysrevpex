@@ -60,7 +60,7 @@ import visualizer.textprocessing.Ngram;
  */
 public abstract class BaseCorpus implements Corpus
 {
-    protected float[] cdata;
+    protected double[] cdata;
     
     protected ArrayList<String> ids;
     
@@ -111,7 +111,7 @@ public abstract class BaseCorpus implements Corpus
     /* (non-Javadoc)
 	 * @see visualizer.corpus.ICorpus#getClassData()
 	 */
-	public float[] getClassData() {
+	public double[] getClassData() {
         return this.cdata;
     }
 

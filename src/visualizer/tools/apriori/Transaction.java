@@ -14,7 +14,7 @@ public class Transaction {
 
     private String tID;
     /* A list of item numbers stored in String format */
-    private float[] items;
+    private double[] items;
     /**
      * Transaction Initialises the Transaction.
      */
@@ -24,11 +24,11 @@ public class Transaction {
     /**
      * Transaction Initialises the Transaction with a new ID and some items.
      * @param transID The transaction ID.
-     * @param inputItems The list of items contained in this transaction.
+     * @param selectedPoints The list of items contained in this transaction.
      */
-    public Transaction(String transID, float[] inputItems) {
+    public Transaction(String transID, double[] selectedPoints) {
         tID = transID;
-        items = inputItems;
+        items = selectedPoints;
     }
 
     /**
@@ -43,7 +43,7 @@ public class Transaction {
      * setItems Sets the items included in this transaction, in order.
      * @param itemsIn The list of items to be added.
      */
-    public void setItems(float[] itemsIn) {
+    public void setItems(double[] itemsIn) {
         items = itemsIn;
     }
 
@@ -59,7 +59,7 @@ public class Transaction {
      * getItems Returns the items of this transaction.
      * @return The transaction items.
      */
-    public float[] getItems() {
+    public double[] getItems() {
         return items;
     }
 

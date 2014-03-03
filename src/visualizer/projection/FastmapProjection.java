@@ -66,14 +66,14 @@ public class FastmapProjection extends Projector {
     }
     
     @Override
-    public float[][] project(DistanceMatrix dmat) {
-        float[][] points = null;
+    public double[][] project(DistanceMatrix dmat) {
+        double[][] points = null;
         try {
             dmat = (DistanceMatrix) dmat.clone();
 
-            points = new float[dmat.getElementCount()][];
+            points = new double[dmat.getElementCount()][];
             for (int i = 0; i < dmat.getElementCount(); i++) {
-                points[i] = new float[this.targetDimension];
+                points[i] = new double[this.targetDimension];
             }
 
             if (points.length < 4) {
@@ -88,7 +88,7 @@ public class FastmapProjection extends Projector {
         return points;
     }
 
-    public void doTheFastmapLessThan4Points(float[][] points, DistanceMatrix dmat) {
+    public void doTheFastmapLessThan4Points(double[][] points, DistanceMatrix dmat) {
         if (points.length == 1) {
             points[0][0] = 0;
             points[0][1] = 0;
@@ -107,13 +107,13 @@ public class FastmapProjection extends Projector {
         }
     }
 
-    private void doTheFastmap(float[][] points, DistanceMatrix dmat) {
+    private void doTheFastmap(double[][] points, DistanceMatrix dmat) {
         int currentDimension = 0;
 
         while (currentDimension < this.targetDimension) {
             //choosen pivots for this recursion
             int[] lvchoosen = this.chooseDistantObjects(dmat);
-            float lvdistance = dmat.getDistance(lvchoosen[0], lvchoosen[1]);
+            double lvdistance = dmat.getDistance(lvchoosen[0], lvchoosen[1]);
 
             //if the distance between the pivots is 0, then set 0 for each instance for this dimension
             if (lvdistance == 0) {
@@ -128,7 +128,7 @@ public class FastmapProjection extends Projector {
                     //								  -(distance between the instance and the secod pivot)^2)
                     //all divided by 2 times the (distance between both pivots)
 
-                    float lvxi = (float) ((Math.pow(dmat.getDistance(lvchoosen[0], lvi), 2) +
+                    double lvxi = (double) ((Math.pow(dmat.getDistance(lvchoosen[0], lvi), 2) +
                             Math.pow(dmat.getDistance(lvchoosen[0], lvchoosen[1]), 2) -
                             Math.pow(dmat.getDistance(lvi, lvchoosen[1]), 2)) /
                             (2 * dmat.getDistance(lvchoosen[0], lvchoosen[1])));
@@ -165,12 +165,12 @@ public class FastmapProjection extends Projector {
         return choosen;
     }
 
-    private void updateDistances(DistanceMatrix dmat, float[][] points, int currentDimension) {
+    private void updateDistances(DistanceMatrix dmat, double[][] points, int currentDimension) {
         //for each instance
         for (int lvinst = 0; lvinst < dmat.getElementCount(); lvinst++) {
             //for each another instance
             for (int lvinst2 = lvinst + 1; lvinst2 < dmat.getElementCount(); lvinst2++) {
-                float value = (float) (Math.sqrt(Math.abs(Math.pow(dmat.getDistance(lvinst, lvinst2), 2) -
+                double value = (double) (Math.sqrt(Math.abs(Math.pow(dmat.getDistance(lvinst, lvinst2), 2) -
                         Math.pow((points[lvinst][currentDimension] -
                         points[lvinst2][currentDimension]), 2))));
 

@@ -53,9 +53,9 @@ package visualizer.util;
  */
 public class Pair implements Comparable {
 
-    public Pair(int index, float value) {
+    public Pair(int index, double min) {
         this.index = index;
-        this.value = value;
+        this.value = min;
     }
 
     public int compareTo(Object o) {
@@ -72,7 +72,7 @@ public class Pair implements Comparable {
         }
     }
 
-    public static final float EPSILON = 0.00001f;
+    public static final double EPSILON = 0.00001f;
     public int index;
-    public float value;
+    public double value;
 }

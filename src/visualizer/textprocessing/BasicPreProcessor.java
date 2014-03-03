@@ -159,7 +159,7 @@ public abstract class BasicPreProcessor implements PreProcessor
 
         //For each file
         for (int i = 0; i < urls.size(); i++) {
-            float[] vector = new float[this.ngrams.size()];
+            double[] vector = new double[this.ngrams.size()];
 
             //get the ngrams of the file
             Map<String, Integer> docNgrams = getNgrams(urls.get(i));
@@ -215,11 +215,11 @@ public abstract class BasicPreProcessor implements PreProcessor
             int freq = corpusNgrams_aux.get(key);
             if (upperCut >= 0) {
                 if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
+                    ngrams_aux.add(new Ngram(key, freq));
                 }
             } else {
                 if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
+                    ngrams_aux.add(new Ngram(key, freq));
                 }
             }
         }

@@ -64,29 +64,29 @@ public class SammonMapping {
     public SammonMapping() {
     }
 
-    public float getMF() {
+    public double getMF() {
         return MF;
     }
 
-    public void setMF(float MF) {
+    public void setMF(double MF) {
         this.MF = MF;
     }
 
-    public float[][] createInitialProjection(Matrix matrix) throws IOException {
-        float[][] points = matrix.toMatrix();
+    public double[][] createInitialProjection(Matrix matrix) throws IOException {
+        double[][] points = matrix.toMatrix();
 
-        float[][] projection = new float[points.length][];
+        double[][] projection = new double[points.length][];
         for (int i = 0; i < projection.length; i++) {
-            projection[i] = new float[2];
+            projection[i] = new double[2];
         }
 
         int dimensions = points[0].length;
-        float[] mins = new float[dimensions];
-        float[] maxs = new float[dimensions];
-        float[] normalized_averages = new float[dimensions];
-        float[] normalized_variances = new float[dimensions];
-        float[] averages = new float[dimensions];
-        float[] variances = new float[dimensions];
+        double[] mins = new double[dimensions];
+        double[] maxs = new double[dimensions];
+        double[] normalized_averages = new double[dimensions];
+        double[] normalized_variances = new double[dimensions];
+        double[] averages = new double[dimensions];
+        double[] variances = new double[dimensions];
 
         for (int i = 0; i < dimensions; i++) {
             mins[i] = points[0][i];
@@ -96,7 +96,7 @@ public class SammonMapping {
             normalized_variances[i] = 0.0f;
         }
 
-        float t = 0.0f;
+        double t = 0.0f;
         for (int i = 1; i < projection.length; i++) {
             if (dimensions != points[i].length) {
                 throw new IOException("Corrupt data!");
@@ -117,7 +117,7 @@ public class SammonMapping {
         int best_one = 0, second_one = 0;
 
         for (int j = 0; j < dimensions; j++) {
-            averages[j] = averages[j] / (float) projection.length;
+            averages[j] = averages[j] / (double) projection.length;
             normalized_averages[j] = (averages[j] - mins[j]) / (maxs[j] - mins[j]);
         }
 
@@ -128,8 +128,8 @@ public class SammonMapping {
                 t = (points[i][j] - mins[j]) / (maxs[j] - mins[j]) - normalized_averages[j];
                 normalized_variances[j] += t * t;
             }
-            variances[j] = variances[j] / (float) projection.length;
-            normalized_variances[j] = normalized_variances[j] / (float) projection.length;
+            variances[j] = variances[j] / (double) projection.length;
+            normalized_variances[j] = normalized_variances[j] / (double) projection.length;
         }
 
         for (int j = 0; j < dimensions; j++) {
@@ -149,20 +149,20 @@ public class SammonMapping {
         return projection;
     }
 
-    public float iteration(DistanceMatrix dmatRn, float[][] projection) throws IOException {
+    public double iteration(DistanceMatrix dmatRn, double[][] projection) throws IOException {
         int nrPoints = dmatRn.getElementCount();
-        float sumSquareMeanError = 0;
-        float error = 0; // Sammon error
-        float sumDistRn = 0;
-        float sumInDer1 = 0;
-        float sumInDer2 = 0;
-        float delta_pq = 0;
-        float c = 0;
+        double sumSquareMeanError = 0;
+        double error = 0; // Sammon error
+        double sumDistRn = 0;
+        double sumInDer1 = 0;
+        double sumInDer2 = 0;
+        double delta_pq = 0;
+        double c = 0;
 
         //necessary to calculate the gradient
-        float[][] projection_aux = new float[projection.length][];
+        double[][] projection_aux = new double[projection.length][];
         for (int i = 0; i < projection.length; i++) {
-            projection_aux[i] = new float[2];
+            projection_aux[i] = new double[2];
             projection_aux[i][0] = projection[i][0];
             projection_aux[i][1] = projection[i][1];
         }
@@ -186,7 +186,7 @@ public class SammonMapping {
 
                 for (int j = 0; j < nrPoints; j++) {
                     if (j != p) {
-                        float distPJ = this.distR2(projection_aux[p], projection_aux[j]);
+                        double distPJ = this.distR2(projection_aux[p], projection_aux[j]);
 
                         sumInDer1 += ((dmatRn.getDistance(p, j) - distPJ) /
                                 (dmatRn.getDistance(p, j) * distPJ)) *
@@ -216,10 +216,10 @@ public class SammonMapping {
         return error;
     }
 
-    private float distR2(float[] pointA, float[] pointB) {
-        float x1x2 = (pointA[0] - pointB[0]);
-        float y1y2 = (pointA[1] - pointB[1]);
-        float dist = (float) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
+    private double distR2(double[] pointA, double[] pointB) {
+        double x1x2 = (pointA[0] - pointB[0]);
+        double y1y2 = (pointA[1] - pointB[1]);
+        double dist = (double) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
 
         if (dist > EPSILON) {
             return dist;
@@ -228,6 +228,6 @@ public class SammonMapping {
         }
     }
 
-    private static final float EPSILON = 0.000001f;
-    private float MF = 0.3f;   // Magic Factor
+    private static final double EPSILON = 0.000001f;
+    private double MF = 0.3f;   // Magic Factor
 }

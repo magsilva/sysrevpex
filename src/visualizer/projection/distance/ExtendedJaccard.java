@@ -55,15 +55,15 @@ import visualizer.matrix.Vector;
  */
 public class ExtendedJaccard implements Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2) {
+    public double calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
 
-        float n1 = v1.norm();
-        float n2 = v2.norm();
+        double n1 = v1.norm();
+        double n2 = v2.norm();
 
         if (n1 != 0.0f && n2 != 0.0f) {
-            float dot = v1.dot(v2);
-            float coef = (dot / (n1 * n1 + n2 * n2 - dot));
+            double dot = v1.dot(v2);
+            double coef = (dot / (n1 * n1 + n2 * n2 - dot));
 
             return (1.0f / (1.0f + coef));
 

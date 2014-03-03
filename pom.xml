@@ -3,19 +3,14 @@
 >
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>vicg</groupId>
-	<artifactId>pex</artifactId>
+	<groupId>utfpr</groupId>
+	<artifactId>sysrevpex</artifactId>
 	<version>1.8.0</version>
 	<packaging>jar</packaging>
 
-	<name>Projection Explorer (PEx)</name>
-	<inceptionYear>2007</inceptionYear>
-	<url>http://infoserver.lcad.icmc.usp.br/infovis2/PEx</url>
-
-	<organization>
-		<name>VICG-ICMC-USP</name>
-		<url>http://infoserver.lcad.icmc.usp.br/</url>
-	</organization>
+	<name>Systematic Review Explorer (SysRevPex)</name>
+	<description>Visualization tool, based upon PEx (VICG-USP), aimed at Systematic Reviews</description>
+	<inceptionYear>2009</inceptionYear>
 
 	<licenses>
 		<license>
@@ -42,65 +37,50 @@
 		</developer>
 	</developers>
 
-	<description>Projection Explorer (PEx) is a Java based tool which can be used to create and explore visual representations of document collections, helping the user to understand their contents.</description>
-	
-	<issueManagement>
-		<system>Bugzilla</system>
-		<url>http://www.ironiacorp.com/Apps/Bugzilla/</url>
-	</issueManagement>
-
-	<scm>
-		<connection>scm:git:https://www.ironiacorp.com/git/projects/SysRevPEx</connection>
-		<url>http://www.ironiacorp.com/Apps/GitPHP/?p=SysRevPEx.git</url>
-		
-	</scm>
-	
-	<ciManagement>
-		<system>Hudson</system>
-		<url>http://www.ironiacorp.com/Apps/Hudson/job/SysRevPEx</url>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>true</sendOnWarning>
-				<address>magsilva@ironiacorp.com</address>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-
 	<distributionManagement>
 		<repository>
-			<id>labes-pc-010808</id>
-			<name>labes-pc-010808</name>
-			<url>http://www.ironiacorp.com/Apps/Artifactory/libs-releases-local</url>
+			<id>IroniaCorp</id>
+			<url>dav:http://www.ironiacorp.com/repo/maven2/</url>
 		</repository>
 	</distributionManagement>
 
 	<repositories>
 		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2/</url>
-			<releases>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-		</repository>
-		
-		<repository>
-			<id>LabES repository</id>
-			<url>http://www.ironiacorp.com/Apps/Artifactory/repo</url>
-			<releases>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-		</repository>
-		
+                        <id>repo1</id>
+                        <url>http://repo1.maven.org/maven2/</url>
+                        <releases>
+                                <enabled>true</enabled>
+                                <updatePolicy>interval:10080</updatePolicy>
+                        </releases>
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                </repository>
+
+                <repository>
+                        <id>IroniaCorp</id>
+                        <name>Ironia Corporation</name>
+                        <url>http://www.ironiacorp.com/repo/maven2</url>
+                        <releases>
+                                <enabled>true</enabled>
+                                <updatePolicy>interval:10080</updatePolicy>
+                        </releases>
+                        <snapshots>
+                                <enabled>true</enabled>
+                                <updatePolicy>interval:10080</updatePolicy>
+                        </snapshots>
+                </repository>
+
 		<repository>
 			<id>Java.net</id>
 			<url>http://download.java.net/maven/2/</url>
 			<releases>
-				<updatePolicy>never</updatePolicy>
+				<enabled>true</enabled>
+				<updatePolicy>interval:10080</updatePolicy>
 			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
@@ -122,9 +102,27 @@
 		</dependency>
 
 		<dependency>
-			<groupId>labes</groupId>
+			<groupId>lode</groupId>
 			<artifactId>lode-miner</artifactId>
-			<version>[0.3.1,)</version>
+			<version>0.5.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>lode</groupId>
+			<artifactId>lode-model</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>lode</groupId>
+			<artifactId>lode-miner-extraction-bibtex</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>lode</groupId>
+			<artifactId>lode-miner-preprocessing-text</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
@@ -142,30 +140,21 @@
 		<dependency>
 			<groupId>org.tartarus</groupId>
 			<artifactId>snowball</artifactId>
-			<version>[1.0.0,)</version>
+			<version>1.0.2</version>
 			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>[1.5.0,)</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ujmp</groupId>
-			<artifactId>ujmp</artifactId>
-			<version>[0.2.5,)</version>
-			<type>jar</type>
+			<version>[1.8.2,)</version>
 			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>net.sf.jabref</groupId>
 			<artifactId>jabref</artifactId>
-			<version>2.6</version>
+			<version>2.9</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>looks</artifactId>
@@ -177,12 +166,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>colt</groupId>
-			<artifactId>colt</artifactId>
-			<version>1.2.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<groupId>cc.mallet</groupId>
+			<artifactId>mallet</artifactId>
+			<version>[2.0.7,)</version>
 		</dependency>
+		
+
 	</dependencies>
 
 	<build>
@@ -218,8 +207,8 @@
 					<fork>true</fork>
 					<meminitial>128m</meminitial>
 					<maxmem>512m</maxmem>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 

@@ -163,10 +163,10 @@ public class BKmeans extends Clustering {
 
         for (int i = 0; i < m.length; i++) {
             int point = -1;
-            float distance = Float.MAX_VALUE;
+            double distance = Float.MAX_VALUE;
 
             for (int j = 0; j < this.clusters.get(i).size(); j++) {
-                float distance2 = this.diss.calculate(this.centroids.getRow(i),
+                double distance2 = this.diss.calculate(this.centroids.getRow(i),
                         matrix.getRow(this.clusters.get(i).get(j)));
 
                 if (distance > distance2) {
@@ -222,8 +222,8 @@ public class BKmeans extends Clustering {
                 //For each cluster
                 int size = gCluster.size();
                 for (int i = 0; i < size; i++) {
-                    float distCentr_1 = diss.calculate(matrix.getRow(gCluster.get(i)), centroid_1);
-                    float distCentr_2 = diss.calculate(matrix.getRow(gCluster.get(i)), centroid_2);
+                    double distCentr_1 = diss.calculate(matrix.getRow(gCluster.get(i)), centroid_1);
+                    double distCentr_2 = diss.calculate(matrix.getRow(gCluster.get(i)), centroid_2);
 
                     if (distCentr_1 < distCentr_2) {
                         cluster_1.add(gCluster.get(i));
@@ -268,11 +268,11 @@ public class BKmeans extends Clustering {
         //choosing the first pivot
         Vector mean = this.calculateMean(matrix, gCluster);
 
-        float size = 1 + (gCluster.size() / 10);
+        double size = 1 + (gCluster.size() / 10);
         for (int i = 0; i < size; i++) {
             int el = (int) ((gCluster.size() / size) * i);
             int aux = gCluster.get(el);
-            float distance = diss.calculate(mean, matrix.getRow(aux));
+            double distance = diss.calculate(mean, matrix.getRow(aux));
             pivots_aux.add(new Pivot(distance, aux));
         }
 
@@ -286,7 +286,7 @@ public class BKmeans extends Clustering {
         for (int i = 0; i < size; i++) {
             int el = (int) ((gCluster.size() / size) * i);
             int aux = gCluster.get(el);
-            float distance = diss.calculate(matrix.getRow(pivots[0]), matrix.getRow(aux));
+            double distance = diss.calculate(matrix.getRow(pivots[0]), matrix.getRow(aux));
             pivots_aux.add(new Pivot(distance, aux));
         }
 
@@ -310,7 +310,7 @@ public class BKmeans extends Clustering {
 
     public class Pivot implements Comparable {
 
-        public Pivot(float distance, int id) {
+        public Pivot(double distance, int id) {
             this.distance = distance;
             this.id = id;
         }
@@ -329,13 +329,13 @@ public class BKmeans extends Clustering {
             }
         }
 
-        public float distance;
+        public double distance;
         public int id;
     }
 
     protected ArrayList<ArrayList<Integer>> clusters;
     protected Matrix centroids;
     protected Dissimilarity diss;
-    protected static final float EPSILON = 0.00001f;
+    protected static final double EPSILON = 0.00001f;
     protected int nrIterations = 15;
 }

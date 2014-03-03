@@ -94,11 +94,11 @@ public class ForceDirectLayout implements Runnable {
         if (this.edges != null && this.vertex != null) {
             for (int i = 0; i < edges.size(); i++) {
                 Edge e = edges.get(i);
-                float vx = e.getTarget().getX() - e.getSource().getX();
-                float vy = e.getTarget().getY() - e.getSource().getY();
-                float len = (float) Math.sqrt(vx * vx + vy * vy);
+                double vx = e.getTarget().getX() - e.getSource().getX();
+                double vy = e.getTarget().getY() - e.getSource().getY();
+                double len = (double) Math.sqrt(vx * vx + vy * vy);
 
-                float edgeLen = e.getLength();
+                double edgeLen = e.getLength();
 
                 if (edgeLen != Edge.NO_SIZE && this.normalize) {
                     edgeLen = (((edgeLen - this.min_length) / (this.max_length - this.min_length)) *
@@ -109,9 +109,9 @@ public class ForceDirectLayout implements Runnable {
                 }
 
                 len = (len == 0) ? 0.0001f : len;
-                float f = (edgeLen - len) / (len * 3.0f);
-                float dx = f * vx;
-                float dy = f * vy;
+                double f = (edgeLen - len) / (len * 3.0f);
+                double dx = f * vx;
+                double dy = f * vy;
 
                 e.getTarget().fdata.dx += dx;
                 e.getTarget().fdata.dy += dy;
@@ -121,17 +121,17 @@ public class ForceDirectLayout implements Runnable {
 
             for (int i = 0; i < vertex.size(); i++) {
                 Vertex v1 = vertex.get(i);
-                float dx = 0;
-                float dy = 0;
+                double dx = 0;
+                double dy = 0;
 
                 for (int j = 0; j < vertex.size(); j++) {
                     if (i == j) {
                         continue;
                     }
                     Vertex v2 = vertex.get(j);
-                    float vx = v1.getX() - v2.getX();
-                    float vy = v1.getY() - v2.getY();
-                    float len = vx * vx + vy * vy;
+                    double vx = v1.getX() - v2.getX();
+                    double vy = v1.getY() - v2.getY();
+                    double len = vx * vx + vy * vy;
                     if (len == 0) {
                         dx += Math.random();
                         dy += Math.random();
@@ -140,9 +140,9 @@ public class ForceDirectLayout implements Runnable {
                         dy += vy / len;
                     }
                 }
-                float dlen = dx * dx + dy * dy;
+                double dlen = dx * dx + dy * dy;
                 if (dlen > 0) {
-                    dlen = (float) Math.sqrt(dlen) / 2;
+                    dlen = (double) Math.sqrt(dlen) / 2;
                     v1.fdata.dx += dx / dlen;
                     v1.fdata.dy += dy / dlen;
                 }
@@ -151,8 +151,8 @@ public class ForceDirectLayout implements Runnable {
             for (int i = 0; i < vertex.size(); i++) {
                 Vertex v = vertex.get(i);
 
-                float x = v.getX() + Math.max(-5.0f, Math.min(5.0f, v.fdata.dx));
-                float y = v.getY() + Math.max(-5.0f, Math.min(5.0f, v.fdata.dy));
+                double x = v.getX() + Math.max(-5.0f, Math.min(5.0f, v.fdata.dx));
+                double y = v.getY() + Math.max(-5.0f, Math.min(5.0f, v.fdata.dy));
 
 //                if (x < Vertex.getRayBase()*2) {
 //                    x = Vertex.getRayBase()*2;
@@ -181,8 +181,8 @@ public class ForceDirectLayout implements Runnable {
             this.vertex = this.graph.getVertex();
 
             //finding the min and max edge lengths
-            this.max_length = Float.MIN_VALUE;
-            this.min_length = Float.MAX_VALUE;
+            this.max_length = Double.MIN_VALUE;
+            this.min_length = Double.MAX_VALUE;
             for (Edge e : this.edges) {
                 if (e.getLength() > this.max_length) {
                     this.max_length = e.getLength();
@@ -206,16 +206,16 @@ public class ForceDirectLayout implements Runnable {
 
         java.awt.Toolkit tk = java.awt.Toolkit.getDefaultToolkit();
         java.awt.Dimension d = tk.getScreenSize();
-        this.graph.normalizeVertex(Vertex.getRayBase() * 5 + 10, ((float) (d.getHeight())) / 1.65f);
+        this.graph.normalizeVertex(Vertex.getRayBase() * 5 + 10, ((double) (d.getHeight())) / 1.65f);
 
         this.gv.updateImage();
     }
 
-    private static final float MAX_EDGE_SIZE = 20.0f;
-    private static final float MIN_EDGE_SIZE = 5.0f;
+    private static final double MAX_EDGE_SIZE = 20.0f;
+    private static final double MIN_EDGE_SIZE = 5.0f;
     private boolean normalize = true;
-    private float max_length;
-    private float min_length;
+    private double max_length;
+    private double min_length;
     private ArrayList<Edge> edges;
     private ArrayList<Vertex> vertex;
     private Graph graph;

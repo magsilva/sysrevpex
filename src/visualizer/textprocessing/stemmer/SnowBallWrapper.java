@@ -58,23 +58,28 @@ import org.tartarus.snowball.SnowballStemmer;
  *
  * @author Fernando Vieira Paulovich
  */
-public class SnowBallWrapper implements Stemmer {
+public class SnowBallWrapper implements Stemmer
+{
+    private SnowballStemmer stemmer;
 
     public SnowBallWrapper(Class stemClass) {
         try {
             this.stemmer = (SnowballStemmer) stemClass.newInstance();
         } catch (InstantiationException ex) {
-            Logger.getLogger(SnowBallWrapper.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("Invalid stemmer: " + stemClass.getName(), ex); 
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(SnowBallWrapper.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("Invalid stemmer: " + stemClass.getName(), ex); 
         }
     }
 
     public String stem(String word) {
         stemmer.setCurrent(word);
-        stemmer.stem();
+        try {
+        	stemmer.stem();
+        } catch (NoSuchMethodError e) {
+        	throw new UnsupportedOperationException("Could not apply the selected stemmer: " + stemmer.getClass().getName(), e);
+        }
         return stemmer.getCurrent();
     }
 
-    private SnowballStemmer stemmer;
 }

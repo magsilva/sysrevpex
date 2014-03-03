@@ -59,23 +59,23 @@ import visualizer.util.Pair;
  */
 public class SparseVector extends Vector {
 
-    public SparseVector(float[] vector) {
+    public SparseVector(double[] vector) {
         this.create(vector, null, 0.0f);
     }
 
-    public SparseVector(float[] vector, String id) {
+    public SparseVector(double[] vector, String id) {
         this.create(vector, id, 0.0f);
     }
 
-    public SparseVector(float[] vector, float klass) {
+    public SparseVector(double[] vector, double klass) {
         this.create(vector, null, klass);
     }
 
-    public SparseVector(float[] vector, String id, float klass) {
-        this.create(vector, id, klass);
+    public SparseVector(double[] points, String id, double d) {
+        this.create(points, id, d);
     }
 
-    public SparseVector(ArrayList<Pair> values, String id, float klass, int size) {
+    public SparseVector(ArrayList<Pair> values, String id, double klass, int size) {
         assert (values != null) : "ERROR: vector can not be null!";
 
         this.id = id;
@@ -83,7 +83,7 @@ public class SparseVector extends Vector {
         this.size = size;
 
         this.index = new int[values.size()];
-        this.values = new float[values.size()];
+        this.values = new double[values.size()];
 
         int length = this.index.length;
         for (int i = 0; i < length; i++) {
@@ -95,15 +95,15 @@ public class SparseVector extends Vector {
     }
 
     @Override
-    public float dot(Vector vector) {
+    public double dot(Vector vector) {
         assert (this.size == vector.size) : "ERROR: vectors of different sizes!";
-        float dot = 0.0f;
+        double dot = 0.0f;
 
         if (vector instanceof SparseVector) {
             int length = this.index.length;
             int vlength = ((SparseVector) vector).index.length;
             int[] vindex = ((SparseVector) vector).index;
-            float[] vvalues = vector.values;
+            double[] vvalues = vector.values;
 
             if (length > 0 && vlength > 0 && index[0] <= vindex[vlength - 1]) {
                 for (int i = 0, j = 0; i < length; i++) {
@@ -147,7 +147,7 @@ public class SparseVector extends Vector {
     }
 
     @Override
-    protected void create(float[] vector, String id, float klass) {
+    protected void create(double[] vector, String id, double klass) {
         assert (vector != null) : "ERROR: vector can not be null!";
 
         this.id = id;
@@ -155,7 +155,7 @@ public class SparseVector extends Vector {
         this.size = vector.length;
 
         ArrayList<Integer> index_aux = new ArrayList<Integer>();
-        ArrayList<Float> values_aux = new ArrayList<Float>();
+        ArrayList<Double> values_aux = new ArrayList<Double>();
 
         for (int i = 0; i < vector.length; i++) {
             if (vector[i] > 0.0f) {
@@ -165,7 +165,7 @@ public class SparseVector extends Vector {
         }
 
         this.index = new int[index_aux.size()];
-        this.values = new float[values_aux.size()];
+        this.values = new double[values_aux.size()];
 
         int length = this.index.length;
         for (int i = 0; i < length; i++) {
@@ -185,21 +185,21 @@ public class SparseVector extends Vector {
             this.norm += this.values[i] * this.values[i];
         }
 
-        this.norm = (float) Math.sqrt(this.norm);
+        this.norm = (double) Math.sqrt(this.norm);
         this.updateNorm = false;
     }
 
-    public float sparsity() {
+    public double sparsity() {
         if (this.size > 0) {
-            return 1.0f - ((float) this.index.length / (float) this.size);
+            return 1.0f - ((double) this.index.length / (double) this.size);
         } else {
             return 1.0f;
         }
     }
 
     @Override
-    public float[] toArray() {
-        float[] vector = new float[this.size];
+    public double[] toArray() {
+        double[] vector = new double[this.size];
         Arrays.fill(vector, 0.0f);
 
         int length = this.index.length;
@@ -211,7 +211,7 @@ public class SparseVector extends Vector {
     }
 
     @Override
-    public float getValue(int index) {
+    public double getValue(int index) {
         assert (index < this.size) : "ERROR: index out of bounds!";
 
         for (int i = 0; i < this.index.length; i++) {
@@ -226,7 +226,7 @@ public class SparseVector extends Vector {
     }
 
     @Override
-    public void setValue(int index, float value) {
+    public void setValue(int index, double value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -238,16 +238,16 @@ public class SparseVector extends Vector {
         for (int i = 0; i < this.values.length; i++) {
             out.write(Integer.toString(this.index[i]));
             out.write(":");
-            out.write(Float.toString(this.values[i]));
+            out.write(Double.toString(this.values[i]));
             out.write(";");
         }
 
-        out.write(Float.toString(this.klass));
+        out.write(Double.toString(this.klass));
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        SparseVector clone = new SparseVector(new float[]{0});
+        SparseVector clone = new SparseVector(new double[]{0});
         clone.norm = this.norm;
         clone.size = this.size;
         clone.id = this.id;
@@ -259,7 +259,7 @@ public class SparseVector extends Vector {
         }
 
         if (this.values != null) {
-            clone.values = new float[this.values.length];
+            clone.values = new double[this.values.length];
             System.arraycopy(this.values, 0, clone.values, 0, this.values.length);
         }
 
@@ -297,7 +297,7 @@ public class SparseVector extends Vector {
                 return false;
             }
 
-            float[] values_aux = this.values;
+            double[] values_aux = this.values;
 
             for (int i = 0; i < values_aux.length; i++) {
                 if (Math.abs(values_aux[i] - dv.values[i]) > DELTA) {

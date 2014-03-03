@@ -59,8 +59,8 @@ import visualizer.projection.distance.Dissimilarity;
  */
 public class SilhouetteCoefficient {
 
-    public float average(float[] silhouette) throws IOException {
-        float s = 0.0f;
+    public double average(double[] silhouette) throws IOException {
+        double s = 0.0f;
         for (int i = 0; i < silhouette.length; i++) {
             s += silhouette[i];
         }
@@ -68,10 +68,10 @@ public class SilhouetteCoefficient {
         return s / silhouette.length;
     }
 
-    public float[] execute(Matrix matrix, Dissimilarity diss) throws IOException {
-        float[] cdata = matrix.getClassData();
+    public double[] execute(Matrix matrix, Dissimilarity diss) throws IOException {
+        double[] cdata = matrix.getClassData();
 
-        ArrayList<Float> cdata_index = new ArrayList<Float>();
+        ArrayList<Double> cdata_index = new ArrayList<Double>();
         for (int i = 0; i < cdata.length; i++) {
             if (!cdata_index.contains(cdata[i])) {
                 cdata_index.add(cdata[i]);
@@ -97,14 +97,14 @@ public class SilhouetteCoefficient {
             cluster_id[i] = index;
         }
 
-        float[] s = new float[cdata.length];
+        double[] s = new double[cdata.length];
 
         for (int i = 0; i < s.length; i++) {
             //testing if the cluster is a singleton
             if (clusters.get(cluster_id[i]).size() > 1) {
-                float a = average(matrix, clusters.get(cluster_id[i]), matrix.getRow(i), diss);
+                double a = average(matrix, clusters.get(cluster_id[i]), matrix.getRow(i), diss);
 
-                float b = Float.POSITIVE_INFINITY;
+                double b = Double.POSITIVE_INFINITY;
                 for (int j = 0; j < clusters.size(); j++) {
                     if (j == cluster_id[i]) {
                         continue;
@@ -123,8 +123,8 @@ public class SilhouetteCoefficient {
         return s;
     }
 
-    private float average(Matrix matrix, ArrayList<Integer> cluster, Vector vector, Dissimilarity diss) {
-        float a = 0.0f;
+    private double average(Matrix matrix, ArrayList<Integer> cluster, Vector vector, Dissimilarity diss) {
+        double a = 0.0f;
 
         for (int i = 0; i < cluster.size(); i++) {
             a += diss.calculate(vector, matrix.getRow(cluster.get(i)));

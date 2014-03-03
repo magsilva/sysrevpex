@@ -58,19 +58,19 @@ import java.awt.image.BufferedImage;
  */
 public class Edge implements Comparable, java.io.Serializable {
 
-    public static final float NO_SIZE = -1;
+    public static final double NO_SIZE = -1;
     private static final long serialVersionUID = 1L;
 
     /**
      * Constructor of the edge
      * 
-     * @param length The edge's lenght
+     * @param dis The edge's lenght
      * @param source The first vertex
      * @param target The second vertex
      */
-    public Edge(float length, Vertex source, Vertex target) {
+    public Edge(double dis, Vertex source, Vertex target) {
         this(source, target);
-        this.length = length;
+        this.length = dis;
     }
 
     /**
@@ -104,7 +104,7 @@ public class Edge implements Comparable, java.io.Serializable {
         if (!this.source.isValid() && !this.target.isValid()) {
             this.color = java.awt.Color.BLACK;
         } else {
-            g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, Vertex.getAlpha()));
+            g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) Vertex.getAlpha()));
             this.color = new Color((this.source.getColor().getRed() + this.target.getColor().getRed()) / 2,
                     (this.source.getColor().getGreen() + this.target.getColor().getGreen()) / 2,
                     (this.source.getColor().getBlue() + this.target.getColor().getBlue()) / 2);
@@ -119,10 +119,10 @@ public class Edge implements Comparable, java.io.Serializable {
         g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 1.0f));
 
         if (Edge.showLength) {
-            String label = Float.toString(this.length);
-            float x = 5 + (float) Math.abs(this.source.getX() - this.target.getX()) / 2 +
+            String label = Double.toString(this.length);
+            double x = 5 + (double) Math.abs(this.source.getX() - this.target.getX()) / 2 +
                     Math.min(this.source.getX(), this.target.getX());
-            float y = (float) Math.abs(this.source.getY() - this.target.getY()) / 2 +
+            double y = (double) Math.abs(this.source.getY() - this.target.getY()) / 2 +
                     Math.min(this.source.getY(), this.target.getY());
 
             //Getting the font information
@@ -140,7 +140,7 @@ public class Edge implements Comparable, java.io.Serializable {
             g2.setColor(java.awt.Color.BLACK);
             g2.drawRect((int) x - 2, (int) y - height, width + 4, height + 4);
 
-            g2.drawString(label, x, y);
+            g2.drawString(label, (int) x, (int) y);
         }
     }
 
@@ -224,7 +224,7 @@ public class Edge implements Comparable, java.io.Serializable {
         }
     }
 
-    public float getLength() {
+    public double getLength() {
         return length;
     }
 
@@ -235,7 +235,7 @@ public class Edge implements Comparable, java.io.Serializable {
     public static void setShowLength(boolean aShowLength) {
         showLength = aShowLength;
     }
-    private float length = Edge.NO_SIZE;
+    private double length = Edge.NO_SIZE;
     private Color color = Color.WHITE; //Color of the edge
     private Vertex source; //The first vertex of the edge
     private Vertex target; //The second vertex of the edge

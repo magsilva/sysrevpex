@@ -62,7 +62,7 @@ import visualizer.projection.distance.Euclidean;
  */
 public class ForceScheme {
 
-    public ForceScheme(float fractionDelta, int numberPoints) {
+    public ForceScheme(double fractionDelta, int numberPoints) {
         this.fractionDelta = fractionDelta;
 
         //Create the indexes and shuffle them
@@ -82,16 +82,16 @@ public class ForceScheme {
         }
     }
 
-    public float iteration(DistanceMatrix dmat, float[][] projection) {
-        float error = 0.0f;
+    public double iteration(DistanceMatrix dmat, double[][] projection_aux) {
+        double error = 0.0f;
 
-        if (projection[0].length == 2) {
+        if (projection_aux[0].length == 2) {
             //for each instance
-            for (int ins1 = 0; ins1 < projection.length; ins1++) {
+            for (int ins1 = 0; ins1 < projection_aux.length; ins1++) {
                 int instance = this.index[ins1];
 
                 //for each other instance
-                for (int ins2 = 0; ins2 < projection.length; ins2++) {
+                for (int ins2 = 0; ins2 < projection_aux.length; ins2++) {
                     int instance2 = this.index[ins2];
 
                     if (instance == instance2) {
@@ -99,16 +99,16 @@ public class ForceScheme {
                     }
 
                     //distance between projected instances
-                    float x1x2 = (projection[instance2][0] - projection[instance][0]);
-                    float y1y2 = (projection[instance2][1] - projection[instance][1]);
-                    float dr2 = (float) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
+                    double x1x2 = (projection_aux[instance2][0] - projection_aux[instance][0]);
+                    double y1y2 = (projection_aux[instance2][1] - projection_aux[instance][1]);
+                    double dr2 = (double) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
 
                     if (dr2 < EPSILON) {
                         dr2 = EPSILON;
                     }
 
-//                    float drn = dmat.getDistance(instance, instance2);
-//                    float normdrn = drn;//(drn - dmat.getMinDistance()) /
+//                    double drn = dmat.getDistance(instance, instance2);
+//                    double normdrn = drn;//(drn - dmat.getMinDistance()) /
 //                    //(dmat.getMaxDistance() - dmat.getMinDistance());
 //
 //                    //Calculating the (fraction of) delta
@@ -116,32 +116,32 @@ public class ForceScheme {
 //                    delta *= Math.abs(delta);
 //                    delta /= this.fractionDelta;
 
-                    float drn = dmat.getDistance(instance, instance2);
-                    float normdrn = (drn - dmat.getMinDistance()) /
+                    double drn = dmat.getDistance(instance, instance2);
+                    double normdrn = (drn - dmat.getMinDistance()) /
                             (dmat.getMaxDistance() - dmat.getMinDistance());
 
                     //Calculating the (fraction of) delta
-                    float delta = normdrn - dr2;
+                    double delta = normdrn - dr2;
                     delta *= Math.abs(delta);
-//                delta = (float) Math.sqrt(Math.abs(delta));
+//                delta = (double) Math.sqrt(Math.abs(delta));
                     delta /= this.fractionDelta;
 
                     error += Math.abs(delta);
 
                     //moving ins2 -> ins1
-                    projection[instance2][0] += delta * (x1x2 / dr2);
-                    projection[instance2][1] += delta * (y1y2 / dr2);
+                    projection_aux[instance2][0] += delta * (x1x2 / dr2);
+                    projection_aux[instance2][1] += delta * (y1y2 / dr2);
                 }
             }
 
-            error /= (projection.length * projection.length) - projection.length;
-        } else if (projection[0].length == 3) {
+            error /= (projection_aux.length * projection_aux.length) - projection_aux.length;
+        } else if (projection_aux[0].length == 3) {
             //for each instance
-            for (int ins1 = 0; ins1 < projection.length; ins1++) {
+            for (int ins1 = 0; ins1 < projection_aux.length; ins1++) {
                 int instance = this.index[ins1];
 
                 //for each other instance
-                for (int ins2 = 0; ins2 < projection.length; ins2++) {
+                for (int ins2 = 0; ins2 < projection_aux.length; ins2++) {
                     int instance2 = this.index[ins2];
 
                     if (instance == instance2) {
@@ -149,43 +149,43 @@ public class ForceScheme {
                     }
 
                     //distance between projected instances
-                    float x1x2 = (projection[instance2][0] - projection[instance][0]);
-                    float y1y2 = (projection[instance2][1] - projection[instance][1]);
-                    float z1z2 = (projection[instance2][2] - projection[instance][2]);
+                    double x1x2 = (projection_aux[instance2][0] - projection_aux[instance][0]);
+                    double y1y2 = (projection_aux[instance2][1] - projection_aux[instance][1]);
+                    double z1z2 = (projection_aux[instance2][2] - projection_aux[instance][2]);
 
-                    float dr3 = (float) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2 + z1z2 * z1z2);
+                    double dr3 = (double) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2 + z1z2 * z1z2);
 
                     if (dr3 < EPSILON) {
                         dr3 = EPSILON;
                     }
 
-                    float drn = dmat.getDistance(instance, instance2);
-                    float normdrn = (drn - dmat.getMinDistance()) /
+                    double drn = dmat.getDistance(instance, instance2);
+                    double normdrn = (drn - dmat.getMinDistance()) /
                             (dmat.getMaxDistance() - dmat.getMinDistance());
 
                     //Calculating the (fraction of) delta
-                    float delta = normdrn - dr3;
+                    double delta = normdrn - dr3;
                     delta *= Math.abs(delta);
-//                delta = (float) Math.sqrt(Math.abs(delta));
+//                delta = (double) Math.sqrt(Math.abs(delta));
                     delta /= this.fractionDelta;
 
                     error += Math.abs(delta);
 
                     //moving ins2 -> ins1
-                    projection[instance2][0] += delta * (x1x2 / dr3);
-                    projection[instance2][1] += delta * (y1y2 / dr3);
-                    projection[instance2][2] += delta * (z1z2 / dr3);
+                    projection_aux[instance2][0] += delta * (x1x2 / dr3);
+                    projection_aux[instance2][1] += delta * (y1y2 / dr3);
+                    projection_aux[instance2][2] += delta * (z1z2 / dr3);
                 }
             }
 
-            error /= (projection.length * projection.length) - projection.length;
+            error /= (projection_aux.length * projection_aux.length) - projection_aux.length;
         }
 
         return error;
     }
 
-    public float iteration(Matrix matrix, Dissimilarity diss, float[][] projection) {
-        float error = 0.0f;
+    public double iteration(Matrix matrix, Dissimilarity diss, double[][] projection) {
+        double error = 0.0f;
 
         if (projection[0].length == 2) {
             //for each instance
@@ -201,21 +201,21 @@ public class ForceScheme {
                     }
 
                     //distance between projected instances
-                    float x1x2 = (projection[instance2][0] - projection[instance][0]);
-                    float y1y2 = (projection[instance2][1] - projection[instance][1]);
-                    float dr2 = (float) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
+                    double x1x2 = (projection[instance2][0] - projection[instance][0]);
+                    double y1y2 = (projection[instance2][1] - projection[instance][1]);
+                    double dr2 = (double) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2);
 
                     if (dr2 < EPSILON) {
                         dr2 = EPSILON;
                     }
 
-                    float drn = diss.calculate(matrix.getRow(instance), matrix.getRow(instance2));
-                    float normdrn = drn / 5.0f;
+                    double drn = diss.calculate(matrix.getRow(instance), matrix.getRow(instance2));
+                    double normdrn = drn / 5.0f;
 
                     //Calculating the (fraction of) delta
-                    float delta = normdrn - dr2;
+                    double delta = normdrn - dr2;
                     delta *= Math.abs(delta);
-//                delta = (float) Math.sqrt(Math.abs(delta));
+//                delta = (double) Math.sqrt(Math.abs(delta));
                     delta /= this.fractionDelta;
 
                     error += Math.abs(delta);
@@ -241,23 +241,23 @@ public class ForceScheme {
                     }
 
                     //distance between projected instances
-                    float x1x2 = (projection[instance2][0] - projection[instance][0]);
-                    float y1y2 = (projection[instance2][1] - projection[instance][1]);
-                    float z1z2 = (projection[instance2][2] - projection[instance][2]);
+                    double x1x2 = (projection[instance2][0] - projection[instance][0]);
+                    double y1y2 = (projection[instance2][1] - projection[instance][1]);
+                    double z1z2 = (projection[instance2][2] - projection[instance][2]);
 
-                    float dr3 = (float) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2 + z1z2 * z1z2);
+                    double dr3 = (double) Math.sqrt(x1x2 * x1x2 + y1y2 * y1y2 + z1z2 * z1z2);
 
                     if (dr3 < EPSILON) {
                         dr3 = EPSILON;
                     }
 
-                    float drn = diss.calculate(matrix.getRow(instance), matrix.getRow(instance2));
-                    float normdrn = drn / 5.0f;
+                    double drn = diss.calculate(matrix.getRow(instance), matrix.getRow(instance2));
+                    double normdrn = drn / 5.0f;
 
                     //Calculating the (fraction of) delta
-                    float delta = normdrn - dr3;
+                    double delta = normdrn - dr3;
                     delta *= Math.abs(delta);
-//                delta = (float) Math.sqrt(Math.abs(delta));
+//                delta = (double) Math.sqrt(Math.abs(delta));
                     delta /= this.fractionDelta;
 
                     error += Math.abs(delta);
@@ -278,18 +278,18 @@ public class ForceScheme {
             String filename = "D:\\My Documents\\FERNANDO\\Tese\\datasets\\quadrapeds-mammals_nc.data";
             Matrix matrix = MatrixFactory.getInstance(filename);
 
-            float[][] projection = new float[matrix.getRowCount()][];
+            double[][] projection = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < projection.length; i++) {
-                projection[i] = new float[2];
-                projection[i][0] = (float) Math.random();
-                projection[i][1] = (float) Math.random();
+                projection[i] = new double[2];
+                projection[i][0] = (double) Math.random();
+                projection[i][1] = (double) Math.random();
             }
 
             ForceScheme force = new ForceScheme(8.0f, matrix.getRowCount());
 
             for (int i = 0; i < 1; i++) {
-                float error = force.iteration(matrix, new Euclidean(), projection);
+                double error = force.iteration(matrix, new Euclidean(), projection);
                 System.out.println(error);
             }
 
@@ -297,7 +297,7 @@ public class ForceScheme {
             Logger.getLogger(ForceScheme.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private float fractionDelta;
+    private double fractionDelta;
     private int[] index;
-    private static final float EPSILON = 0.0000001f;
+    private static final double EPSILON = 0.0000001f;
 }

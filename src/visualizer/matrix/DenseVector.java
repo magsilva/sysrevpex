@@ -56,27 +56,27 @@ import java.io.IOException;
  */
 public class DenseVector extends Vector {
 
-    public DenseVector(float[] vector) {
-        this.create(vector, null, 0.0f);
+    public DenseVector(double[] vect) {
+        this.create(vect, null, 0.0f);
     }
 
-    public DenseVector(float[] vector, String id) {
+    public DenseVector(double[] vector, String id) {
         this.create(vector, id, 0.0f);
     }
 
-    public DenseVector(float[] vector, float klass) {
+    public DenseVector(double[] vector, double klass) {
         this.create(vector, null, klass);
     }
 
-    public DenseVector(float[] vector, String id, float klass) {
+    public DenseVector(double[] vector, String id, double klass) {
         this.create(vector, id, klass);
     }
 
     @Override
-    public float dot(Vector vector) {
+    public double dot(Vector vector) {
         assert (this.size == vector.size) : "ERROR: vectors of different sizes!";
 
-        float dot = 0.0f;
+        double dot = 0.0f;
 
         if (vector instanceof DenseVector) {
             int length = this.values.length;
@@ -109,22 +109,22 @@ public class DenseVector extends Vector {
     }
 
     @Override
-    public float[] toArray() {
-        float[] array = new float[this.values.length];
+    public double[] toArray() {
+        double[] array = new double[this.values.length];
         System.arraycopy(this.values, 0, array, 0, this.values.length);
 
         return array;
     }
 
     @Override
-    public float getValue(int index) {
+    public double getValue(int index) {
         assert (index <= this.size) : "ERROR: vector can not be null!";
 
         return this.values[index];
     }
 
     @Override
-    public void setValue(int index, float value) {
+    public void setValue(int index, double value) {
         assert (index <= this.size) : "ERROR: vector can not be null!";
 
         this.updateNorm = true;
@@ -137,15 +137,15 @@ public class DenseVector extends Vector {
         out.write(";");
 
         for (int i = 0; i < this.values.length; i++) {
-            out.write(Float.toString(this.values[i]));
+            out.write(Double.toString(this.values[i]));
             out.write(";");
         }
 
-        out.write(Float.toString(this.klass));
+        out.write(Double.toString(this.klass));
     }
 
     @Override
-    protected void create(float[] vector, String id, float klass) {
+    protected void create(double[] vector, String id, double klass) {
         assert (vector != null) : "ERROR: vector can not be null!";
 
         this.values = vector;
@@ -165,20 +165,20 @@ public class DenseVector extends Vector {
             this.norm += this.values[i] * this.values[i];
         }
 
-        this.norm = (float) Math.sqrt(this.norm);
+        this.norm = (double) Math.sqrt(this.norm);
         this.updateNorm = false;
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        DenseVector clone = new DenseVector(new float[]{0});
+        DenseVector clone = new DenseVector(new double[]{0});
         clone.norm = this.norm;
         clone.size = this.size;
         clone.id = this.id;
         clone.klass = this.klass;
 
         if (this.values != null) {
-            clone.values = new float[this.values.length];
+            clone.values = new double[this.values.length];
             System.arraycopy(this.values, 0, clone.values, 0, this.values.length);
         }
 
@@ -209,7 +209,7 @@ public class DenseVector extends Vector {
                 return false;
             }
 
-            float[] values_aux = sv.values;
+            double[] values_aux = sv.values;
 
             for (int i = 0; i < this.values.length; i++) {
                 if (Math.abs(this.values[i] - values_aux[i]) > DELTA) {

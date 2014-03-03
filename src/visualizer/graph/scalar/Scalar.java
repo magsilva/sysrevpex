@@ -59,12 +59,12 @@ public class Scalar {
     /**
      * Max value set for a vertex using this scalar.
      */
-    private float max = Float.NEGATIVE_INFINITY;
+    private double max = Float.NEGATIVE_INFINITY;
 
     /**
      * Min value set for a vertex using this scalar.
      */
-    private float min = Float.POSITIVE_INFINITY;
+    private double min = Float.POSITIVE_INFINITY;
     
     public Scalar(String name) {
         this.name = name;
@@ -74,19 +74,19 @@ public class Scalar {
         return name;
     }
 
-    public float getMax() {
+    public double getMax() {
         return max;
     }
 
-    public void setMax(float max) {
-        this.max = max;
+    public void setMax(double value) {
+        this.max = value;
     }
 
-    public float getMin() {
+    public double getMin() {
         return min;
     }
 
-    public void setMin(float min) {
+    public void setMin(double min) {
         this.min = min;
     }
 

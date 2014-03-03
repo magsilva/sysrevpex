@@ -73,14 +73,14 @@ import visualizer.wizard.ProjectionView;
 public class IDMAPProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         try {
             Dissimilarity diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
             DistanceMatrix dmat_aux = new DistanceMatrix(matrix, diss);
             dmat_aux.setIds(matrix.getIds());
             dmat_aux.setClassData(matrix.getClassData());
 
-            float[][] projection = this.project(dmat_aux, pdata, view);
+            double[][] projection = this.project(dmat_aux, pdata, view);
             return projection;
         } catch (IOException ex) {
             Logger.getLogger(IDMAPProjection.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,7 +90,7 @@ public class IDMAPProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         this.dmat = dmat;
 
         if (view != null) {
@@ -100,7 +100,7 @@ public class IDMAPProjection extends Projection {
         long start = System.currentTimeMillis();
 
         Projector proj = ProjectorFactory.getInstance(pdata.getProjectorType());
-        float[][] projection = proj.project(dmat);
+        double[][] projection = proj.project(dmat);
 
         if (projection != null) {
             if (view != null) {
@@ -109,7 +109,7 @@ public class IDMAPProjection extends Projection {
 
             ForceScheme force = new ForceScheme(pdata.getFractionDelta(), projection.length);
 
-            float error = Float.MAX_VALUE;
+            double error = Float.MAX_VALUE;
             for (int i = 0; i < pdata.getNumberIterations(); i++) {
                 error = force.iteration(dmat, projection);
 
@@ -161,7 +161,7 @@ public class IDMAPProjection extends Projection {
             pdata.setSourceFile(filename);
 
             IDMAPProjection idmap = new IDMAPProjection();
-            float[][] projection = idmap.project(matrix, pdata, null);
+            double[][] projection = idmap.project(matrix, pdata, null);
 
             BufferedWriter out = null;
             try {

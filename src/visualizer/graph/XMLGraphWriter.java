@@ -98,7 +98,7 @@ public class XMLGraphWriter {
             out.write("\"/>\r\n");
 
             out.write("<fraction-delta value=\"");
-            out.write(Float.toString(graph.getProjectionData().getFractionDelta()));
+            out.write(Double.toString(graph.getProjectionData().getFractionDelta()));
             out.write("\"/>\r\n");
 
             out.write("<projection-type value=\"");
@@ -122,7 +122,7 @@ public class XMLGraphWriter {
             out.write("\"/>\r\n");
 
             out.write("<cluster-factor value=\"");
-            out.write(Float.toString(graph.getProjectionData().getClusterFactor()));
+            out.write(Double.toString(graph.getProjectionData().getClusterFactor()));
             out.write("\"/>\n");
 
             out.write("<number-neighbors value=\"");
@@ -169,11 +169,11 @@ public class XMLGraphWriter {
                 out.write("\"/>\r\n");
 
                 out.write("<x-coordinate value=\"");
-                out.write(Float.toString(v.getX()));
+                out.write(Double.toString(v.getX()));
                 out.write("\"/>\r\n");
 
                 out.write("<y-coordinate value=\"");
-                out.write(Float.toString(v.getY()));
+                out.write(Double.toString(v.getY()));
                 out.write("\"/>\r\n");
 
                 out.write("<url value=\"");
@@ -185,7 +185,7 @@ public class XMLGraphWriter {
                     out.write("<scalar name=\"");
                     out.write(s.getName().replaceAll("\"", "'"));
                     out.write("\" value=\"");
-                    out.write(Float.toString(v.getScalar(s)));
+                    out.write(Double.toString(v.getScalar(s)));
                     out.write("\"/>\r\n");
                 }
                 out.write("</scalars>\r\n");
@@ -219,7 +219,7 @@ public class XMLGraphWriter {
                     out.write("\" target=\"");
                     out.write(Long.toString(e.getTarget().getId()));
                     out.write("\" length=\"");
-                    out.write(Float.toString(e.getLength()));
+                    out.write(Double.toString(e.getLength()));
                     out.write("\"/>\r\n");
                 }
                 out.write("</edges>\r\n");

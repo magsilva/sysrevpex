@@ -154,8 +154,8 @@ public class BKmedoids extends Clustering {
 
         //For each cluster
         for (int i = 0; i < oldCluster.size(); i++) {
-            float distanceCentroid1 = dmat.getDistance(oldCluster.get(i), medoids1);
-            float distanceCentroid2 = dmat.getDistance(oldCluster.get(i), medoids2);
+            double distanceCentroid1 = dmat.getDistance(oldCluster.get(i), medoids1);
+            double distanceCentroid2 = dmat.getDistance(oldCluster.get(i), medoids2);
 
             if (distanceCentroid1 < distanceCentroid2) {
                 cluster1.add(oldCluster.get(i));
@@ -186,19 +186,19 @@ public class BKmedoids extends Clustering {
         //Para cada cluster
         for (int cluster = 0; cluster < clusters.size(); cluster++) {
             int medoid = clusters.get(cluster).get(0);
-            float sumDistances = dmat.getMaxDistance();
+            double sumDistances = dmat.getMaxDistance();
 
             //para cada ponto do cluster
             for (int point = 0; point < clusters.get(cluster).size(); point++) {
-                float sumDistances2 = 0.0f;
+                double sumDistances2 = 0.0f;
 
-                //Encontrar a média da distância desse ponto para todos os outros pontos
+                //Encontrar a mï¿½dia da distï¿½ncia desse ponto para todos os outros pontos
                 for (int point2 = 0; point2 < clusters.get(cluster).size(); point2++) {
                     sumDistances2 += dmat.getDistance(clusters.get(cluster).get(point), clusters.get(cluster).get(point2));
                 }
                 sumDistances2 /= clusters.get(cluster).size();
 
-                //Assinalar como medóide o ponto que minimiza a distância média
+                //Assinalar como medï¿½ide o ponto que minimiza a distï¿½ncia mï¿½dia
                 if (sumDistances > sumDistances2) {
                     sumDistances = sumDistances2;
                     medoid = clusters.get(cluster).get(point);
@@ -213,10 +213,10 @@ public class BKmedoids extends Clustering {
 
             //Find the nearest cluster
             int nearest = 0;
-            float distance1 = dmat.getDistance(this.medoids.get(cluster), this.medoids.get(0));
+            double distance1 = dmat.getDistance(this.medoids.get(cluster), this.medoids.get(0));
             for (int j = 0; j < clusters.size(); j++) {
                 if (cluster != j) {
-                    float distance2 = dmat.getDistance(this.medoids.get(cluster), this.medoids.get(j));
+                    double distance2 = dmat.getDistance(this.medoids.get(cluster), this.medoids.get(j));
                     if (distance1 > distance2) {
                         distance1 = distance2;
                         nearest = j;

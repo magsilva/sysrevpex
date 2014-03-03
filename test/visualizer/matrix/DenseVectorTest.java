@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class DenseVectorTest
 {
 
-	private static final float DELTA = 0.00001f;
+	private static final double DELTA = 0.00001f;
 
 	/**
 	 * Test of innerProduct method, of class DenseVector.
@@ -20,26 +20,26 @@ public class DenseVectorTest
 	{
 		System.out.println("innerProduct");
 
-		DenseVector svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0,
+		DenseVector svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0,
 						0, 0, 1 });
-		DenseVector svect2 = new DenseVector(new float[] { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+		DenseVector svect2 = new DenseVector(new double[] { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 						0, 0, 10 });
 		assertEquals(11, svect1.dot(svect2), DELTA);
 
-		svect1 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-		svect2 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 		assertEquals(0, svect1.dot(svect2), DELTA);
 
-		svect1 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
-		svect2 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
 		assertEquals(1, svect1.dot(svect2), DELTA);
 
-		svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1 });
-		svect2 = new DenseVector(new float[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1 });
+		svect2 = new DenseVector(new double[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0 });
 		assertEquals(26, svect1.dot(svect2), DELTA);
 
-		svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0 });
-		svect2 = new DenseVector(new float[] { 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1 });
+		svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1 });
 		assertEquals(0, svect1.dot(svect2), DELTA);
 	}
 
@@ -52,19 +52,19 @@ public class DenseVectorTest
 
 		for (int n = 0; n < 30; n++) {
 			int size = (int) (1000 * Math.random());
-			float[] vect = new float[size];
-			float threshold = (float) Math.random();
+			double[] vect = new double[size];
+			double threshold = (double) Math.random();
 			for (int i = 0; i < size; i++) {
 				// if(n%10==0) vect[i]=0.0f;
-				// else vect[i]=(Math.random() > threshold) ? (float)Math.random() : 0.0f;
-				vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+				// else vect[i]=(Math.random() > threshold) ? (double)Math.random() : 0.0f;
+				vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 			}
 
 			DenseVector spvect = new DenseVector(vect);
 
 			if (!spvect.isNull()) {
 				spvect.normalize();
-				assertEquals(((float) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
+				assertEquals(((double) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
 			}
 
 			if (!spvect.isNull()) {
@@ -79,13 +79,13 @@ public class DenseVectorTest
 
 		for (int n = 0; n < 30; n++) {
 			int size = (int) (1000 * Math.random());
-			float[] vect = new float[size];
-			float threshold = (float) Math.random();
+			double[] vect = new double[size];
+			double threshold = (double) Math.random();
 			for (int i = 0; i < size; i++) {
 				if (n % 10 == 0) {
 					vect[i] = 0.0f;
 				} else {
-					vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+					vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 				}
 			}
 
@@ -98,36 +98,36 @@ public class DenseVectorTest
 	{
 		System.out.println("isNull");
 
-		DenseVector svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0,
+		DenseVector svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0,
 						0, 0, 1 });
 		assertFalse(svect1.isNull());
 
-		DenseVector svect2 = new DenseVector(new float[] { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+		DenseVector svect2 = new DenseVector(new double[] { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 						0, 0, 10 });
 		assertFalse(svect2.isNull());
 
-		svect1 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 		assertTrue(svect1.isNull());
 
-		svect2 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 		assertTrue(svect2.isNull());
 
-		svect1 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
 		assertFalse(svect1.isNull());
 
-		svect2 = new DenseVector(new float[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 });
 		assertFalse(svect2.isNull());
 
-		svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1 });
+		svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1 });
 		assertFalse(svect1.isNull());
 
-		svect2 = new DenseVector(new float[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0 });
+		svect2 = new DenseVector(new double[] { 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0 });
 		assertFalse(svect2.isNull());
 
-		svect1 = new DenseVector(new float[] { 1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0 });
+		svect1 = new DenseVector(new double[] { 1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0 });
 		assertFalse(svect1.isNull());
 
-		svect2 = new DenseVector(new float[] { 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1 });
+		svect2 = new DenseVector(new double[] { 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1 });
 		assertFalse(svect2.isNull());
 	}
 
@@ -140,18 +140,18 @@ public class DenseVectorTest
 
 		for (int n = 0; n < 30; n++) {
 			int size = (int) (1000 * Math.random());
-			float[] vect = new float[size];
-			float threshold = (float) Math.random();
+			double[] vect = new double[size];
+			double threshold = (double) Math.random();
 			for (int i = 0; i < size; i++) {
 				if (n % 10 == 0) {
 					vect[i] = 0.0f;
 				} else {
-					vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+					vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 				}
 			}
 
 			DenseVector spvect = new DenseVector(vect);
-			assertEquals(((float) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
+			assertEquals(((double) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
 		}
 	}
 
@@ -164,18 +164,18 @@ public class DenseVectorTest
 
 		for (int n = 0; n < 30; n++) {
 			int size = (int) (1000 * Math.random());
-			float[] vect1 = new float[size];
-			float threshold = (float) Math.random();
+			double[] vect1 = new double[size];
+			double threshold = (double) Math.random();
 			for (int i = 0; i < size; i++) {
 				if (n % 10 == 0) {
 					vect1[i] = 0.0f;
 				} else {
-					vect1[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+					vect1[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 				}
 			}
 
 			DenseVector spvect = new DenseVector(vect1);
-			float[] vect2 = spvect.toArray();
+			double[] vect2 = spvect.toArray();
 
 			for (int i = 0; i < vect1.length; i++) {
 				assertEquals(vect1[i], vect2[i], DELTA);
@@ -225,21 +225,21 @@ public class DenseVectorTest
 
 		for (int n = 0; n < 30; n++) {
 			int size = (int) (1000 * Math.random());
-			float[] vect = new float[size];
-			float threshold = (float) Math.random();
+			double[] vect = new double[size];
+			double threshold = (double) Math.random();
 			for (int i = 0; i < size; i++) {
 				if (n % 10 == 0) {
 					vect[i] = 0.0f;
 				} else {
-					vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+					vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 				}
 			}
 
 			DenseVector spvect = new DenseVector(vect, 19.0f);
 			DenseVector clone = (DenseVector) spvect.clone();
 
-			float[] spvect_v = spvect.toArray();
-			float[] clone_v = clone.toArray();
+			double[] spvect_v = spvect.toArray();
+			double[] clone_v = clone.toArray();
 
 			for (int i = 0; i < spvect_v.length; i++) {
 				assertEquals(spvect_v[i], clone_v[i], DELTA);
@@ -264,13 +264,13 @@ public class DenseVectorTest
 		for (int n = 0; n < 30; n++) {
 			try {
 				int size = (int) (1000 * Math.random());
-				float[] vect = new float[size];
-				float threshold = (float) Math.random();
+				double[] vect = new double[size];
+				double threshold = (double) Math.random();
 				for (int i = 0; i < size; i++) {
 					if (n % 10 == 0) {
 						vect[i] = 0.0f;
 					} else {
-						vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+						vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
 					}
 				}
 

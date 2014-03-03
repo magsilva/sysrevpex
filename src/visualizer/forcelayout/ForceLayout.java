@@ -109,8 +109,8 @@ public class ForceLayout implements Runnable {
         for (Edge e : edges) {
             Vertex v1 = e.getSource();
             Vertex v2 = e.getTarget();
-            float coeff = COEF;
-            float slen = LENGTH;
+            double coeff = COEF;
+            double slen = LENGTH;
             fsim.addSpring(v1, v2, (coeff >= 0 ? coeff : -1.f), (slen >= 0 ? slen : -1.f));
         }
 
@@ -131,14 +131,14 @@ public class ForceLayout implements Runnable {
 
         java.awt.Toolkit tk = java.awt.Toolkit.getDefaultToolkit();
         java.awt.Dimension d = tk.getScreenSize();
-        this.graph.normalizeVertex(Vertex.getRayBase() * 5 + 10, ((float) (d.getHeight())) / 1.65f);
+        this.graph.normalizeVertex(Vertex.getRayBase() * 5 + 10, ((double) (d.getHeight())) / 1.65f);
 
         this.gv.updateImage();
     }
 
-    public static final float MASS = 1.0f;
-    public static final float LENGTH = 1.0f;
-    public static final float COEF = -1.0f;
+    public static final double MASS = 1.0f;
+    public static final double LENGTH = 1.0f;
+    public static final double COEF = -1.0f;
     private Graph graph;
     private ArrayList<Edge> edges;
     private ArrayList<Vertex> vertices;

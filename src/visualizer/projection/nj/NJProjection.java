@@ -75,14 +75,14 @@ import visualizer.wizard.ProjectionView;
 public class NJProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         try {
             Dissimilarity diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
             DistanceMatrix dmat_aux = new DistanceMatrix(matrix, diss);
             dmat_aux.setIds(matrix.getIds());
             dmat_aux.setClassData(matrix.getClassData());
 
-            float[][] projection = this.project(dmat_aux, pdata, view);
+            double[][] projection = this.project(dmat_aux, pdata, view);
             return projection;
         } catch (IOException ex) {
             Logger.getLogger(NJProjection.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +92,7 @@ public class NJProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         this.dmat = dmat;
 
         if (view != null) {
@@ -105,10 +105,10 @@ public class NJProjection extends Projection {
         this.neighbor = new NeighborJoining(numberPoints);
         this.neighbor.doNeighbor(this.dmat);
 
-        float[][] projection = new float[p][];
+        double[][] projection = new double[p][];
 
         for (int i = 0; i < p; i++) {
-            projection[i] = new float[2];
+            projection[i] = new double[2];
             projection[i][0] = neighbor.getX(i);
             projection[i][1] = neighbor.getY(i);
         }
@@ -126,7 +126,7 @@ public class NJProjection extends Projection {
             Connectivity njcon = new Connectivity(PExConstants.NJ);
             ArrayList<Edge> edges = new ArrayList<Edge>();
 
-            //Armazena os vértices, mas fornece um índice por ser uma HashMap
+            //Armazena os vï¿½rtices, mas fornece um ï¿½ndice por ser uma HashMap
             HashMap<java.lang.Long, Vertex> vert_aux = new HashMap<java.lang.Long, Vertex>();
             ArrayList<Vertex> vertex = graph.getVertex();
             for (Vertex v : vertex) {
@@ -134,7 +134,7 @@ public class NJProjection extends Projection {
             }
 
             for (int j = 0; j < this.neighbor.get_size(); j++) {
-                float dis = this.neighbor.get_dis_are(j);
+                double dis = this.neighbor.get_dis_are(j);
                 int sour = this.neighbor.get_source_are(j);
                 int targ = this.neighbor.get_target_are(j);
                 edges.add(new Edge(dis, vert_aux.get((long) sour), vert_aux.get((long) targ)));

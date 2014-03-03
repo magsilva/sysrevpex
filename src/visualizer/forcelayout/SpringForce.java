@@ -58,15 +58,15 @@ import visualizer.graph.Vertex;
  */
 public class SpringForce extends Force {
 
-    private float[] params;
+    private double[] params;
     private static String[] pnames = new String[]{"SpringCoefficient", "DefaultSpringLength"};
-    public static final float DEFAULT_SPRING_COEFF = 1E-4f;
-    public static final float DEFAULT_SPRING_LENGTH = 100;
+    public static final double DEFAULT_SPRING_COEFF = 1E-4f;
+    public static final double DEFAULT_SPRING_LENGTH = 100;
     public static final int SPRING_COEFF = 0;
     public static final int SPRING_LENGTH = 1;
     private ForceSimulator fsim;
-    public SpringForce(float springCoeff, float defaultLength) {
-        params = new float[]{springCoeff, defaultLength};
+    public SpringForce(double springCoeff, double defaultLength) {
+        params = new double[]{springCoeff, defaultLength};
     } //
 
     /**
@@ -102,18 +102,18 @@ public class SpringForce extends Force {
     public void getForce(Spring s) {
         Vertex item1 = s.item1;
         Vertex item2 = s.item2;
-        float length = (s.length < 0 ? params[SPRING_LENGTH] : s.length);
-        float x1 = item1.fdata.location[0], y1 = item1.fdata.location[1];
-        float x2 = item2.fdata.location[0], y2 = item2.fdata.location[1];
-        float dx = x2 - x1, dy = y2 - y1;
-        float r = (float) Math.sqrt(dx * dx + dy * dy);
+        double length = (s.length < 0 ? params[SPRING_LENGTH] : s.length);
+        double x1 = item1.fdata.location[0], y1 = item1.fdata.location[1];
+        double x2 = item2.fdata.location[0], y2 = item2.fdata.location[1];
+        double dx = x2 - x1, dy = y2 - y1;
+        double r = (double) Math.sqrt(dx * dx + dy * dy);
         if (r == 0.0) {
-            dx = ((float) Math.random() - 0.5f) / 50.0f;
-            dy = ((float) Math.random() - 0.5f) / 50.0f;
-            r = (float) Math.sqrt(dx * dx + dy * dy);
+            dx = ((double) Math.random() - 0.5f) / 50.0f;
+            dy = ((double) Math.random() - 0.5f) / 50.0f;
+            r = (double) Math.sqrt(dx * dx + dy * dy);
         }
-        float d = r - length;
-        float coeff = (s.coeff < 0 ? params[SPRING_COEFF] : s.coeff) * d / r;
+        double d = r - length;
+        double coeff = (s.coeff < 0 ? params[SPRING_COEFF] : s.coeff) * d / r;
         item1.fdata.force[0] += coeff * dx;
         item1.fdata.force[1] += coeff * dy;
         item2.fdata.force[0] += -coeff * dx;

@@ -13,11 +13,11 @@ import visualizer.matrix.Vector;
  */
 public class DynamicTimeWarping implements Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2) {
+    public double calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
 
-        float[] a = v1.getValues();
-        float[] b = v2.getValues();
+        double[] a = v1.getValues();
+        double[] b = v2.getValues();
 
         if (v1 instanceof SparseVector) {
             a = v1.toArray();
@@ -29,7 +29,7 @@ public class DynamicTimeWarping implements Dissimilarity {
 
         //creating the matrix
         if (g == null || g.length < a.length) {
-            g = new float[a.length][b.length];
+            g = new double[a.length][b.length];
         }
 
         //initial condition
@@ -58,14 +58,14 @@ public class DynamicTimeWarping implements Dissimilarity {
             }
         }
 
-        return (float) g[a.length - 1][b.length - 1];
+        return (double) g[a.length - 1][b.length - 1];
     }
 
-    private float dist(float a, float b) {
-        float diff = a - b;
-        return (float)Math.sqrt(diff * diff);
+    private double dist(double a, double b) {
+        double diff = a - b;
+        return (double)Math.sqrt(diff * diff);
     }
     
-    private static float[][] g;
-    private static final float WWINDOW = 0.25f;
+    private static double[][] g;
+    private static final double WWINDOW = 0.25f;
 }

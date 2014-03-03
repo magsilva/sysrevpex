@@ -74,9 +74,9 @@ public class ColorTable
         setColorScaleType(colorScaleType);
     }
 
-    public Color getColor(float value)
+    public Color getColor(double d)
     {
-        return colorScale.getColor(value);
+        return colorScale.getColor(d);
     }
 
     public int getNumberColors()

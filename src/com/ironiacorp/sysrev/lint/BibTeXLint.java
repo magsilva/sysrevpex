@@ -27,12 +27,13 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.Iterator;
 
-import com.ironiacorp.miner.extraction.bibtex.BibtexParser;
-import com.ironiacorp.miner.extraction.bibtex.BibtexWriter;
-import com.ironiacorp.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
-import com.ironiacorp.resource.library.Collection;
-import com.ironiacorp.resource.library.EventArticle;
-import com.ironiacorp.resource.library.Publication;
+import lode.miner.extraction.bibtex.BibtexParser;
+import lode.miner.extraction.bibtex.BibtexWriter;
+import lode.miner.extraction.bibtex.handmade.HandmadeBibtexParser;
+import lode.model.publication.Collection;
+import lode.model.publication.EventArticle;
+import lode.model.publication.Publication;
+
 import com.ironiacorp.sysrev.selection.Argument;
 import com.ironiacorp.sysrev.selection.PublicationSelectionStatus;
 import com.ironiacorp.sysrev.selection.Reason;

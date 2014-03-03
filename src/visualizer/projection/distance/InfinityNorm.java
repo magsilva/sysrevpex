@@ -57,7 +57,7 @@ import visualizer.matrix.Vector;
  */
 public class InfinityNorm implements Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2) {
+    public double calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
         assert (v1.getClass() == v2.getClass()) :
                 "Error: only supported comparing vectors of the same type";
@@ -73,26 +73,26 @@ public class InfinityNorm implements Dissimilarity {
             int v2length = ((SparseVector) v2).getIndex().length;
             int[] v1index = ((SparseVector) v1).getIndex();
             int[] v2index = ((SparseVector) v2).getIndex();
-            float[] v1values = v1.getValues();
-            float[] v2values = v2.getValues();
+            double[] v1values = v1.getValues();
+            double[] v2values = v2.getValues();
 
             int i = 0;
             int j = 0;
-            float dist = Float.NEGATIVE_INFINITY;
+            double dist = Float.NEGATIVE_INFINITY;
 
             while (i < v1length) {
                 if (j < v2length) {
                     if (v1index[i] == v2index[j]) {
-                        float diff = Math.abs(v1values[i] - v2values[j]);
+                        double diff = Math.abs(v1values[i] - v2values[j]);
                         dist = (diff > dist) ? diff : dist;
                         i++;
                         j++;
                     } else if (v1index[i] < v2index[j]) {
-                        float diff = Math.abs(v1values[i]);
+                        double diff = Math.abs(v1values[i]);
                         dist = (diff > dist) ? diff : dist;
                         i++;
                     } else {
-                        float diff = Math.abs(v2values[j]);
+                        double diff = Math.abs(v2values[j]);
                         dist = (diff > dist) ? diff : dist;
                         j++;
                     }
@@ -102,13 +102,13 @@ public class InfinityNorm implements Dissimilarity {
             }
 
             while (i < v1length) {
-                float diff = Math.abs(v1values[i]);
+                double diff = Math.abs(v1values[i]);
                 dist = (diff > dist) ? diff : dist;
                 i++;
             }
 
             while (j < v2length) {
-                float diff = Math.abs(v2values[j]);
+                double diff = Math.abs(v2values[j]);
                 dist = (diff > dist) ? diff : dist;
                 j++;
             }
@@ -117,14 +117,14 @@ public class InfinityNorm implements Dissimilarity {
 
         } else if (v1 instanceof DenseVector) {
 
-            float[] vector1 = v1.getValues();
-            float[] vector2 = v2.getValues();
+            double[] vector1 = v1.getValues();
+            double[] vector2 = v2.getValues();
 
-            float dist = 0.0f;
+            double dist = 0.0f;
 
             int length = vector1.length;
             for (int i = 0; i < length; i++) {
-                float diff = Math.abs(vector1[i] - vector2[i]);
+                double diff = Math.abs(vector1[i] - vector2[i]);
                 dist = (diff > dist) ? diff : dist;
             }
 

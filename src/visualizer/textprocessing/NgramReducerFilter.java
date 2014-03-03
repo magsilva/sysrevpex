@@ -20,14 +20,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import lode.miner.PipelineUtil;
+import lode.miner.TypicalPipelineComponent;
+import lode.model.Element;
+import lode.model.text.TextResource;
+
 import visualizer.corpus.Corpus;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.ironiacorp.miner.PipelineUtil;
-import com.ironiacorp.miner.TypicalPipelineComponent;
-import com.ironiacorp.resource.Resource;
-import com.ironiacorp.resource.mining.TextResource;
 
 public class NgramReducerFilter extends TypicalPipelineComponent
 {
@@ -64,7 +65,7 @@ public class NgramReducerFilter extends TypicalPipelineComponent
 				String[] ngramWords = ngramText.split(separator);
 				if (ngramWords.length == i) {
 					for (String ngramWord : ngramWords) {
-						Ngram ngramToIgnore = new Ngram(ngramWord, 1);
+						Ngram ngramToIgnore = new Ngram(ngramWord);
 						PexNgramResource ngramToIgnoreResource = new PexNgramResource(ngramToIgnore); 
 						int count = resources.count(ngramToIgnoreResource);
 						if (count == 1) {
@@ -88,7 +89,7 @@ public class NgramReducerFilter extends TypicalPipelineComponent
 	
 	
 	@Override
-	public void process(Resource resource)
+	public void process(Element resource)
 	{
 		if (resource instanceof TextResource) {
 			PexNgramResource pexNgramResource = (PexNgramResource) resource;
@@ -97,11 +98,11 @@ public class NgramReducerFilter extends TypicalPipelineComponent
 	}
 	
 
-	public Class<? extends Resource>[] getInputResourceTypes() {
+	public Class<? extends Element>[] getInputResourceTypes() {
 		return PipelineUtil.getResourceTypes(PexNgramResource.class);
 	}
 
-	public Class<? extends Resource>[] getOutputResourceTypes() {
+	public Class<? extends Element>[] getOutputResourceTypes() {
 		return PipelineUtil.getResourceTypes(PexNgramResource.class);
 	}
 }

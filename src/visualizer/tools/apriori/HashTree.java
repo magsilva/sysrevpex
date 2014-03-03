@@ -129,7 +129,7 @@ public class HashTree {
      * @param level The level in the tree at which the transactions need to be inserted.
      * @param fileName The file in which the transactions are stored.
      */
-    public void passTransactions(int level, float[][] selectedPoints) {
+    public void passTransactions(int level, double[][] selectedPoints) {
         //Transaction newTrans = new Transaction();
         ArrayList candidateItemsets;
         ListIterator itTransItems;

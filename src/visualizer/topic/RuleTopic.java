@@ -104,8 +104,8 @@ public class RuleTopic extends Topic {
 
     @Override
     protected void createTopic(ArrayList<Vertex> vertex, Corpus corpus) {
-        float[][] points;
-        float[][] selectedPoints;
+        double[][] points;
+        double[][] selectedPoints;
         List<Ngram> corporaNgrams = null;
 
          //Get Matrix
@@ -151,7 +151,7 @@ public class RuleTopic extends Topic {
         System.out.println("**********Vertex: " + vertex.size());
         while (vertex != null && vertex.size() > 0) {
 
-            selectedPoints = new float[vertex.size()][];
+            selectedPoints = new double[vertex.size()][];
             int[] vertexIndex = new int[vertex.size()];
 
             //For each vertex
@@ -185,7 +185,7 @@ public class RuleTopic extends Topic {
             sApriori.setRuleSetList(ruleSetList);
             //sApriori.setMinSup(tdata.getMinSup());
             sApriori.setMinConf(90.0f);
-            sApriori.setBeta(tdata.getWeightBeta().floatValue());
+            sApriori.setBeta(tdata.getWeightBeta().doubleValue());
             sApriori.setLdata(this.tdata);
             sApriori.run();
             //Accumulates TermSet
@@ -406,7 +406,7 @@ public class RuleTopic extends Topic {
 
     private void drawDiamond(Graphics2D g2, Point p, Color color) {
 
-        float halfSize = 2.0f;
+        double halfSize = 2.0f;
 
         int x[] = new int[4];
         int y[] = new int[4];

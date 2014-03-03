@@ -55,13 +55,13 @@ import visualizer.matrix.Vector;
  */
 public class CosineBased implements Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2) {
+    public double calculate(Vector v1, Vector v2) {
         assert (v1.size() == v2.size()) : "ERROR: vectors of different sizes!";
         
-        float n1 = v1.norm();
-        float n2 = v2.norm();
+        double n1 = v1.norm();
+        double n2 = v2.norm();
 
-        float cosine = -1.0f;
+        double cosine = -1.0f;
         if (n1 != 0.0f && n2 != 0.0f) {
             cosine = v1.dot(v2) / (n1 * n2);
 

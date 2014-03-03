@@ -64,7 +64,7 @@ import visualizer.wizard.ProjectionView;
 public class PCAProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         this.matrix = matrix;
         
         try {
@@ -75,7 +75,7 @@ public class PCAProjection extends Projection {
             PCA pca = new PCA(2);
             Matrix proj = pca.reduce(matrix, null);
 
-            float[][] projection = new float[proj.getRowCount()][];
+            double[][] projection = new double[proj.getRowCount()][];
             for (int i = 0; i < projection.length; i++) {
                 projection[i] = proj.getRow(i).toArray();
             }
@@ -89,7 +89,7 @@ public class PCAProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

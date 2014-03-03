@@ -65,16 +65,16 @@ public class Dijkstra {
 
     public Dijkstra(Pair[][] neighborhood, int nrNodes) {
         this.n = nrNodes;
-        this.d = new float[this.n];
+        this.d = new double[this.n];
 
         //creating the adjascent matrix
-        this.dist = new float[this.n][];
+        this.dist = new double[this.n][];
 
         for (int i = 0; i < neighborhood.length; i++) {
-            this.dist[i] = new float[this.n];
+            this.dist[i] = new double[this.n];
             Arrays.fill(this.dist[i], 0.0f);
             for (int j = 0; j < neighborhood[i].length; j++) {
-                float distance = neighborhood[i][j].value;
+                double distance = neighborhood[i][j].value;
 
                 if (distance > 0.0f) {
                     this.dist[i][neighborhood[i][j].index] = distance;
@@ -83,7 +83,7 @@ public class Dijkstra {
         }
     }
 
-    public float[] execute(int source) {
+    public double[] execute(int source) {
         boolean visited[] = new boolean[this.n];
 
         for (int i = 0; i < this.n; ++i) {
@@ -149,7 +149,7 @@ public class Dijkstra {
             Dijkstra d = new Dijkstra(neighborhood, dmat.getElementCount());
 
             for (int i = 0; i < dmat.getElementCount(); i++) {
-                float[] dist = d.execute(i);
+                double[] dist = d.execute(i);
 
                 for (int j = 0; j < dist.length; j++) {
                     new_dmat.setDistance(i, j, dist[j]);
@@ -163,6 +163,6 @@ public class Dijkstra {
     }
 
     private int n; // The number of nodes in the graph
-    private float dist[][]; // dist[i][j] is the distance between node i and j; or 0 if there is no direct connection
-    private float d[]; // d[i] is the length of the shortest path between the source (s) and node i
+    private double dist[][]; // dist[i][j] is the distance between node i and j; or 0 if there is no direct connection
+    private double d[]; // d[i] is the length of the shortest path between the source (s) and node i
 }

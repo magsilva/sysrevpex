@@ -304,7 +304,7 @@ private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 Dissimilarity diss = DissimilarityFactory.getInstance(mtype);
 
                 Stress stress = StressFactory.getInstance((StressType) stressComboBox.getSelectedItem());
-                float value = stress.calculate(matrix, diss, graph);
+                double value = stress.calculate(matrix, diss, graph);
 
                 JOptionPane.showMessageDialog(this, "Stress= " + value,
                         "Stress Value", JOptionPane.ERROR_MESSAGE);
@@ -321,7 +321,7 @@ private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
                 DistanceMatrix dmat = new DistanceMatrix(this.distanceMatrixTextField.getText());
 
                 Stress stress = StressFactory.getInstance((StressType) stressComboBox.getSelectedItem());
-                float value = stress.calculate(dmat, graph);
+                double value = stress.calculate(dmat, graph);
 
                 JOptionPane.showMessageDialog(this, "Stress= " + value,
                         "Stress Value", JOptionPane.ERROR_MESSAGE);

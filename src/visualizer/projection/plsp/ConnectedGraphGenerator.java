@@ -147,11 +147,11 @@ public class ConnectedGraphGenerator {
         //joining all components
         for (int i = 0; i < components.size(); i++) {
             //finding the nearest component
-            float dist = Float.POSITIVE_INFINITY;
+            double dist = Double.POSITIVE_INFINITY;
             int nearest = -1;
 
             for (int j = i + 1; j < components.size(); j++) {
-                float aux = diss.calculate(centroids.getRow(i), centroids.getRow(j));
+                double aux = diss.calculate(centroids.getRow(i), centroids.getRow(j));
 
                 if (aux < dist) {
                     dist = aux;
@@ -164,9 +164,9 @@ public class ConnectedGraphGenerator {
                 int node2 = -1;
 
                 //find the nearest point of component i to the centroid of nearest
-                dist = Float.POSITIVE_INFINITY;
+                dist = Double.POSITIVE_INFINITY;
                 for (int n = 0; n < components.get(i).size(); n++) {
-                    float aux = diss.calculate(matrix.getRow(components.get(i).get(n)),
+                    double aux = diss.calculate(matrix.getRow(components.get(i).get(n)),
                             centroids.getRow(nearest));
 
                     if (aux < dist) {
@@ -176,9 +176,9 @@ public class ConnectedGraphGenerator {
                 }
 
                 //find the nearest point of component i to the centroid of nearest
-                dist = Float.POSITIVE_INFINITY;
+                dist = Double.POSITIVE_INFINITY;
                 for (int n = 0; n < components.get(nearest).size(); n++) {
-                    float aux = diss.calculate(matrix.getRow(components.get(nearest).get(n)),
+                    double aux = diss.calculate(matrix.getRow(components.get(nearest).get(n)),
                             centroids.getRow(i));
 
                     if (aux < dist) {

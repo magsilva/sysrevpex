@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ironiacorp.resource.library.Event;
-import com.ironiacorp.resource.library.EventArticle;
-import com.ironiacorp.resource.library.Journal;
-import com.ironiacorp.resource.library.JournalArticle;
-import com.ironiacorp.resource.library.Publication;
+import lode.model.publication.Event;
+import lode.model.publication.EventArticle;
+import lode.model.publication.Journal;
+import lode.model.publication.JournalArticle;
+import lode.model.publication.Publication;
 
 public class PublisherMerger
 {

@@ -69,7 +69,7 @@ public class Legend {
         this.items.add(item);
     }
 
-    public void addItem(String text, float value) {
+    public void addItem(String text, double value) {
         this.items.add(new Legend.Item(text, value));
     }
 
@@ -86,7 +86,7 @@ public class Legend {
 
     public class Item {
 
-        public Item(String text, float value) {
+        public Item(String text, double value) {
             this.name = text;
             this.value = value;
 
@@ -113,11 +113,11 @@ public class Legend {
         }
 
         private String name;
-        private float value;
+        private double value;
     }
 
-    private float max;
-    private float min;
+    private double max;
+    private double min;
     private ColorTable table;
     private String title;
     private ArrayList<Legend.Item> items = new ArrayList<Legend.Item>();

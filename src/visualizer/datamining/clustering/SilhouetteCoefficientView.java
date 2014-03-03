@@ -175,10 +175,10 @@ public class SilhouetteCoefficientView extends javax.swing.JDialog {
                 Dissimilarity diss = DissimilarityFactory.getInstance(mtype);
 
                 SilhouetteCoefficient sc = new SilhouetteCoefficient();
-                float[] silhouette = sc.execute(matrix, diss);
+                double[] silhouette = sc.execute(matrix, diss);
 
                 //showing the average silhouette on console
-                float average = sc.average(silhouette);
+                double average = sc.average(silhouette);
                 resultTextArea.append("Silhouette coefficient: " + average + "\r\n");
                 resultTextArea.append("---\r\n");
 
@@ -212,16 +212,16 @@ public class SilhouetteCoefficientView extends javax.swing.JDialog {
         this.setVisible(true);
     }
 
-    private void createScalars(float[] silhouette) throws IOException {
+    private void createScalars(double[] silhouette) throws IOException {
         //normalize the silhouette (we know that it can be between -1 and 1)
         for (int i = 0; i < silhouette.length; i++) {
             silhouette[i] = (silhouette[i] + 1) / 2;
         }
 
         //calculating the average silhouette of each cluster
-        float[] cdata = matrix.getClassData();
+        double[] cdata = matrix.getClassData();
 
-        ArrayList<Float> cdata_index = new ArrayList<Float>();
+        ArrayList<Double> cdata_index = new ArrayList<Double>();
         for (int i = 0; i < cdata.length; i++) {
             if (!cdata_index.contains(cdata[i])) {
                 cdata_index.add(cdata[i]);
@@ -234,7 +234,7 @@ public class SilhouetteCoefficientView extends javax.swing.JDialog {
             cluster_id[i] = index;
         }
 
-        float[] clsilhaverage = new float[cdata_index.size()];
+        double[] clsilhaverage = new double[cdata_index.size()];
         int[] nrel = new int[cdata_index.size()];
         Arrays.fill(nrel, 0);
         Arrays.fill(clsilhaverage, 0.0f);
@@ -245,16 +245,16 @@ public class SilhouetteCoefficientView extends javax.swing.JDialog {
             nrel[index]++;
         }
 
-        float[] clsilhouette = new float[cdata.length];
+        double[] clsilhouette = new double[cdata.length];
         for (int i = 0; i < cdata.length; i++) {
             int index = cdata_index.indexOf(cdata[i]);
             clsilhouette[i] = clsilhaverage[index] / nrel[index];
         }
 
         //calculating the normalized silhouette
-        float[] normsilhouette = new float[silhouette.length];
-        float max = Float.NEGATIVE_INFINITY;
-        float min = Float.POSITIVE_INFINITY;
+        double[] normsilhouette = new double[silhouette.length];
+        double max = Double.NEGATIVE_INFINITY;
+        double min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < silhouette.length; i++) {
             if (max < silhouette[i]) {
                 max = silhouette[i];
@@ -270,9 +270,9 @@ public class SilhouetteCoefficientView extends javax.swing.JDialog {
         }
 
         //calculating the normalized cluster silhouette
-        float[] normclsilhouette = new float[silhouette.length];
-        max = Float.NEGATIVE_INFINITY;
-        min = Float.POSITIVE_INFINITY;
+        double[] normclsilhouette = new double[silhouette.length];
+        max = Double.NEGATIVE_INFINITY;
+        min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < clsilhouette.length; i++) {
             if (max < clsilhouette[i]) {
                 max = clsilhouette[i];

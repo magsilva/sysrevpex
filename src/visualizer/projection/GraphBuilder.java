@@ -123,9 +123,9 @@ public class GraphBuilder {
     }
 
     private void createGraph(ProjectionData pdata) throws IOException {
-        float[] cdata = null;
+        double[] cdata = null;
         List<String> ids = null;
-        float[][] projection = null;
+        double[][] projection = null;
         Projection proj = null;
 
         if (pdata.getSourceType() == SourceType.DISTANCE_MATRIX || pdata.getDissimilarityType() == DissimilarityType.KOLMOGOROV) {
@@ -282,7 +282,7 @@ public class GraphBuilder {
             }
 
             HierarchicalClusteringType type = pdata.getHierarchicalClusteringType();
-            float[] hcScalars = this.createHC(dproj, type);
+            double[] hcScalars = this.createHC(dproj, type);
 
             Scalar shc = null;
             if (type == HierarchicalClusteringType.ALINK) {
@@ -323,7 +323,7 @@ public class GraphBuilder {
         this.matrix = null;
     }
 
-    private float[] createHC(Matrix matrix, HierarchicalClusteringType type) throws IOException {
+    private double[] createHC(Matrix matrix, HierarchicalClusteringType type) throws IOException {
         HierarchicalClustering hc = new HierarchicalClustering(type);
         return hc.getPointsHeight(matrix, new Euclidean());
     }

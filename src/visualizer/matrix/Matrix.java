@@ -122,8 +122,8 @@ public abstract class Matrix
         }
     }
 
-    public float[][] toMatrix() {
-        float[][] matrix = new float[this.rows.size()][];
+    public double[][] toMatrix() {
+        double[][] matrix = new double[this.rows.size()][];
 
         int size = this.rows.size();
         for (int i = 0; i < size; i++) {
@@ -155,8 +155,8 @@ public abstract class Matrix
         return ids;
     }
 
-    public float[] getClassData() {
-        float[] cdata = new float[this.rows.size()];
+    public double[] getClassData() {
+        double[] cdata = new double[this.rows.size()];
 
         for (int i = 0; i < cdata.length; i++) {
             cdata[i] = this.rows.get(i).getKlass();
