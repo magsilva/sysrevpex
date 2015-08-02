@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  */
 public class SparseVectorTest extends TestCase {
 
-    private static final float DELTA = 0.00001f;
+    private static final double DELTA = 0.00001f;
     public SparseVectorTest(String testName) {
         super(testName);
     }
@@ -37,24 +37,24 @@ public class SparseVectorTest extends TestCase {
     public void testdot() {
         System.out.println("dot");
 
-        SparseVector svect1 = new SparseVector(new float[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
-        SparseVector svect2 = new SparseVector(new float[]{0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10});
+        SparseVector svect1 = new SparseVector(new double[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
+        SparseVector svect2 = new SparseVector(new double[]{0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10});
         assertEquals(11, svect1.dot(svect2), DELTA);
 
-        svect1 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-        svect2 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         assertEquals(0, svect1.dot(svect2), DELTA);
 
-        svect1 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
-        svect2 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
         assertEquals(1, svect1.dot(svect2), DELTA);
 
-        svect1 = new SparseVector(new float[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1});
-        svect2 = new SparseVector(new float[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1});
+        svect2 = new SparseVector(new double[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0});
         assertEquals(26, svect1.dot(svect2), DELTA);
 
-        svect1 = new SparseVector(new float[]{1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0});
-        svect2 = new SparseVector(new float[]{0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
+        svect1 = new SparseVector(new double[]{1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
         assertEquals(0, svect1.dot(svect2), DELTA);
     }
 
@@ -66,19 +66,19 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect = new float[size];
-            float threshold = (float) Math.random();
+            double[] vect = new double[size];
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
 //                if(n%10==0) vect[i]=0.0f;
-//                else vect[i]=(Math.random() > threshold) ? (float)Math.random() : 0.0f;
-                vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+//                else vect[i]=(Math.random() > threshold) ? (double)Math.random() : 0.0f;
+                vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
             }
 
             SparseVector spvect = new SparseVector(vect);
 
             if (!spvect.isNull()) {
                 spvect.normalize();
-                assertEquals(((float) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
+                assertEquals(((double) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
             }
 
             if (!spvect.isNull()) {
@@ -92,13 +92,13 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect = new float[size];
-            float threshold = (float) Math.random();
+            double[] vect = new double[size];
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
                 if (n % 10 == 0) {
                     vect[i] = 0.0f;
                 } else {
-                    vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                    vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                 }
             }
 
@@ -110,34 +110,34 @@ public class SparseVectorTest extends TestCase {
     public void testIsNull() {
         System.out.println("isNull");
 
-        SparseVector svect1 = new SparseVector(new float[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
+        SparseVector svect1 = new SparseVector(new double[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
         assertFalse(svect1.isNull());
 
-        SparseVector svect2 = new SparseVector(new float[]{0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10});
+        SparseVector svect2 = new SparseVector(new double[]{0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10});
         assertFalse(svect2.isNull());
 
-        svect1 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         assertTrue(svect1.isNull());
 
-        svect2 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         assertTrue(svect2.isNull());
 
-        svect1 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
         assertFalse(svect1.isNull());
 
-        svect2 = new SparseVector(new float[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0});
         assertFalse(svect2.isNull());
 
-        svect1 = new SparseVector(new float[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1});
+        svect1 = new SparseVector(new double[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1});
         assertFalse(svect1.isNull());
 
-        svect2 = new SparseVector(new float[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0});
+        svect2 = new SparseVector(new double[]{1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0});
         assertFalse(svect2.isNull());
 
-        svect1 = new SparseVector(new float[]{1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0});
+        svect1 = new SparseVector(new double[]{1, 0, 0, 0, 0, 0, 5, 4, 0, 0, 0, 0});
         assertFalse(svect1.isNull());
 
-        svect2 = new SparseVector(new float[]{0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
+        svect2 = new SparseVector(new double[]{0, 1, 0, 0, 0, 5, 0, 0, 0, 0, 0, 1});
         assertFalse(svect2.isNull());
     }
 
@@ -149,18 +149,18 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect = new float[size];
-            float threshold = (float) Math.random();
+            double[] vect = new double[size];
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
                 if (n % 10 == 0) {
                     vect[i] = 0.0f;
                 } else {
-                    vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                    vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                 }
             }
 
             SparseVector spvect = new SparseVector(vect);
-            assertEquals(((float) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
+            assertEquals(((double) Math.sqrt(spvect.dot(spvect))), spvect.norm(), DELTA);
         }
     }
 
@@ -172,11 +172,11 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect = new float[size];
-            float nrElements = 0;
-            float threshold = (float) Math.random();
+            double[] vect = new double[size];
+            double nrElements = 0;
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
-                float value = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                double value = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                 if (n % 10 == 0) {
                     vect[i] = 0.0f;
                 } else {
@@ -200,18 +200,18 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect1 = new float[size];
-            float threshold = (float) Math.random();
+            double[] vect1 = new double[size];
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
                 if (n % 10 == 0) {
                     vect1[i] = 0.0f;
                 } else {
-                    vect1[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                    vect1[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                 }
             }
 
             SparseVector spvect = new SparseVector(vect1);
-            float[] vect2 = spvect.toArray();
+            double[] vect2 = spvect.toArray();
 
             for (int i = 0; i < vect1.length; i++) {
                 assertEquals(vect1[i], vect2[i], DELTA);
@@ -234,18 +234,18 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (10000 * Math.random());
-            float[] vect1 = new float[size];
+            double[] vect1 = new double[size];
             Arrays.fill(vect1, 0.0f);
             
             SparseVector spvect = new SparseVector(vect1);
 
             for (int i = 0; i < size / 10; i++) {
                 int index = (int) ((size - 1) * Math.random());
-                vect1[index] = (float) Math.random();
+                vect1[index] = (double) Math.random();
                 spvect.setValue(index, vect1[index]);
             }
             
-            float[] vect2 = spvect.toArray();
+            double[] vect2 = spvect.toArray();
 
             for (int i = 0; i < vect1.length; i++) {                
                 assertEquals(vect1[i], vect2[i], DELTA);
@@ -268,21 +268,21 @@ public class SparseVectorTest extends TestCase {
 
         for (int n = 0; n < 30; n++) {
             int size = (int) (1000 * Math.random());
-            float[] vect = new float[size];
-            float threshold = (float) Math.random();
+            double[] vect = new double[size];
+            double threshold = (double) Math.random();
             for (int i = 0; i < size; i++) {
                 if (n % 10 == 0) {
                     vect[i] = 0.0f;
                 } else {
-                    vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                    vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                 }
             }
 
             SparseVector spvect = new SparseVector(vect, 19.0f);
             SparseVector clone = (SparseVector) spvect.clone();
 
-            float[] spvect_v = spvect.toArray();
-            float[] clone_v = clone.toArray();
+            double[] spvect_v = spvect.toArray();
+            double[] clone_v = clone.toArray();
 
             for (int i = 0; i < spvect_v.length; i++) {
                 assertEquals(spvect_v[i], clone_v[i], DELTA);
@@ -306,13 +306,13 @@ public class SparseVectorTest extends TestCase {
         for (int n = 0; n < 30; n++) {
             try {
                 int size = (int) (1000 * Math.random());
-                float[] vect = new float[size];
-                float threshold = (float) Math.random();
+                double[] vect = new double[size];
+                double threshold = (double) Math.random();
                 for (int i = 0; i < size; i++) {
                     if (n % 10 == 0) {
                         vect[i] = 0.0f;
                     } else {
-                        vect[i] = (Math.random() > threshold) ? (float) Math.random() : 0.0f;
+                        vect[i] = (Math.random() > threshold) ? (double) Math.random() : 0.0f;
                     }
                 }
 

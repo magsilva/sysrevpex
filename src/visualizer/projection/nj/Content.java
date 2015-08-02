@@ -57,15 +57,15 @@ public class Content {
     int m_pFolha1;
     int m_pFolha2;
     int m_pInter;
-    float m_pDis_F;
+    double m_pDis_F;
     int m_pFlag;
     int m_pFlagP;
     int m_pFlagT;
     //layout var
-    float lv;
-    float w;
-    float t;
+    double lv;
+    double w;
+    double t;
     int m_pFlagV;
-    float x;
-    float y;
+    double x;
+    double y;
 }

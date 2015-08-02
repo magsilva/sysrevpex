@@ -68,10 +68,10 @@ public class NormalizeColumns extends Normalization {
     public Matrix execute(Matrix matrix) throws IOException {
         assert (matrix.getRowCount() > 0) : "More than zero vectors must be used!";
 
-        float[][] points = null;
+        double[][] points = null;
 
         if (matrix instanceof DenseMatrix) {
-            points = new float[matrix.getRowCount()][];
+            points = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < points.length; i++) {
                 points[i] = matrix.getRow(i).getValues();
@@ -82,8 +82,8 @@ public class NormalizeColumns extends Normalization {
         }
 
         for (int j = 0; j < matrix.getDimensions(); j++) {
-            float max = Float.NEGATIVE_INFINITY;
-            float min = Float.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
+            double min = Double.POSITIVE_INFINITY;
 
             for (int i = 0; i < matrix.getRowCount(); i++) {
                 if (max < points[i][j]) {

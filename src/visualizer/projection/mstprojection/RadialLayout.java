@@ -65,7 +65,7 @@ public class RadialLayout {
 
         root.x = 0.0f;
         root.y = 0.0f;
-        root.w = (float) (2 * Math.PI);
+        root.w = (double) (2 * Math.PI);
         root.t = 0;
 
         preorderTraversal(root);
@@ -112,14 +112,14 @@ public class RadialLayout {
     private void preorderTraversal(RadialLayout.Node v) {
         if (v != root) {
             Node u = v.parent;
-            v.x = u.x + v.dist * (float) Math.cos(v.t + v.w / 2);
-            v.y = u.y + v.dist * (float) Math.sin(v.t + v.w / 2);
+            v.x = u.x + v.dist * (double) Math.cos(v.t + v.w / 2);
+            v.y = u.y + v.dist * (double) Math.sin(v.t + v.w / 2);
         }
 
-        float n = v.t;
+        double n = v.t;
 
         for (RadialLayout.Node w : v.children) {
-            w.w = w.l / root.l * (float) (2 * Math.PI);
+            w.w = w.l / root.l * (double) (2 * Math.PI);
             w.t = n;
             n = n + w.w;
             preorderTraversal(w);
@@ -133,13 +133,13 @@ public class RadialLayout {
         }
 
         public int id;
-        public float x;
-        public float y;
-        public float w;
-        public float t;
-        public float l;
+        public double x;
+        public double y;
+        public double w;
+        public double t;
+        public double l;
         public Node parent;
-        public float dist; //distance to parent
+        public double dist; //distance to parent
 
         public ArrayList<Node> children = new ArrayList<Node>();
     }

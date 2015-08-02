@@ -215,7 +215,7 @@ public class SimilarityMatrix extends javax.swing.JDialog {
                 int height = redimage.getHeight(null) - 2 * space;
 
                 for (int i = 0; i < height; i++) {
-                    float color = ((float) i) / ((float) height);
+                    double color = ((double) i) / ((double) height);
                     g.setColor(colorTable.getColor(color));
                     g.drawLine(redimage.getWidth(null) + 2* space, i + 2*space,
                             redimage.getWidth(null) + 3 * space, i + 2*space);
@@ -259,7 +259,7 @@ public class SimilarityMatrix extends javax.swing.JDialog {
 
             for (int i = 0; i < index.length; i++) {
                 for (int j = 0; j < index.length; j++) {
-                    float color = 0.0f;
+                    double color = 0.0f;
 
                     if (index[i] != index[j]) {
                         color = (dmat.getDistance(index[i], index[j]) - dmat.getMinDistance()) /
@@ -271,9 +271,9 @@ public class SimilarityMatrix extends javax.swing.JDialog {
             }
 
             //draw the class color legend
-            float[] cdata = dmat.getClassData();
-            float min = Float.POSITIVE_INFINITY;
-            float max = Float.NEGATIVE_INFINITY;
+            double[] cdata = dmat.getClassData();
+            double min = Double.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
 
             for (int i = 0; i < cdata.length; i++) {
                 if (min > cdata[i]) {
@@ -286,7 +286,7 @@ public class SimilarityMatrix extends javax.swing.JDialog {
             }
 
             for (int i = 0; i < index.length; i++) {
-                float color = (cdata[index[i]] - min) / (max - min);
+                double color = (cdata[index[i]] - min) / (max - min);
                 g2Buffer.setColor(scaleTable.getColor(color));
 
                 g2Buffer.fillRect(0, i, cBorder, i + 1);
@@ -303,8 +303,8 @@ public class SimilarityMatrix extends javax.swing.JDialog {
             int[] index_aux = new int[dmat.getElementCount()];
 
             //getting the classes
-            float[] cdata = dmat.getClassData();
-            ArrayList<Float> classes = new ArrayList<Float>();
+            double[] cdata = dmat.getClassData();
+            ArrayList<Double> classes = new ArrayList<Double>();
 
             for (int i = 0; i < cdata.length; i++) {
                 if (!classes.contains(cdata[i])) {
@@ -318,7 +318,7 @@ public class SimilarityMatrix extends javax.swing.JDialog {
             int ini = 0;
 
             for (int i = 0; i < classes.size(); i++) {
-                float klass = classes.get(i);
+                double klass = classes.get(i);
 
                 for (int j = 0; j < cdata.length; j++) {
                     if (cdata[j] == klass) {
@@ -329,11 +329,11 @@ public class SimilarityMatrix extends javax.swing.JDialog {
 
                 Pair[] indexes = new Pair[n - ini];
                 int pivot = 0;
-                float max = Float.NEGATIVE_INFINITY;
+                double max = Double.NEGATIVE_INFINITY;
 
                 for (int j = 0; j < indexes.length; j++) {
                     for (int k = indexes.length - 1; k >= 0; k--) {
-                        float distance = dmat.getDistance(index_aux[j + ini],
+                        double distance = dmat.getDistance(index_aux[j + ini],
                                 index_aux[k + ini]);
 
                         if (max < distance) {
@@ -433,10 +433,10 @@ public class SimilarityMatrix extends javax.swing.JDialog {
                 }
             }
 
-            public static final float EPSILON = 0.00001f;
+            public static final double EPSILON = 0.00001f;
             public int begin;
             public int end;
-            public float value;
+            public double value;
         }
 
         private Image redimage;

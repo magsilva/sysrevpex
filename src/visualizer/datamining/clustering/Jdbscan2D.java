@@ -79,7 +79,7 @@ public class Jdbscan2D extends Clustering {
 
     @Override
     public ArrayList<ArrayList<Integer>> execute(DistanceMatrix dmat) throws IOException {
-        float eps = this.calculateEps(dmat);
+        double eps = this.calculateEps(dmat);
 
         //fill the points list
         ArrayList<Point> points_aux = new ArrayList<Point>();
@@ -112,14 +112,14 @@ public class Jdbscan2D extends Clustering {
         return clusters;
     }
 
-    private float calculateEps(DistanceMatrix dmat) throws IOException {
-        float[] max_ray = new float[dmat.getElementCount()];
+    private double calculateEps(DistanceMatrix dmat) throws IOException {
+        double[] max_ray = new double[dmat.getElementCount()];
 
         KNN knn = new KNN(nrNeighbors);
         Pair[][] neighbors = knn.execute(dmat);
 
         for (int p = 0; p < neighbors.length; p++) {
-            float max_dist = Float.MIN_VALUE;
+            double max_dist = Float.MIN_VALUE;
             for (int n = 0; n < neighbors[p].length; n++) {
                 if (neighbors[p][n].value > max_dist) {
                     max_dist = neighbors[p][n].value;
@@ -133,7 +133,7 @@ public class Jdbscan2D extends Clustering {
         return max_ray[(int) (dmat.getElementCount() * 0.85f)];
     }
 
-    private void dbscan(DistanceMatrix dmat, ArrayList<Point> points, float eps, int minPts) {
+    private void dbscan(DistanceMatrix dmat, ArrayList<Point> points, double eps, int minPts) {
         int clusterId = nextId(Point.NOISE);
 
         for (int i = 0; i < points.size(); i++) {
@@ -148,7 +148,7 @@ public class Jdbscan2D extends Clustering {
     }
 
     private boolean expandCluster(DistanceMatrix dmat, ArrayList<Point> points,
-            Point p, int clusterId, float eps, int minPts) {
+            Point p, int clusterId, double eps, int minPts) {
         ArrayList<Point> seeds = regionQuery(dmat, points, p, eps);
 
         if (seeds.size() < minPts) {
@@ -182,7 +182,7 @@ public class Jdbscan2D extends Clustering {
     }
 
     private ArrayList<Point> regionQuery(DistanceMatrix dmat, ArrayList<Point> points,
-            Point p, float eps) {
+            Point p, double eps) {
         ArrayList<Point> query = new ArrayList<Point>();
 
         for (int i = 0; i < points.size(); i++) {

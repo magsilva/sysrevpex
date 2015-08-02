@@ -61,17 +61,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.ironiacorp.resource.mining.Corpus;
-
 import visualizer.corpus.Encoding;
 import visualizer.textprocessing.Ngram;
+import visualizer.textprocessing.RegExpTermExtractor;
 import visualizer.textprocessing.TermExtractor;
 
 /**
@@ -93,8 +88,7 @@ public class ZipFileImporter
         this.klasses = new ArrayList<String>();
     }
 
-    public void execute(String collection, int nrLines, int nrGrams,
-            Encoding encoding) throws IOException {
+    public void execute(String collection, int nrLines, int nrGrams, Encoding encoding) throws IOException {
         HashMap<String, Integer> corpusNgrams = new HashMap<String, Integer>();
 
         //checking if the collection nam already exist
@@ -114,7 +108,6 @@ public class ZipFileImporter
             stmt.setInt(3, nrGrams);
             stmt.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOException(ex.getMessage());
         } finally {
             if (stmt != null) {
@@ -122,7 +115,6 @@ public class ZipFileImporter
                     stmt.close();
                     stmt = null;
                 } catch (SQLException ex) {
-                    Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException(ex.getMessage());
                 }
             }
@@ -138,7 +130,7 @@ public class ZipFileImporter
                 String content = this.getFileContent(zip, entry, encoding);
                 ArrayList<Ngram> fngrams = this.getNgramsFromFile(content, nrGrams);
                 String title = this.getFileTitle(zip, entry, nrLines, encoding);
-                float klass = this.getKlass(entry.getName());
+                double klass = this.getKlass(entry.getName());
                 Date date = this.getFileDate(zip, entry, encoding);
 
                 this.saveToDataBase(i, id_collection, title, content, date,
@@ -157,7 +149,7 @@ public class ZipFileImporter
 
         ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
         for (String key : corpusNgrams.keySet()) {
-            ngrams.add(new Ngram(key, nrGrams, corpusNgrams.get(key)));
+            ngrams.add(new Ngram(key, corpusNgrams.get(key)));
         }
 
         Collections.sort(ngrams);
@@ -176,14 +168,12 @@ public class ZipFileImporter
             stmt.executeUpdate();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOException(ex.getMessage());
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException(ex.getMessage());
                 }
             }
@@ -208,14 +198,12 @@ public class ZipFileImporter
                 return true;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOException(ex.getMessage());
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException(ex.getMessage());
                 }
             }
@@ -236,14 +224,12 @@ public class ZipFileImporter
                 return 0;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOException(ex.getMessage());
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException(ex.getMessage());
                 }
             }
@@ -251,7 +237,7 @@ public class ZipFileImporter
     }
 
     private void saveToDataBase(int id, int id_collection, String title, String content,
-            Date date, ArrayList<Ngram> ngrams, float klass) throws IOException {
+            Date date, ArrayList<Ngram> ngrams, double klass) throws IOException {
 
         PreparedStatement stmt = null;
 
@@ -270,19 +256,17 @@ public class ZipFileImporter
             stmt.setString(3, title);
             stmt.setString(4, content);
             stmt.setBytes(5, baos.toByteArray());
-            stmt.setFloat(6, klass);
+            stmt.setDouble(6, klass);
             stmt.setDate(7, date);
             stmt.executeUpdate();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOException(ex.getMessage());
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IOException(ex.getMessage());
                 }
             }
@@ -364,17 +348,13 @@ public class ZipFileImporter
     private ArrayList<Ngram> getNgramsFromFile(String content, int nrGrams) throws IOException {
         HashMap<String, Integer> ngramsTable = new HashMap<String, Integer>();
 
-        Pattern pattern = Pattern.compile(TermExtractor.getRegularExpression());
-
-        if (content != null) {
-            Matcher matcher = pattern.matcher(content);
-
+		TermExtractor<String> termExtractor = new RegExpTermExtractor(content);
+		String term;
+		while ((term = termExtractor.next()) != null) {
             //create the firt ngram
             String[] ngram = new String[nrGrams];
             int i = 0, count = 0;
-            while (count < nrGrams && matcher.find()) {
-                String term = matcher.group();
-
+            while (count < nrGrams && term != null) {
                 if (term.trim().length() > 0) {
                     String word = term.toLowerCase();
 
@@ -399,24 +379,19 @@ public class ZipFileImporter
             ngramsTable.put(sb.toString(), 1);
 
             //creating the remaining ngrams
-            while (matcher.find()) {
-                String term = matcher.group();
+            if (term.length() > 0) {
+                String word = term.toLowerCase();
 
-                if (term.length() > 0) {
-                    String word = term.toLowerCase();
+                if (word.trim().length() > 0) {
+                    String ng = this.addNextWord(ngram, word);
 
-                    if (word.trim().length() > 0) {
-                        String ng = this.addNextWord(ngram, word);
-
-                        //verify if the ngram already exist on the document
-                        if (ngramsTable.containsKey(ng)) {
-                            ngramsTable.put(ng, ngramsTable.get(ng) + 1);
-                        } else {
-                            ngramsTable.put(ng, 1);
-                        }
+                    //verify if the ngram already exist on the document
+                    if (ngramsTable.containsKey(ng)) {
+                        ngramsTable.put(ng, ngramsTable.get(ng) + 1);
+                    } else {
+                        ngramsTable.put(ng, 1);
                     }
                 }
-
                 i++;
             }
 
@@ -425,7 +400,7 @@ public class ZipFileImporter
         ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
 
         for (String n : ngramsTable.keySet()) {
-            ngrams.add(new Ngram(n, nrGrams, ngramsTable.get(n)));
+            ngrams.add(new Ngram(n, ngramsTable.get(n)));
         }
 
         Collections.sort(ngrams);
@@ -451,7 +426,7 @@ public class ZipFileImporter
         return sb.toString();
     }
 
-    private float getKlass(String filename) {
+    private double getKlass(String filename) {
         int begin = filename.lastIndexOf("/");
         if (begin > -1) {
             filename = filename.substring(begin + 1);
@@ -472,15 +447,5 @@ public class ZipFileImporter
         }
 
         return this.klasses.indexOf(ini);
-    }
-
-    public static void main(String[] args) {
-        try {
-            String filename = "G:\\User\\users\\Documents\\FERNANDO\\Codigo\\java\\ExtractArticles\\ExtractArticles.zip";
-            ZipFileImporter zfi = new ZipFileImporter(filename);
-            zfi.execute("Infovis 2004 contest IV", 1, 1, Encoding.ASCII);
-        } catch (IOException ex) {
-            Logger.getLogger(ZipFileImporter.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

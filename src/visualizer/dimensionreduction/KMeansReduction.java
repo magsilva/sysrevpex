@@ -67,15 +67,15 @@ public class KMeansReduction extends DimensionalityReduction {
     }
 
     @Override
-    protected float[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
-        float[][] points = matrix.toMatrix();
+    protected double[][] execute(Matrix matrix, Dissimilarity diss) throws IOException {
+        double[][] points = matrix.toMatrix();
 
         ArrayList<ArrayList<Integer>> dimClusters = this.doClustering(points);
 
-        float[][] newPoints = new float[points.length][];
+        double[][] newPoints = new double[points.length][];
 
         for (int i = 0; i < newPoints.length; i++) {
-            newPoints[i] = new float[dimClusters.size()];
+            newPoints[i] = new double[dimClusters.size()];
             Arrays.fill(newPoints[i], 0.0f);
         }
 
@@ -93,11 +93,11 @@ public class KMeansReduction extends DimensionalityReduction {
         return newPoints;
     }
 
-    private ArrayList<ArrayList<Integer>> doClustering(float[][] points) throws IOException {
+    private ArrayList<ArrayList<Integer>> doClustering(double[][] points) throws IOException {
         ArrayList<ArrayList<Integer>> clusters = new ArrayList<ArrayList<Integer>>();
 
         //Variavel auxiliar para armazenar as centr�ides antigas
-        float[][] oldCentroids;
+        double[][] oldCentroids;
 
         //indica se as centr�ides foram modificadas
         boolean isCentroidModified = true;
@@ -106,9 +106,9 @@ public class KMeansReduction extends DimensionalityReduction {
         int numberIterations = 0;
 
         //inicializar as centr�ides com alguns pontos
-        this.centroids = new float[points.length][];
+        this.centroids = new double[points.length][];
         for (int i = 0; i < points.length; i++) {
-            this.centroids[i] = new float[this.targetDimension];
+            this.centroids[i] = new double[this.targetDimension];
 
             for (int j = 0; j < this.targetDimension; j++) {
                 this.centroids[i][j] = points[i][j];
@@ -124,12 +124,12 @@ public class KMeansReduction extends DimensionalityReduction {
             //colocar os pontos dentro dos seus respectivos clusters
             for (int dim = 0; dim < points[0].length; dim++) {
                 int nearestCentroid = 0; //armazenar� a centr�ide que a dimens�o pertencer�
-                float distance1 = this.calculateDistance(points, dim, nearestCentroid);
+                double distance1 = this.calculateDistance(points, dim, nearestCentroid);
 
                 //para cada cluster existente, verificar qual centr�ide a dimens�o
                 //est� mais pr�xima
                 for (int cluster = 1; cluster < this.targetDimension; cluster++) {
-                    float distance2 = this.calculateDistance(points, dim, cluster);
+                    double distance2 = this.calculateDistance(points, dim, cluster);
 
                     if (distance1 > distance2) {
                         nearestCentroid = cluster;
@@ -167,37 +167,37 @@ public class KMeansReduction extends DimensionalityReduction {
         return clusters;
     }
 
-    public float calculateDistance(float[][] points, int dim, int nearestCentroid) throws IOException {
+    public double calculateDistance(double[][] points, int dim, int nearestCentroid) throws IOException {
         if (!this.isNormalized) {
             this.normalize(points);
         }
 
-        float norm = 0.0f;
+        double norm = 0.0f;
         for (int i = 0; i < points.length; i++) {
             norm += this.centroids[i][nearestCentroid] * this.centroids[i][nearestCentroid];
         }
-        norm = (float) Math.sqrt(norm);
+        norm = (double) Math.sqrt(norm);
 
-        float sim = 0.0f;
+        double sim = 0.0f;
         for (int i = 0; i < points.length; i++) {
             sim += points[i][dim] * this.centroids[i][nearestCentroid];
         }
         sim = sim / norm;
 
-        return (float) Math.sqrt(Math.abs(2 * (1.0 - sim)));
+        return (double) Math.sqrt(Math.abs(2 * (1.0 - sim)));
     }
 
-    private void updateCentroid(int nrOldPoints, int centroid, int dim, float[][] points) {
+    private void updateCentroid(int nrOldPoints, int centroid, int dim, double[][] points) {
         for (int i = 0; i < points.length; i++) {
             this.centroids[i][centroid] = (((this.centroids[i][centroid] * nrOldPoints) + points[i][dim]) / (nrOldPoints + 1));
         }
     }
 
-    private void updateCentroids(float[][] points, ArrayList<ArrayList<Integer>> clusters) {
+    private void updateCentroids(double[][] points, ArrayList<ArrayList<Integer>> clusters) {
         //zerar as centroids
-        this.centroids = new float[points.length][];
+        this.centroids = new double[points.length][];
         for (int i = 0; i < points.length; i++) {
-            this.centroids[i] = new float[this.targetDimension];
+            this.centroids[i] = new double[this.targetDimension];
             Arrays.fill(this.centroids[i], 0.0f);
         }
 
@@ -219,7 +219,7 @@ public class KMeansReduction extends DimensionalityReduction {
         }
     }
 
-    private boolean isCentroidModified(float[][] oldCentroids) {
+    private boolean isCentroidModified(double[][] oldCentroids) {
         for (int centroid = 0; centroid < oldCentroids.length; centroid++) {
             for (int coord = 0; coord < oldCentroids[centroid].length; coord++) {
                 if (oldCentroids[centroid][coord] != this.centroids[centroid][coord]) {
@@ -231,10 +231,10 @@ public class KMeansReduction extends DimensionalityReduction {
         return false;
     }
 
-    private void normalize(float[][] points) {
+    private void normalize(double[][] points) {
         this.isNormalized = true;
 
-        float[] termSum = new float[points[0].length];
+        double[] termSum = new double[points[0].length];
         Arrays.fill(termSum, 0.0f);
 
         for (int j = 0; j < points[0].length; j++) {
@@ -242,7 +242,7 @@ public class KMeansReduction extends DimensionalityReduction {
                 termSum[j] += points[i][j] * points[i][j];
             }
 
-            termSum[j] = (float) Math.sqrt(termSum[j]);
+            termSum[j] = (double) Math.sqrt(termSum[j]);
         }
 
         for (int j = 0; j < points[0].length; j++) {
@@ -256,6 +256,6 @@ public class KMeansReduction extends DimensionalityReduction {
         }
     }
 
-    private float[][] centroids;
+    private double[][] centroids;
     private boolean isNormalized = false;
 }

@@ -29,10 +29,10 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
     private List<Integer> items;
     /* The support count of the itemset */
     private int support;
-    private Float[] confidence = null;
+    private double[] confidence = null;
     String[] ngrams;
-    private float sumTfIdf;
-    private float headTfIdf;
+    private double sumTfIdf;
+    private double headTfIdf;
     int tamCluster = 1;
     int cover = -1;
     int globalCover = -1;
@@ -120,9 +120,9 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return support;
     }
 
-    public float getSupportRelative() {
+    public double getSupportRelative() {
 
-        return (float) this.support / tamCluster;
+        return (double) this.support / tamCluster;
     }
 
     /**
@@ -226,7 +226,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return ngramList;
     }
 
-    public String computeShortPhrase(float[][] allPoints, TopicData ldata, String[] ngrams, float[] singleItemTfIdf, int tamCluster) {
+    public String computeShortPhrase(double[][] allPoints, TopicData ldata, String[] ngrams, double[] singleItemTfIdf, int tamCluster) {
 
         Corpus datasource = ldata.getCorpus();
         List<String> ngramList = ngramList(ngrams);
@@ -291,7 +291,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return contains;
     }
 
-    public String computePhrase(float[][] allPoints, TopicData ldata, String[] ngrams, float[] singleItemTfIdf, int tamCluster) {
+    public String computePhrase(double[][] allPoints, TopicData ldata, String[] ngrams, double[] singleItemTfIdf, int tamCluster) {
 
         Corpus datasource = ldata.getCorpus();
         List<String> ngramList = ngramList(ngrams);
@@ -335,7 +335,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         }
     }
 
-    public String computeRuleTopic(String[] ngrams, float[] singleItemTfIdf, int tamCluster) {
+    public String computeRuleTopic(String[] ngrams, double[] singleItemTfIdf, int tamCluster) {
         this.ngrams = ngrams;
         String itemset = "";
         fileName = "";
@@ -370,9 +370,9 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
                         ngrams[item.intValue()] + " ";
             }
             itemset += "(" + formatter0.format(this.support) + "/" +
-                    formatter0.format(100 * (float) this.support / tamCluster) + "%;" + formatter0.format(this.confidence[kHead] * 100) + "%)";
+                    formatter0.format(100 * (double) this.support / tamCluster) + "%;" + formatter0.format(this.confidence[kHead] * 100) + "%)";
             fileName += "[" + formatter0.format(this.support) + "_" +
-                    formatter2.format(100 * (float) this.support / tamCluster) + ";" + formatter0.format(this.confidence[kHead] * 100) + "]";
+                    formatter2.format(100 * (double) this.support / tamCluster) + ";" + formatter0.format(this.confidence[kHead] * 100) + "]";
             this.ruleTopic = itemset;
             return itemset;
         }
@@ -384,13 +384,13 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return fileName;
     }
 
-    public String toStringDump(String[] ngrams, float[] singleItemTfIdf, int tamCluster, float[] singleItemSupport) {
+    public String toStringDump(String[] ngrams, double[] singleItemTfIdf, int tamCluster, double[] singleItemSupport) {
         String itemset = "";
         NumberFormat formatter3 = new DecimalFormat("0.000");
         NumberFormat formatter2 = new DecimalFormat("0.00");
         NumberFormat formatter0 = new DecimalFormat("#");
         itemset += formatter0.format(this.support) + "/" +
-                formatter0.format(100 * (float) this.support / tamCluster) + "%:{";
+                formatter0.format(100 * (double) this.support / tamCluster) + "%:{";
         if (this.confidence == null) {
 
             for (Integer item : items) {
@@ -474,14 +474,14 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
 
     }
 
-    public void compute(float[][] selectedPoints, float[] singleItemTfIdf, float[] singleItemSupport) {
+    public void compute(double[][] selectedPoints, double[] singleItemTfIdf, double[] singleItemSupport) {
         this.tamCluster = selectedPoints.length;
         this.getHead(singleItemTfIdf, singleItemSupport);
 
 
     }
 
-    public void computeConfidence(float[][] selectedPoints) {
+    public void computeConfidence(double[][] selectedPoints) {
         int support[] = new int[items.size()];
         int head = 1;
         for (int s : support) {
@@ -500,11 +500,10 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
             }
 
         }
-        Float confidence[] = new Float[support.length];
-        Float maxConfidence = Float.NEGATIVE_INFINITY;
-
+        double confidence[] = new double[support.length];
+        double maxConfidence = Double.NEGATIVE_INFINITY;
         for (int k = 0; k < items.size(); k++) {
-            confidence[k] = ((float) this.support) / support[k];
+            confidence[k] = ((double) this.support) / support[k];
             if (confidence[k] > maxConfidence) {
                 maxConfidence = confidence[k];
                 head = k;
@@ -516,7 +515,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
 
     }
 
-    public void computeGlobal(float[][] allPoints) {
+    public void computeGlobal(double[][] allPoints) {
         if (this.head == null) {
             return;
         }
@@ -550,12 +549,12 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         this.globalSupport = ruleSupport;
     }
 
-    public Integer getHead(float[] singleItemTfIdf, float[] singleItemSupport) {
+    public Integer getHead(double[] singleItemTfIdf, double[] singleItemSupport) {
         if (this.head == null) {
             int headInt = -1;
-            float maxTfIdf = Float.NEGATIVE_INFINITY;
-            float minSupport = Float.POSITIVE_INFINITY;
-            float sumTfIdf = 0.0f;
+            double maxTfIdf = Float.NEGATIVE_INFINITY;
+            double minSupport = Float.POSITIVE_INFINITY;
+            double sumTfIdf = 0.0f;
 
 
             for (Integer item : items) {
@@ -579,11 +578,11 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return this.head;
     }
 
-    public float getSumTfIdf() {
+    public double getSumTfIdf() {
         return sumTfIdf;
     }
 
-    public float getHeadTfIdf() {
+    public double getHeadTfIdf() {
         return headTfIdf;
     }
 
@@ -591,13 +590,13 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return ngrams[maxTfIdfItem.intValue()];
     }
 
-    public Float[] getConfidence() {
+    public double[] getConfidence() {
         return confidence;
     }
 
-    public Float getMaxConfidence() {
-        Float maxConfidence = Float.MIN_VALUE;
-        for (Float f : confidence) {
+    public double getMaxConfidence() {
+        double maxConfidence = Double.MIN_VALUE;
+        for (double f : confidence) {
             if (f > maxConfidence) {
                 maxConfidence = f;
             }
@@ -605,7 +604,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return maxConfidence;
     }
 
-    public void setConfidence(Float[] confidence) {
+    public void setConfidence(double[] confidence) {
         this.confidence = confidence;
     }
 
@@ -635,7 +634,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return hash;
     }
 
-    int setCovered(float[][] selectedPoints, boolean[] coveredPoints, boolean local) {
+    int setCovered(double[][] selectedPoints, boolean[] coveredPoints, boolean local) {
         int s;
         if (local) {
             this.cover = 0;
@@ -679,7 +678,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         }
     }
 
-    int countCovered(float[][] selectedPoints, boolean[] coveredPoints) {
+    int countCovered(double[][] selectedPoints, boolean[] coveredPoints) {
         int s;
         this.cover = 0;
         for (int i = 0; i < selectedPoints.length; i++) {
@@ -700,7 +699,7 @@ public class ItemSet implements Comparable<ItemSet>, TopicInterface {
         return this.cover;
     }
 
-    int countOverlap(float[][] Points, boolean[] coveredPoints) {
+    int countOverlap(double[][] Points, boolean[] coveredPoints) {
         int s;
         int overlap = 0;
         for (int i = 0; i < Points.length; i++) {

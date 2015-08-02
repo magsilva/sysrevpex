@@ -71,7 +71,7 @@ import visualizer.wizard.ProjectionView;
 public class SammonMappingProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         try {
             Dissimilarity diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
             DistanceMatrix dmat_aux = new DistanceMatrix(matrix, diss);
@@ -88,7 +88,7 @@ public class SammonMappingProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         this.dmat = dmat;
 
         try {
@@ -98,13 +98,13 @@ public class SammonMappingProjection extends Projection {
             }
 
             FastmapProjection proj = new FastmapProjection();
-            float[][] projection = proj.project(dmat);
+            double[][] projection = proj.project(dmat);
 
             if (projection != null) {
                 SammonMapping sm = new SammonMapping();
                 sm.setMF(pdata.getFractionDelta());
 
-                float error = Float.MAX_VALUE;
+                double error = Float.MAX_VALUE;
                 for (int i = 0; i < pdata.getNumberIterations(); i++) {
                     error = sm.iteration(dmat, projection);
 
@@ -157,7 +157,7 @@ public class SammonMappingProjection extends Projection {
             pdata.setSourceFile(filename);
 
             SammonMappingProjection sammon = new SammonMappingProjection();
-            float[][] projection = sammon.project(matrix, pdata, null);
+            double[][] projection = sammon.project(matrix, pdata, null);
 
             BufferedWriter out = null;
             try {

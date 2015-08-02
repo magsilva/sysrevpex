@@ -71,16 +71,16 @@ public class Kmeans extends Clustering {
     @Override
     public ArrayList<ArrayList<Integer>> execute(Dissimilarity diss, Matrix matrix) throws IOException {
         try {
-            //Variável auxiliar para armazenar as centróides antigas
+            //Variï¿½vel auxiliar para armazenar as centrï¿½ides antigas
             Matrix oldCentroids;
 
-            //indica se as centróides foram modificadas
+            //indica se as centrï¿½ides foram modificadas
             boolean isCentroidModified = true;
 
-            //serve para executar o algoritmo até um número limitado de vazes
+            //serve para executar o algoritmo atï¿½ um nï¿½mero limitado de vazes
             int numberIterations = 0;
 
-            //inicializar as centróides com alguns pontos
+            //inicializar as centrï¿½ides com alguns pontos
             this.centroids = MatrixFactory.getInstance(matrix.getClass());
             for (int i = 0; i < this.nrclusters; i++) {
                 this.centroids.addRow((Vector) matrix.getRow(i).clone());
@@ -94,14 +94,14 @@ public class Kmeans extends Clustering {
 
                 //colocar os pontos dentro dos seus respectivos clusters
                 for (int point = 0; point < matrix.getRowCount(); point++) {
-                    int nearestCentroid = 0; //armazenará a centróide que o ponto pertencerá
-                    float distance1 = diss.calculate(matrix.getRow(point),
+                    int nearestCentroid = 0; //armazenarï¿½ a centrï¿½ide que o ponto pertencerï¿½
+                    double distance1 = diss.calculate(matrix.getRow(point),
                             this.centroids.getRow(nearestCentroid));
 
-                    //para cada cluster existente, verificar qual centróide o ponto
-                    //está mais próximo
+                    //para cada cluster existente, verificar qual centrï¿½ide o ponto
+                    //estï¿½ mais prï¿½ximo
                     for (int cluster = 1; cluster < this.nrclusters; cluster++) {
-                        float distance2 = diss.calculate(matrix.getRow(point),
+                        double distance2 = diss.calculate(matrix.getRow(point),
                                 this.centroids.getRow(cluster));
 
                         if (distance1 > distance2) {
@@ -116,21 +116,21 @@ public class Kmeans extends Clustering {
 
                 //verifica se algum cluster ficou vazio
                 for (int i = 0; i < this.clusters.size(); i++) {
-                    //se o cluster for vazio, copia aleatóriamente algum ponto como
-                    //centróide
+                    //se o cluster for vazio, copia aleatï¿½riamente algum ponto como
+                    //centrï¿½ide
                     if (this.clusters.get(i).size() == 0) {
                         int index = (int) (Math.random() * (matrix.getRowCount() - 1));
                         this.centroids.setRow(i, (Vector) matrix.getRow(index).clone());
                     }
                 }
 
-                //Armazena os valores antigos das centróides
+                //Armazena os valores antigos das centrï¿½ides
                 oldCentroids = this.centroids;
 
-                //Atualiza as centróides
+                //Atualiza as centrï¿½ides
                 this.updateCentroids(matrix);
 
-                //Se não houve modificação, para o looping
+                //Se nï¿½o houve modificaï¿½ï¿½o, para o looping
                 isCentroidModified = isCentroidModified(oldCentroids);
 
                 //Incrementa a quantidade de vezes que foram realocados os pontos
@@ -167,10 +167,10 @@ public class Kmeans extends Clustering {
 
         for (int i = 0; i < m.length; i++) {
             int point = -1;
-            float distance = Float.MAX_VALUE;
+            double distance = Float.MAX_VALUE;
 
             for (int j = 0; j < this.clusters.get(i).size(); j++) {
-                float distance2 = diss.calculate(this.centroids.getRow(i),
+                double distance2 = diss.calculate(this.centroids.getRow(i),
                         matrix.getRow(this.clusters.get(i).get(j)));
                 if (distance > distance2) {
                     point = this.clusters.get(i).get(j);

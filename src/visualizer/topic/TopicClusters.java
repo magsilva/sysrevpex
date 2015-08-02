@@ -86,7 +86,7 @@ public class TopicClusters {
         //Create the clusters
         Matrix matrix = new DenseMatrix();
         for (int i = 0; i < this.gv.getGraph().getVertex().size(); i++) {
-            float[] point = new float[2];
+            double[] point = new double[2];
             point[0] = this.gv.getGraph().getVertex().get(i).getX();
             point[1] = this.gv.getGraph().getVertex().get(i).getY();
             matrix.addRow(new DenseVector(point));

@@ -71,9 +71,9 @@ import visualizer.wizard.ProjectionView;
  */
 public abstract class Projection {
 
-    public abstract float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view);
+    public abstract double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view);
 
-    public abstract float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view);
+    public abstract double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view);
 
     public abstract ProjectionView getProjectionView(ProjectionData pdata);
 
@@ -87,9 +87,9 @@ public abstract class Projection {
                 view.setStatus("Creating the Delaunay triangulation...", 95);
             }
 
-            float[][] projection = new float[graph.getVertex().size()][];
+            double[][] projection = new double[graph.getVertex().size()][];
             for (int i = 0; i < projection.length; i++) {
-                projection[i] = new float[2];
+                projection[i] = new double[2];
                 projection[i][0] = graph.getVertex().get(i).getX();
                 projection[i][1] = graph.getVertex().get(i).getY();
             }

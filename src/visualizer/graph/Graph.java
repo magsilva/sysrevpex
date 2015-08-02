@@ -100,10 +100,10 @@ public class Graph implements java.io.Serializable {
      */
     public java.awt.Dimension getSize() {
         if (this.vertex.size() > 0) {
-            float maxX = vertex.get(0).getX();
-            float minX = vertex.get(0).getX();
-            float maxY = vertex.get(0).getY();
-            float minY = vertex.get(0).getY();
+            double maxX = vertex.get(0).getX();
+            double minX = vertex.get(0).getX();
+            double maxY = vertex.get(0).getY();
+            double minY = vertex.get(0).getY();
 
             //Encontra o maior e menor valores para X e Y
             for (Vertex v : this.vertex) {
@@ -257,7 +257,7 @@ public class Graph implements java.io.Serializable {
         java.awt.Toolkit tk = java.awt.Toolkit.getDefaultToolkit();
         java.awt.Dimension d = tk.getScreenSize();
         this.normalizeVertex(Vertex.getRayBase() * 5 + 10,
-                ((float) (d.getHeight())) / 1.65f);
+                ((double) (d.getHeight())) / 1.65f);
     }
 
     public void getNeighbors(ArrayList<Vertex> neighborsVertex,
@@ -351,11 +351,11 @@ public class Graph implements java.io.Serializable {
         this.connectivities.remove(connectivity);
     }
 
-    public void normalizeVertex(float begin, float end) {
-        float maxX = vertex.get(0).getX();
-        float minX = vertex.get(0).getX();
-        float maxY = vertex.get(0).getY();
-        float minY = vertex.get(0).getY();
+    public void normalizeVertex(double begin, double end) {
+        double maxX = vertex.get(0).getX();
+        double minX = vertex.get(0).getX();
+        double maxY = vertex.get(0).getY();
+        double minY = vertex.get(0).getY();
 
         //Encontra o maior e menor valores para X e Y
         for (Vertex v : this.vertex) {
@@ -377,7 +377,7 @@ public class Graph implements java.io.Serializable {
         }
 
         ///////Fazer a largura ficar proporcional a altura
-        float endX = ((maxX - minX) * end);
+        double endX = ((maxX - minX) * end);
         if (maxY != minY) {
             endX = ((maxX - minX) * end) / (maxY - minY);
         }
@@ -486,10 +486,10 @@ public class Graph implements java.io.Serializable {
     }
 
     public Scalar createHC(HierarchicalClusteringType type) throws IOException {
-        float[][] projection = new float[this.getVertex().size()][];
+        double[][] projection = new double[this.getVertex().size()][];
 
         for (int i = 0; i < this.getVertex().size(); i++) {
-            projection[i] = new float[2];
+            projection[i] = new double[2];
             projection[i][0] = this.getVertex().get(i).getX();
             projection[i][1] = this.getVertex().get(i).getY();
         }
@@ -500,7 +500,7 @@ public class Graph implements java.io.Serializable {
         }
 
         HierarchicalClustering hc = new HierarchicalClustering(type);
-        float[] hcScalars = hc.getPointsHeight(dproj, new Euclidean());
+        double[] hcScalars = hc.getPointsHeight(dproj, new Euclidean());
 
         String scalarname = PExConstants.SLINK;
         if (type == HierarchicalClusteringType.ALINK) {
@@ -702,20 +702,20 @@ public class Graph implements java.io.Serializable {
     }
 
     public Scalar createScalarByConnection(Connectivity connectivity) {
-        HashMap<Vertex, Float> vDegree = new HashMap<Vertex, Float>();
+        HashMap<Vertex, Double> vDegree = new HashMap<Vertex, Double>();
 
         if (connectivity != null) {
             for (Edge e : connectivity.getEdges()) {
                 Vertex source = e.getSource();
                 if (!vDegree.containsKey(source)) {
-                    vDegree.put(source, 1.0f);
+                    vDegree.put(source, 1.0);
                 } else {
                     vDegree.put(source, vDegree.get(source) + 1);
                 }
 
                 Vertex target = e.getTarget();
                 if (!vDegree.containsKey(target)) {
-                    vDegree.put(target, 1.0f);
+                    vDegree.put(target, 1.0);
                 } else {
                     vDegree.put(target, vDegree.get(target) + 1);
                 }
@@ -741,10 +741,10 @@ public class Graph implements java.io.Serializable {
     public void perturb() {
         Random rand = new Random(7);
 
-        float maxx = Float.NEGATIVE_INFINITY;
-        float minx = Float.POSITIVE_INFINITY;
-        float maxy = Float.NEGATIVE_INFINITY;
-        float miny = Float.POSITIVE_INFINITY;
+        double maxx = Double.NEGATIVE_INFINITY;
+        double minx = Double.POSITIVE_INFINITY;
+        double maxy = Double.NEGATIVE_INFINITY;
+        double miny = Double.POSITIVE_INFINITY;
 
         for (Vertex v : this.vertex) {
             if (maxx < v.getX()) {
@@ -764,12 +764,12 @@ public class Graph implements java.io.Serializable {
             }
         }
 
-        float diffx = (maxx - minx) / 1000;
-        float diffy = (maxy - miny) / 1000;
+        double diffx = (maxx - minx) / 1000;
+        double diffy = (maxy - miny) / 1000;
 
         for (int i = 0; i < vertex.size(); i++) {
-            vertex.get(i).setX(vertex.get(i).getX() + diffx * rand.nextFloat());
-            vertex.get(i).setY(vertex.get(i).getY() + diffy * rand.nextFloat());
+            vertex.get(i).setX(vertex.get(i).getX() + diffx * rand.nextDouble());
+            vertex.get(i).setY(vertex.get(i).getY() + diffy * rand.nextDouble());
         }
     }
 

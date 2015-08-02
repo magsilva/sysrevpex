@@ -21,7 +21,7 @@ import visualizer.matrix.DenseVector;
  */
 public class DistanceMatrixTest extends TestCase {
 
-    private static final float DELTA = 0.00001f;
+    private static final double DELTA = 0.00001f;
     
     public DistanceMatrixTest(String testName) {
         super(testName);
@@ -49,10 +49,10 @@ public class DistanceMatrixTest extends TestCase {
 
                 DenseMatrix matrix = new DenseMatrix();
                 for (int i = 0; i < 500; i++) {
-                    float[] vector = new float[DIM];
+                    double[] vector = new double[DIM];
 
                     for (int j = 0; j < vector.length; j++) {
-                        vector[j] = (float) Math.random();
+                        vector[j] = (double) Math.random();
                     }
 
                     matrix.addRow(new DenseVector(vector));
@@ -71,7 +71,7 @@ public class DistanceMatrixTest extends TestCase {
                             continue;
                         }
 
-                        float dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                        double dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
                         assertEquals(dist, dmat.getDistance(i, j), DELTA);
                     }
                 }
@@ -90,10 +90,10 @@ public class DistanceMatrixTest extends TestCase {
 
             DenseMatrix matrix = new DenseMatrix();
             for (int i = 0; i < 500; i++) {
-                float[] vector = new float[DIM];
+                double[] vector = new double[DIM];
 
                 for (int j = 0; j < vector.length; j++) {
-                    vector[j] = (float) Math.random();
+                    vector[j] = (double) Math.random();
                 }
 
                 matrix.addRow(new DenseVector(vector));
@@ -108,7 +108,7 @@ public class DistanceMatrixTest extends TestCase {
 
             for (int i = 0; i < matrix.getRowCount(); i++) {
                 for (int j = 0; j < matrix.getRowCount(); j++) {
-                    float dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                    double dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
                     dmat.setDistance(i, j, dist);
                 }
             }
@@ -119,7 +119,7 @@ public class DistanceMatrixTest extends TestCase {
                         continue;
                     }
 
-                    float dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                    double dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
                     assertEquals(dist, dmat.getDistance(i, j), DELTA);
                 }
             }
@@ -135,10 +135,10 @@ public class DistanceMatrixTest extends TestCase {
 
                 DenseMatrix matrix = new DenseMatrix();
                 for (int i = 0; i < 500; i++) {
-                    float[] vector = new float[DIM];
+                    double[] vector = new double[DIM];
 
                     for (int j = 0; j < vector.length; j++) {
-                        vector[j] = (float) Math.random();
+                        vector[j] = (double) Math.random();
                     }
 
                     matrix.addRow(new DenseVector(vector));
@@ -151,8 +151,8 @@ public class DistanceMatrixTest extends TestCase {
 
                 DistanceMatrix dmat = new DistanceMatrix(matrix, diss);
 
-                float min = Float.POSITIVE_INFINITY;
-                float max = Float.NEGATIVE_INFINITY;
+                double min = Float.POSITIVE_INFINITY;
+                double max = Float.NEGATIVE_INFINITY;
 
                 for (int i = 0; i < matrix.getRowCount(); i++) {
                     for (int j = 0; j < matrix.getRowCount(); j++) {
@@ -160,7 +160,7 @@ public class DistanceMatrixTest extends TestCase {
                             continue;
                         }
 
-                        float dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                        double dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
 
                         if (min > dist) {
                             min = dist;
@@ -190,10 +190,10 @@ public class DistanceMatrixTest extends TestCase {
 
             DenseMatrix matrix = new DenseMatrix();
             for (int i = 0; i < 500; i++) {
-                float[] vector = new float[DIM];
+                double[] vector = new double[DIM];
 
                 for (int j = 0; j < vector.length; j++) {
-                    vector[j] = (float) Math.random();
+                    vector[j] = (double) Math.random();
                 }
 
                 matrix.addRow(new DenseVector(vector));
@@ -206,8 +206,8 @@ public class DistanceMatrixTest extends TestCase {
 
             DistanceMatrix dmat = new DistanceMatrix(matrix.getRowCount());
 
-            float min = Float.POSITIVE_INFINITY;
-            float max = Float.NEGATIVE_INFINITY;
+            double min = Float.POSITIVE_INFINITY;
+            double max = Float.NEGATIVE_INFINITY;
 
             for (int i = 0; i < matrix.getRowCount(); i++) {
                 for (int j = 0; j < matrix.getRowCount(); j++) {
@@ -215,7 +215,7 @@ public class DistanceMatrixTest extends TestCase {
                         continue;
                     }
 
-                    float dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
+                    double dist = diss.calculate(matrix.getRow(i), matrix.getRow(j));
                     dmat.setDistance(i, j, dist);
 
                     if (min > dist) {
@@ -244,10 +244,10 @@ public class DistanceMatrixTest extends TestCase {
 
                 DenseMatrix matrix = new DenseMatrix();
                 for (int i = 0; i < 500; i++) {
-                    float[] vector = new float[DIM];
+                    double[] vector = new double[DIM];
 
                     for (int j = 0; j < vector.length; j++) {
-                        vector[j] = (float) Math.random();
+                        vector[j] = (double) Math.random();
                     }
 
                     matrix.addRow(new DenseVector(vector));
@@ -258,7 +258,7 @@ public class DistanceMatrixTest extends TestCase {
                     diss = new Euclidean();
                 }
 
-                float[] cdata1 = new float[matrix.getRowCount()];
+                double[] cdata1 = new double[matrix.getRowCount()];
                 for (int i = 0; i < cdata1.length; i++) {
                     cdata1[i] = i;
                 }
@@ -274,7 +274,7 @@ public class DistanceMatrixTest extends TestCase {
                 dmat1.save(filename);
 
                 DistanceMatrix dmat2 = new DistanceMatrix(filename);
-                float[] cdata2 = dmat2.getClassData();
+                double[] cdata2 = dmat2.getClassData();
                 List<String> ids2 = dmat2.getIds();
 
                 for (int i = 0; i < cdata2.length; i++) {

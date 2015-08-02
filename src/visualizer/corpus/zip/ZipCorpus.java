@@ -175,7 +175,7 @@ public class ZipCorpus extends BaseCorpus
 
             //Creating the cdata
             if (initials.length > 1) {
-                this.cdata = new float[this.ids.size()];
+                this.cdata = new double[this.ids.size()];
 
                 for (int i = 0; i < this.ids.size(); i++) {
                     this.cdata[i] = -1;
@@ -196,7 +196,7 @@ public class ZipCorpus extends BaseCorpus
                     }
                 }
             } else {
-                this.cdata = new float[this.ids.size()];
+                this.cdata = new double[this.ids.size()];
                 Arrays.fill(this.cdata, 0.0f);
             }
         }

@@ -1715,9 +1715,9 @@ public class ProjectionExplorerView extends javax.swing.JFrame {
             gv.getGraph().perturb();
 
             //Creating new Delaunay triangulation
-            float[][] points = new float[gv.getGraph().getVertex().size()][];
+            double[][] points = new double[gv.getGraph().getVertex().size()][];
             for (int i = 0; i < points.length; i++) {
-                points[i] = new float[2];
+                points[i] = new double[2];
                 points[i][0] = gv.getGraph().getVertex().get(i).getX();
                 points[i][1] = gv.getGraph().getVertex().get(i).getY();
             }

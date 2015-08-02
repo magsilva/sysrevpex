@@ -55,15 +55,15 @@ import visualizer.projection.distance.DistanceMatrix;
  */
 public abstract class Projector {
 
-    public abstract float[][] project(DistanceMatrix dmat);
+    public abstract double[][] project(DistanceMatrix dmat);
 
-    public void normalize(float[][] result) {
+    public void normalize(double[][] result) {
         int lvdimensions = result[0].length;
         int lvinstances = result.length;
 
         //for normalization
-        float[] lvlowrange = new float[lvdimensions];
-        float[] lvhighrange = new float[lvdimensions];
+        double[] lvlowrange = new double[lvdimensions];
+        double[] lvhighrange = new double[lvdimensions];
 
         //for each instance
         for (int lvins = 0; lvins < lvinstances; lvins++) {
@@ -95,14 +95,14 @@ public abstract class Projector {
         }
     }
 
-    public void normalize2D(float[][] projection) {
-        //Os valores máximos e mínimos para cada coordenada
-        float maxX = projection[0][0];
-        float minX = projection[0][0];
-        float maxY = projection[0][1];
-        float minY = projection[0][1];
+    public void normalize2D(double[][] projection) {
+        //Os valores mï¿½ximos e mï¿½nimos para cada coordenada
+        double maxX = projection[0][0];
+        double minX = projection[0][0];
+        double maxY = projection[0][1];
+        double minY = projection[0][1];
 
-        //Os valores máximos e mínimos para X e Y
+        //Os valores mï¿½ximos e mï¿½nimos para X e Y
         for (int _ins = 1; _ins < projection.length; _ins++) {
             if (minX > projection[_ins][0]) {
                 minX = projection[_ins][0];
@@ -122,7 +122,7 @@ public abstract class Projector {
         }
 
         //fazer Y proporcional a X
-        float endY = (maxY - minY) / (maxX - minX);
+        double endY = (maxY - minY) / (maxX - minX);
 
         //for each position in the ArrayList ... normalize!
         for (int _ins = 0; _ins < projection.length; _ins++) {

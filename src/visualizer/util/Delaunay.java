@@ -64,11 +64,11 @@ public class Delaunay implements java.io.Serializable {
     public Delaunay() {
     }
 
-    public Pair[][] execute(float[][] points) {
+    public Pair[][] execute(double[][] points) {
         long start = System.currentTimeMillis();
 
         //Creating the Delaunay triangulation
-        float[] dtpoints = new float[points.length * 2];
+        double[] dtpoints = new double[points.length * 2];
 
         for (int i = 0; i < dtpoints.length; i += 2) {
             dtpoints[i] = points[i / 2][0];
@@ -115,12 +115,12 @@ public class Delaunay implements java.io.Serializable {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
     // If a point lies within a 3-degree-angle of an edge, it is considered to be ON the edge
-    static float MIN_LINE_COS_ANGLE = 0.99862953f;   // cos(3)=0.99862953   cos(1)=0.9998477
+    static double MIN_LINE_COS_ANGLE = 0.99862953f;   // cos(3)=0.99862953   cos(1)=0.9998477
     // The following are initial values
-    // They are floatd each time they are exceeded
+    // They are doubled each time they are exceeded
     int maximalNumberOfPoints = 1000;
     int maximalNumberOfFaces = 1000;
-    float[] point = new float[3 * maximalNumberOfPoints];
+    double[] point = new double[3 * maximalNumberOfPoints];
     int[] face = new int[3 * maximalNumberOfFaces];
     int[] neighbor = new int[3 * maximalNumberOfFaces];
     // A segment is an edge on the boundary - an (almost) untouchable edge
@@ -128,7 +128,7 @@ public class Delaunay implements java.io.Serializable {
     int numberOfPoints;
     int numberOfFaces;
     // Every Point lies within a square of side length 2*xyBound which is centered about the origin
-    float xyBound;
+    double xyBound;
     boolean[] obsolete;
     boolean hasExteriorPoints = true;
 
@@ -142,7 +142,7 @@ public class Delaunay implements java.io.Serializable {
      * @param p the points given as <code>x<sub>1</sub>,y<sub>1</sub>,
      * x<sub>2</sub>,y<sub>2</sub>,...</code>
      */
-    private Delaunay(final float[] p) {
+    private Delaunay(final double[] p) {
         init(p);
         eatExterior();
     }
@@ -163,7 +163,7 @@ public class Delaunay implements java.io.Serializable {
      * @param p the array given as <code>x<sub>1,1</sub>,y<sub>1,1</sub>,
      * x<sub>1,2</sub>,y<sub>1,2</sub>,...</code> containing the boundary points
      */
-    private Delaunay(final float[][] p) {
+    private Delaunay(final double[][] p) {
         init(makePointArray(p));
         checkBoundary(p);
         makeSegments(p);
@@ -179,14 +179,14 @@ public class Delaunay implements java.io.Serializable {
      * Triangle <code>i</code> consists of points number
      *  <code>p<sub>3i</sub>, p<sub>3i+1</sub>, p<sub>3i+2</sub></code>
      */
-    public static int[] triangulate(final float[] p) {
+    public static int[] triangulate(final double[] p) {
         return new Delaunay(p).getIndices();
     }
 
     /** Every Point lies within a square of side length <code>2*getBound()</code>
      *  which is centered about the origin.
      */
-    public float getBound() {
+    public double getBound() {
         return xyBound;
     }
 
@@ -204,9 +204,9 @@ public class Delaunay implements java.io.Serializable {
 
     /** Stores the coordinates of point <code>i</code> in the submitted array
      * @param index the index of the point
-     * @param point the float array of length 2 submitted
+     * @param point the double array of length 2 submitted
      */
-    public void getPoint(int index, float[] point) {
+    public void getPoint(int index, double[] point) {
         if (point == null) {
             throw new RuntimeException("no array submitted");
         }
@@ -220,7 +220,7 @@ public class Delaunay implements java.io.Serializable {
     /** Stores the coordinates of all points  in the submitted array <code>points</code>
      * beginning at the specified position <code>offset</code>.
      */
-    public void getPoints(float[] points, int offset) {
+    public void getPoints(double[] points, int offset) {
         if (points == null) {
             throw new RuntimeException("no array submitted");
         }
@@ -234,8 +234,8 @@ public class Delaunay implements java.io.Serializable {
      * @return An array containing the coordinates of the points given as
      * <code>x<sub>1</sub>,y<sub>1</sub>, x<sub>2</sub>,y<sub>2</sub>,...</code>
      */
-    public float[] getPoints() {
-        float[] r = new float[2 * numberOfPoints];
+    public double[] getPoints() {
+        double[] r = new double[2 * numberOfPoints];
         getPoints(r, 0);
         return r;
     }
@@ -254,9 +254,9 @@ public class Delaunay implements java.io.Serializable {
         return numberOfPoints;
     }
 
-    void init(final float[] p) {
+    void init(final double[] p) {
         int nip = p.length / 2;
-        float r;
+        double r;
         xyBound = Math.abs(p[0]);
         for (int i = 1; i < 2 * nip; i++) {
             if ((r = Math.abs(p[i])) > xyBound) {
@@ -294,7 +294,7 @@ public class Delaunay implements java.io.Serializable {
      * The point <b>must lie inside</b> the given triangulation.
      * @param x,y are the point's coordinates
      */
-    public void addPoint(final float x, final float y) {
+    public void addPoint(final double x, final double y) {
         final int f = findTriangle(x, y);
 
         if (f < 0) {
@@ -308,7 +308,7 @@ public class Delaunay implements java.io.Serializable {
         }
     }
 
-    void addPoint(final float x, final float y, final int f) {
+    void addPoint(final double x, final double y, final int f) {
         checkPointArray();
         point[2 * numberOfPoints] = x;
         point[2 * numberOfPoints + 1] = y;
@@ -318,7 +318,7 @@ public class Delaunay implements java.io.Serializable {
         legalizeNewFaces();
     }
 
-    void addPoint(final float x, final float y, final int f, final int e) {
+    void addPoint(final double x, final double y, final int f, final int e) {
         checkPointArray();
         point[2 * numberOfPoints] = x;
         point[2 * numberOfPoints + 1] = y;
@@ -371,7 +371,7 @@ public class Delaunay implements java.io.Serializable {
         return (ne + 1) % 3;
     }
 
-    int findTriangle(final float x, final float y) {
+    int findTriangle(final double x, final double y) {
         for (int i = 0,  fp = 0; i < numberOfFaces; i++, fp += 3) {
             if (checkTriangle(i, x, y)) {
                 return i;
@@ -381,12 +381,12 @@ public class Delaunay implements java.io.Serializable {
     }
 
     int pointOnEdge;  // Is set to  -1  if the point is INSIDE triangle
-    boolean checkTriangle(final int f, final float x, final float y) {
+    boolean checkTriangle(final int f, final double x, final double y) {
         int fp = 3 * f, p0 = 2 * face[fp++], p1 = 2 * face[fp++], p2 = 2 * face[fp];
-        final float x0 = point[p0++],  y0 = point[p0],  x1 = point[p1++],  y1 = point[p1],  x2 = point[p2++],  y2 = point[p2];
-        final float e0x = x2 - x1,  e0y = y2 - y1,  e1x = x0 - x2,  e1y = y0 - y2,  e2x = x1 - x0,  e2y = y1 - y0;
-        final float v0x = x - x1,  v0y = y - y1,  v1x = x - x2,  v1y = y - y2,  v2x = x - x0,  v2y = y - y0;
-        final float n0 = e0x * v0y - e0y * v0x,  n1 = e1x * v1y - e1y * v1x,  n2 = e2x * v2y - e2y * v2x;
+        final double x0 = point[p0++],  y0 = point[p0],  x1 = point[p1++],  y1 = point[p1],  x2 = point[p2++],  y2 = point[p2];
+        final double e0x = x2 - x1,  e0y = y2 - y1,  e1x = x0 - x2,  e1y = y0 - y2,  e2x = x1 - x0,  e2y = y1 - y0;
+        final double v0x = x - x1,  v0y = y - y1,  v1x = x - x2,  v1y = y - y2,  v2x = x - x0,  v2y = y - y0;
+        final double n0 = e0x * v0y - e0y * v0x,  n1 = e1x * v1y - e1y * v1x,  n2 = e2x * v2y - e2y * v2x;
 
         if ((n0 < 0 || n1 < 0) || n2 < 0) {
             return false;
@@ -394,10 +394,10 @@ public class Delaunay implements java.io.Serializable {
 
         pointOnEdge = -1;
 
-        final float v0 = v0x * v0x + v0y * v0y,  v1 = v1x * v1x + v1y * v1y,  v2 = v2x * v2x + v2y * v2y;
-        final float e0 = e0x * e0x + e0y * e0y,  e1 = e1x * e1x + e1y * e1y,  e2 = e2x * e2x + e2y * e2y;
-        final float s0 = e0x * v0x + e0y * v0y,  s1 = e1x * v1x + e1y * v1y,  s2 = e2x * v2x + e2y * v2y;
-        final float cos0 = (float) (s0 / Math.sqrt(e0 * v0)),  cos1 = (float) (s1 / Math.sqrt(e1 * v1)),  cos2 = (float) (s2 / Math.sqrt(e2 * v2));
+        final double v0 = v0x * v0x + v0y * v0y,  v1 = v1x * v1x + v1y * v1y,  v2 = v2x * v2x + v2y * v2y;
+        final double e0 = e0x * e0x + e0y * e0y,  e1 = e1x * e1x + e1y * e1y,  e2 = e2x * e2x + e2y * e2y;
+        final double s0 = e0x * v0x + e0y * v0y,  s1 = e1x * v1x + e1y * v1y,  s2 = e2x * v2x + e2y * v2y;
+        final double cos0 = (double) (s0 / Math.sqrt(e0 * v0)),  cos1 = (double) (s1 / Math.sqrt(e1 * v1)),  cos2 = (double) (s2 / Math.sqrt(e2 * v2));
 
         if (cos0 > cos1) {
             if (cos0 > cos2) {
@@ -425,8 +425,8 @@ public class Delaunay implements java.io.Serializable {
     }
 
     // We must not spilt the edge if the resulting split of the neighbor creates disoriented triangles !
-    int checkForNewEdges(final float x1, final float y1, final float x2, final float y2,
-            final float x, final float y, final int f, final int e) {
+    int checkForNewEdges(final double x1, final double y1, final double x2, final double y2,
+            final double x, final double y, final int f, final int e) {
 
         final int n = neighbor[3 * f + e];
 
@@ -435,7 +435,7 @@ public class Delaunay implements java.io.Serializable {
         }
 
         int p = 2 * face[getNeighborPtr(n, f)];
-        final float x0 = point[p++],  y0 = point[p],  ex = x - x0,  ey = y - y0,  ex1 = x1 - x0,  ey1 = y1 - y0,  ex2 = x2 - x0,  ey2 = y2 - y0;
+        final double x0 = point[p++],  y0 = point[p],  ex = x - x0,  ey = y - y0,  ex1 = x1 - x0,  ey1 = y1 - y0,  ex2 = x2 - x0,  ey2 = y2 - y0;
 
         if (ex * ey1 - ey * ex1 > 0 && ex2 * ey - ey2 * ex > 0) {
             return e;
@@ -601,19 +601,19 @@ public class Delaunay implements java.io.Serializable {
         return pointInCircle(point[np++], point[np], f);
     }
 
-    float circleX, circleY, circleR; // radius is squared !
+    double circleX, circleY, circleR; // radius is squared !
 
     // set e=p1-p0  <n,(p2-p1)>=0  x=(p1+p2)/2  d=(p0-p2)/2
     // then x -= n*<e,d>/<e,n> will be the CircumCenter
-    void computeCircumCircle(final float x0, final float y0, final float x1,
-            final float y1, final float x2, final float y2) {
-        final float ex = x1 - x0,  ey = y1 - y0,  nx = y2 - y1,  ny = x1 - x2;
+    void computeCircumCircle(final double x0, final double y0, final double x1,
+            final double y1, final double x2, final double y2) {
+        final double ex = x1 - x0,  ey = y1 - y0,  nx = y2 - y1,  ny = x1 - x2;
         circleX = (x1 + x2) * 0.5f;
         circleY = (y1 + y2) * 0.5f;
-        final float dx = (x0 - x2) * 0.5f,  dy = (y0 - y2) * 0.5f,  s = (ex * dx + ey * dy) / (ex * nx + ey * ny);
+        final double dx = (x0 - x2) * 0.5f,  dy = (y0 - y2) * 0.5f,  s = (ex * dx + ey * dy) / (ex * nx + ey * ny);
         circleX += s * nx;
         circleY += s * ny;
-        final float rx = x0 - circleX,  ry = y0 - circleY;
+        final double rx = x0 - circleX,  ry = y0 - circleY;
         circleR = rx * rx + ry * ry;
     }
 
@@ -622,9 +622,9 @@ public class Delaunay implements java.io.Serializable {
         computeCircumCircle(point[p0++], point[p0], point[p1++], point[p1], point[p2++], point[p2]);
     }
 
-    boolean pointInCircle(final float x, final float y, final int f) {
+    boolean pointInCircle(final double x, final double y, final int f) {
         computeCircumCircle(f);
-        final float dx = x - circleX,  dy = y - circleY;
+        final double dx = x - circleX,  dy = y - circleY;
         return (dx * dx + dy * dy < circleR);
     }
 
@@ -639,35 +639,35 @@ public class Delaunay implements java.io.Serializable {
 
     void checkPointArray() {
         if (numberOfPoints >= maximalNumberOfPoints - 1) {
-            point = floatSize(point);
+            point = doubleSize(point);
             maximalNumberOfPoints *= 2;
         }
     }
 
     void checkFaceArray() {
         if (numberOfFaces >= maximalNumberOfFaces - 4) {
-            face = floatSize(face);
-            neighbor = floatSize(neighbor);
-            segment = floatSize(segment);
+            face = doubleSize(face);
+            neighbor = doubleSize(neighbor);
+            segment = doubleSize(segment);
             maximalNumberOfFaces *= 2;
         }
     }
 
-    float[] floatSize(float[] p) {
+    double[] doubleSize(double[] p) {
         int i = p.length;
-        float[] newP = new float[2 * i];
+        double[] newP = new double[2 * i];
         System.arraycopy(p, 0, newP, 0, i);
         return newP;
     }
 
-    int[] floatSize(int[] p) {
+    int[] doubleSize(int[] p) {
         int i = p.length;
         int[] newP = new int[2 * i];
         System.arraycopy(p, 0, newP, 0, i);
         return newP;
     }
 
-    boolean[] floatSize(boolean[] p) {
+    boolean[] doubleSize(boolean[] p) {
         int i = p.length;
         boolean[] newP = new boolean[2 * i];
         System.arraycopy(p, 0, newP, 0, i);
@@ -758,12 +758,12 @@ public class Delaunay implements java.io.Serializable {
     }
 
     // all methods below deal with segments
-    static float[] makePointArray(final float[][] p) {
+    static double[] makePointArray(final double[][] p) {
         int pp = 0, nos = p.length;
         for (int i = 0; i < nos; i++) {
             pp += p[i].length;
         }
-        float[] r = new float[pp];
+        double[] r = new double[pp];
         for (int i = 0,  j = 0; i < nos; i++) {
             int l = p[i].length;
             if (l % 2 == 1) {
@@ -775,7 +775,7 @@ public class Delaunay implements java.io.Serializable {
         return r;
     }
 
-    void makeSegments(final float[][] p) {
+    void makeSegments(final double[][] p) {
         final int nos = p.length;
         for (int i = 0,  j = 3; i < nos; i++) {
             int l = p[i].length / 2;
@@ -842,7 +842,7 @@ public class Delaunay implements java.io.Serializable {
     }
 
     // calls recursion
-    void eatExterior(final float[][] p) {
+    void eatExterior(final double[][] p) {
         obsolete = new boolean[numberOfFaces];
         for (int i = 0; i < numberOfFaces; obsolete[i++] = false) {
 
@@ -872,9 +872,9 @@ public class Delaunay implements java.io.Serializable {
         hasExteriorPoints = false;
     }
 
-    boolean computeInteriorPoint(final float[] p) // circleX,circleY  will be inside p
+    boolean computeInteriorPoint(final double[] p) // circleX,circleY  will be inside p
     {
-        float x0 = p[0], x, xc;
+        double x0 = p[0], x, xc;
         int j = 0;
         final int l = p.length / 2;
         for (int i = 1,  c = 2; i < l; i++, c += 2) {
@@ -883,10 +883,10 @@ public class Delaunay implements java.io.Serializable {
                 j = i;
             }
         }               // j = is right-most point
-        final float y0 = p[2 * j + 1];
+        final double y0 = p[2 * j + 1];
 
         int p1 = 2 * ((j + 1) % l), p2 = 2 * ((j - 1 + l) % l);
-        final float ym1 = p[p1 + 1] - y0,  ym2 = p[p2 + 1] - y0;
+        final double ym1 = p[p1 + 1] - y0,  ym2 = p[p2 + 1] - y0;
         if (ym1 * ym2 >= 0) {                               // j  is a peak (both neighbors above OR below)
             if (ym1 == 0 && ym2 == 0) {
                 return false;
@@ -894,7 +894,7 @@ public class Delaunay implements java.io.Serializable {
             x = 1;                                          // x  will be sqr of distance to closest point
             for (int i = 0,  c = 0; i < l; i++) {
                 if (i != j) {
-                    final float xm = p[c++] - x0,  ym = p[c++] - y0;
+                    final double xm = p[c++] - x0,  ym = p[c++] - y0;
                     xc = xm * xm + ym * ym;
                     if (xc < x) {
                         x = xc;
@@ -903,8 +903,8 @@ public class Delaunay implements java.io.Serializable {
                     c += 2;
                 }
             }
-            float vx = p[p1++] + p[p2++] - 2 * x0, vy = p[p1] + p[p2] - 2 * y0;
-            final float s = (float) (0.5 * Math.sqrt(x / (vx * vx + vy * vy)));
+            double vx = p[p1++] + p[p2++] - 2 * x0, vy = p[p1] + p[p2] - 2 * y0;
+            final double s = (double) (0.5 * Math.sqrt(x / (vx * vx + vy * vy)));
             circleX = x0 + s * vx;
             circleY = y0 + s * vy;
             return true;                                  // end peak-case
@@ -916,7 +916,7 @@ public class Delaunay implements java.io.Serializable {
             if (j != i && j != (i + 1) % l) {
                 p1 = 2 * i;
                 p2 = 2 * ((i + 1) % l);
-                final float x1 = p[p1++],  y1 = p[p1],  x2 = p[p2++],  y2 = p[p2];
+                final double x1 = p[p1++],  y1 = p[p1],  x2 = p[p2++],  y2 = p[p2];
                 if ((y2 - y0) * (y1 - y0) <= 0) {
                     if (y1 == y2) {
                         xc = (x1 > x2 ? x1 : x2);
@@ -964,15 +964,15 @@ public class Delaunay implements java.io.Serializable {
     }
 
     // check whether the boundary edges do not intersect
-    void checkBoundary(final float[][] p) {
+    void checkBoundary(final double[][] p) {
         final int numberOfBoundaryCurves = p.length;
 
         for (int i = 0; i < numberOfBoundaryCurves; i++) {
             final int currentCurveLength = p[i].length / 2;
 
             for (int j = 0; j < currentCurveLength; j++) {
-                final float e0x0 = p[i][2 * j],  e0y0 = p[i][2 * j + 1];
-                final float e0x1 = p[i][2 * ((j + 1) % currentCurveLength)],  e0y1 = p[i][2 * ((j + 1) % currentCurveLength) + 1];
+                final double e0x0 = p[i][2 * j],  e0y0 = p[i][2 * j + 1];
+                final double e0x1 = p[i][2 * ((j + 1) % currentCurveLength)],  e0y1 = p[i][2 * ((j + 1) % currentCurveLength) + 1];
 
                 // Check whether any two segments of the same boundary curve intersect
                 if (j < currentCurveLength - 2) {
@@ -1002,11 +1002,11 @@ public class Delaunay implements java.io.Serializable {
     }
 
     // Two edges cross if either edge crosses the line through the other
-    boolean edgesCross(final float e0x0, final float e0y0, final float e0x1, final float e0y1,
-            final float e1x0, final float e1y0, final float e1x1, final float e1y1) {
-        final float ax = e0x1 - e0x0,  ay = e0y1 - e0y0,  bx = e1x1 - e1x0,  by = e1y1 - e1y0; // edges
-        final float cx = e1x0 - e0x0,  cy = e1y0 - e0y0,  dx = e1x1 - e0x0,  dy = e1y1 - e0y0;
-        final float ex = e0x0 - e1x0,  ey = e0y0 - e1y0,  fx = e0x1 - e1x0,  fy = e0y1 - e1y0;
+    boolean edgesCross(final double e0x0, final double e0y0, final double e0x1, final double e0y1,
+            final double e1x0, final double e1y0, final double e1x1, final double e1y1) {
+        final double ax = e0x1 - e0x0,  ay = e0y1 - e0y0,  bx = e1x1 - e1x0,  by = e1y1 - e1y0; // edges
+        final double cx = e1x0 - e0x0,  cy = e1y0 - e0y0,  dx = e1x1 - e0x0,  dy = e1y1 - e0y0;
+        final double ex = e0x0 - e1x0,  ey = e0y0 - e1y0,  fx = e0x1 - e1x0,  fy = e0y1 - e1y0;
 
         if ((ax * cy - ay * cx) * (ax * dy - ay * dx) >= 0) {
             return false;

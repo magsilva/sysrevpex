@@ -65,10 +65,10 @@ public class EqualizeColumns extends Normalization {
     public Matrix execute(Matrix matrix) throws IOException {
         assert (matrix.getRowCount() > 0) : "More than zero vectors must be used!";
 
-        float[][] points = null;
+        double[][] points = null;
 
         if (matrix instanceof DenseMatrix) {
-            points = new float[matrix.getRowCount()][];
+            points = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < points.length; i++) {
                 points[i] = matrix.getRow(i).getValues();
@@ -80,12 +80,12 @@ public class EqualizeColumns extends Normalization {
 
         //for each column
         for (int j = 0; j < matrix.getDimensions(); j++) {
-            float[] hist = new float[EqualizeColumns.nrbins];
+            double[] hist = new double[EqualizeColumns.nrbins];
             Arrays.fill(hist, 0.0f);
 
             //find the maximum and minimum values
-            float min = Float.POSITIVE_INFINITY;
-            float max = Float.NEGATIVE_INFINITY;
+            double min = Double.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
 
             for (int i = 0; i < points.length; i++) {
                 if (points[i][j] > max) {

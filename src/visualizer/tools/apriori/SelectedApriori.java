@@ -74,11 +74,11 @@ import visualizer.topic.TopicData.WeightType;
  */
 public class SelectedApriori {
 
-    private float minSup;
-    private float minConf;
-    private float beta = 1.0f;
-    private float[][] selectedPoints;
-    float[][] allPoints;
+    private double minSup;
+    private double minConf;
+    private double beta = 1.0f;
+    private double[][] selectedPoints;
+    double[][] allPoints;
     public boolean[] coveredPoints;
     private String[] ngrams;
     public String topic;
@@ -94,7 +94,7 @@ public class SelectedApriori {
     private Set<String> termSetW = new HashSet<String>();
     private TopicData tdata;
     /** Creates a new instance of subSetApriori */
-    public SelectedApriori(float[][] selectedPoints, float[][] allPoints, ///
+    public SelectedApriori(double[][] selectedPoints, double[][] allPoints, ///
             Object[] ngrams) {
         this.selectedPoints = selectedPoints;
         this.allPoints = allPoints;
@@ -124,7 +124,7 @@ public class SelectedApriori {
         HashTree tree;
         int maxTransactionLength;
         /* minSup as it has to be used for these calculations */
-        float practicalMinSup, practicalMinNewWeight;
+        double practicalMinSup, practicalMinNewWeight;
         long practicalMinSupInt;
         int nTop = 10; //new Float(Math.sqrt(selectedPoints[0].length)).intValue();
 
@@ -138,10 +138,10 @@ public class SelectedApriori {
         //Create itemSets with one item in each and find suport
 
 
-        float[] singleItemSupport = new float[selectedPoints[0].length];
-        float[] singleItemTfIdf = new float[selectedPoints[0].length];
-        float[] singleItemTfIdfSum = new float[selectedPoints[0].length];
-        float[] newWeight = new float[selectedPoints[0].length];
+        double[] singleItemSupport = new double[selectedPoints[0].length];
+        double[] singleItemTfIdf = new double[selectedPoints[0].length];
+        double[] singleItemTfIdfSum = new double[selectedPoints[0].length];
+        double[] newWeight = new double[selectedPoints[0].length];
         coveredPoints = new boolean[selectedPoints.length];
         for (int j = 0; j < selectedPoints.length; j++) {
             coveredPoints[j] = false;
@@ -185,7 +185,7 @@ public class SelectedApriori {
         //Run with lowering support
         do {
             //Find Seeds
-            float top[] = new float[nTop + 1];
+            double top[] = new double[nTop + 1];
             for (int i = 0; i < selectedPoints[0].length; i++) {
                 for (int l = 0; l < nTop; l++) {
                     if (newWeight[i] > top[l]) {
@@ -199,7 +199,7 @@ public class SelectedApriori {
             }
 
             practicalMinNewWeight = top[nTop - 1];
-            float threshold = 1.0f * selectedPoints.length / allPoints.length;
+            double threshold = 1.0f * selectedPoints.length / allPoints.length;
             ruleDump = "Selection size:\t" + selectedPoints.length + "/" + (threshold * 100.0) + "%\n";
             ruleDump += "Top Locally Weighted Terms >=" + practicalMinNewWeight + "\n";
             frequentOneItemSets = new ArrayList<ItemSet>();
@@ -253,7 +253,7 @@ public class SelectedApriori {
 
             //Adjust support, if no item sets
             if (itemSets.size() == 0) {
-                float delta = practicalMinSup * 0.50f;//*(practicalMinSup/20.0>1?1:practicalMinSup/20.0);
+                double delta = practicalMinSup * 0.50f;//*(practicalMinSup/20.0>1?1:practicalMinSup/20.0);
                 System.out.println("delta:" + delta);
 
                 if (delta < 1.0) {
@@ -275,9 +275,9 @@ public class SelectedApriori {
 
             //set up
             int nTopic = 1;
-            float weight;
-            float maxWeight[] = new float[nTopic + 1];
-            for (float d : maxWeight) {
+            double weight;
+            double maxWeight[] = new double[nTopic + 1];
+            for (double d : maxWeight) {
                 d = Float.NEGATIVE_INFINITY;
             }
             ItemSet maxItemSet[] = new ItemSet[nTopic + 1];
@@ -308,7 +308,7 @@ public class SelectedApriori {
 
 
 
-                float delta;
+                double delta;
                 //delta = coverAnt/10.0;
                 //if(delta <2) delta = 2;
                 delta = 0;
@@ -443,19 +443,19 @@ public class SelectedApriori {
 
 //    Preprocessor pp=new Preprocessor(pdata.getCorpora());
 //    points=pp.getMatrix(corporaNgrams, pdata.getLunhLowerCut(), pdata.getLunhUpperCut(), pdata.getNumberGrams(), pdata.getMatrixTransformationType());
-    public float getMinSup() {
+    public double getMinSup() {
         return minSup;
     }
 
-    public void setMinSup(float minSup) {
+    public void setMinSup(double minSup) {
         this.minSup = minSup;
     }
 
-    public float getMinConf() {
+    public double getMinConf() {
         return minConf;
     }
 
-    public void setMinConf(float minConf) {
+    public void setMinConf(double minConf) {
         this.minConf = minConf;
     }
 
@@ -527,15 +527,15 @@ public class SelectedApriori {
         return itemSets;
     }
 
-    public float getBeta() {
+    public double getBeta() {
         return beta;
     }
 
-    public void setBeta(float beta) {
-        this.beta = beta;
+    public void setBeta(double d) {
+        this.beta = d;
     }
 
-    private float getWeight(ItemSet iS) {
+    private double getWeight(ItemSet iS) {
         if (weightType == WeightType.LOCAL) {
             return beta * iS.getSumTfIdf() + (1.0f - beta) * iS.getSupportRelative();
         } else {
@@ -543,7 +543,7 @@ public class SelectedApriori {
         }
     }
 
-    private float getWeight(ItemSet iS, int n) {
+    private double getWeight(ItemSet iS, int n) {
         if (n == 0) {
             return iS.getSumTfIdf();
         } else if (n == 1) {

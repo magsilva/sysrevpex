@@ -78,7 +78,7 @@ public class ItemSetsWriter {
     public ItemSetsWriter() {
     }
 
-    public static void outRulesDocs(String rootFileName, float[][] allPoints, List<ItemSet> rules, Corpus datasource) {
+    public static void outRulesDocs(String rootFileName, double[][] ds, List<ItemSet> rules, Corpus datasource) {
 
         PrintWriter out;
 
@@ -94,11 +94,11 @@ public class ItemSetsWriter {
 
                 outZip.putNextEntry(new ZipEntry(rules.get(i).getRuleFileName()));
                 outZip.write((rules.get(i).getRuleFileName() + "\n").getBytes(), 0, (rules.get(i).getRuleFileName() + "\n").getBytes().length);
-                for (int j = 0; j < allPoints.length; j++) {
+                for (int j = 0; j < ds.length; j++) {
 
                     int s = 1;
                     for (int k = 0; k < items.size(); k++) {
-                        s = s * ((allPoints[j][items.get(k).intValue()] > 0) ? 1 : 0);
+                        s = s * ((ds[j][items.get(k).intValue()] > 0) ? 1 : 0);
                     }
                     if (s == 1) {
                         out.print("1 ");

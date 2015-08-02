@@ -56,11 +56,11 @@ import visualizer.projection.distance.DistanceMatrix;
 public class NearestNeighborProjection extends Projector {
 
     @Override
-    public float[][] project(DistanceMatrix dmat) {
+    public double[][] project(DistanceMatrix dmat) {
 
-        float[][] projection = new float[dmat.getElementCount()][];
+        double[][] projection = new double[dmat.getElementCount()][];
         for (int i = 0; i < dmat.getElementCount(); i++) {
-            projection[i] = new float[2];
+            projection[i] = new double[2];
         }
 
         //Project the fisrt two data points such that the distance between them in the bidimensional
@@ -76,11 +76,11 @@ public class NearestNeighborProjection extends Projector {
 
             //Perform a kNN query in the subset of the projected point X'
             //returning the two nearest neighborr q and r of x
-            float minDistance1 = dmat.getMaxDistance();
-            float minDistance2 = dmat.getMaxDistance();
+            double minDistance1 = dmat.getMaxDistance();
+            double minDistance2 = dmat.getMaxDistance();
 
             for (int _ins = 0; _ins < x; _ins++) {
-                float distance = dmat.getDistance(x, _ins);
+                double distance = dmat.getDistance(x, _ins);
 
                 if (minDistance1 > distance) {
                     r = q;
@@ -129,19 +129,19 @@ public class NearestNeighborProjection extends Projector {
             } else { //there are two intersections
 
                 //choice the point that minimize the error
-                float distanceQX = dmat.getDistance(q, x);
-                float distanceRX = dmat.getDistance(r, x);
+                double distanceQX = dmat.getDistance(q, x);
+                double distanceRX = dmat.getDistance(r, x);
 
-                float distanceQX1 = (float) Math.sqrt(((projection[q][0] - resultingIntersections.first.x) * (projection[q][0] - resultingIntersections.first.x)) +
+                double distanceQX1 = (double) Math.sqrt(((projection[q][0] - resultingIntersections.first.x) * (projection[q][0] - resultingIntersections.first.x)) +
                         ((projection[q][1] - resultingIntersections.first.y) * (projection[q][1] - resultingIntersections.first.y)));
 
-                float distanceQX2 = (float) Math.sqrt(((projection[q][0] - resultingIntersections.second.x) * (projection[q][0] - resultingIntersections.second.x)) +
+                double distanceQX2 = (double) Math.sqrt(((projection[q][0] - resultingIntersections.second.x) * (projection[q][0] - resultingIntersections.second.x)) +
                         ((projection[q][1] - resultingIntersections.second.y) * (projection[q][1] - resultingIntersections.second.y)));
 
-                float distanceRX1 = (float) Math.sqrt(((projection[r][0] - resultingIntersections.first.x) * (projection[r][0] - resultingIntersections.first.x)) +
+                double distanceRX1 = (double) Math.sqrt(((projection[r][0] - resultingIntersections.first.x) * (projection[r][0] - resultingIntersections.first.x)) +
                         ((projection[r][1] - resultingIntersections.first.y) * (projection[r][1] - resultingIntersections.first.y)));
 
-                float distanceRX2 = (float) Math.sqrt(((projection[r][0] - resultingIntersections.second.x) * (projection[r][0] - resultingIntersections.second.x)) +
+                double distanceRX2 = (double) Math.sqrt(((projection[r][0] - resultingIntersections.second.x) * (projection[r][0] - resultingIntersections.second.x)) +
                         ((projection[r][1] - resultingIntersections.second.y) * (projection[r][1] - resultingIntersections.second.y)));
 
                 if (Math.abs(((distanceQX / distanceQX1) - 1)) + Math.abs(((distanceRX / distanceRX1) - 1)) <
@@ -161,28 +161,28 @@ public class NearestNeighborProjection extends Projector {
     }
 
     private int intersect(Circle circle1, Circle circle2, Pair intersect) {
-        float lvdistance = (float) Math.sqrt(((circle1.center.x - circle2.center.x) * (circle1.center.x - circle2.center.x)) +
+        double lvdistance = (double) Math.sqrt(((circle1.center.x - circle2.center.x) * (circle1.center.x - circle2.center.x)) +
                 ((circle1.center.y - circle2.center.y) * (circle1.center.y - circle2.center.y)));
 
         if (lvdistance > (circle1.radius + circle2.radius)) {
-            float lvdifference = lvdistance - (circle1.radius + circle2.radius);
+            double lvdifference = lvdistance - (circle1.radius + circle2.radius);
 
             if (circle1.center.x < circle2.center.x) {
-                float m = (circle2.center.y - circle1.center.y) / (circle2.center.x - circle1.center.x);
+                double m = (circle2.center.y - circle1.center.y) / (circle2.center.x - circle1.center.x);
                 intersect.first.x = circle1.center.x;
                 intersect.first.y = circle1.center.y;
 
-                float lvdeloc = circle1.radius;
+                double lvdeloc = circle1.radius;
                 lvdeloc += lvdifference / 2;
 
                 intersect.first.x += Math.sqrt(lvdeloc * lvdeloc / (1 + m * m));
                 intersect.first.y += m * Math.sqrt(lvdeloc * lvdeloc / (1 + m * m));
             } else {
-                float m = (circle1.center.y - circle2.center.y) / (circle1.center.x - circle2.center.x);
+                double m = (circle1.center.y - circle2.center.y) / (circle1.center.x - circle2.center.x);
                 intersect.first.x = circle2.center.x;
                 intersect.first.y = circle2.center.y;
 
-                float lvdeloc = circle2.radius;
+                double lvdeloc = circle2.radius;
                 lvdeloc += lvdifference / 2;
 
                 intersect.first.x += Math.sqrt(lvdeloc * lvdeloc / (1 + m * m));
@@ -193,10 +193,10 @@ public class NearestNeighborProjection extends Projector {
         }
 
         if (lvdistance < Math.abs(circle1.radius - circle2.radius)) {
-            float lvdeloc;
+            double lvdeloc;
             if (circle1.radius > circle2.radius) {
                 lvdeloc = circle2.radius + lvdistance + (circle1.radius - circle2.radius - lvdistance) / 2;
-                float m = (circle2.center.y - circle1.center.y) / (circle2.center.x - circle1.center.x);
+                double m = (circle2.center.y - circle1.center.y) / (circle2.center.x - circle1.center.x);
 
                 intersect.first.x = circle1.center.x;
                 intersect.first.y = circle1.center.y;
@@ -216,7 +216,7 @@ public class NearestNeighborProjection extends Projector {
                 }
             } else {
                 lvdeloc = circle1.radius + lvdistance + (circle2.radius - circle1.radius - lvdistance) / 2;
-                float m = (circle1.center.y - circle2.center.y) / (circle1.center.x - circle2.center.x);
+                double m = (circle1.center.y - circle2.center.y) / (circle1.center.x - circle2.center.x);
 
                 intersect.first.x = circle2.center.x;
                 intersect.first.y = circle2.center.y;
@@ -239,21 +239,21 @@ public class NearestNeighborProjection extends Projector {
             return 1;
         }
 
-        float a = (circle1.radius * circle1.radius - circle2.radius * circle2.radius + lvdistance * lvdistance) / (2 * lvdistance);
+        double a = (circle1.radius * circle1.radius - circle2.radius * circle2.radius + lvdistance * lvdistance) / (2 * lvdistance);
 
-        float h = (float) Math.sqrt(circle1.radius * circle1.radius - a * a);
+        double h = (double) Math.sqrt(circle1.radius * circle1.radius - a * a);
 
-        float x2 = circle1.center.x + a * (circle2.center.x - circle1.center.x) / lvdistance;
+        double x2 = circle1.center.x + a * (circle2.center.x - circle1.center.x) / lvdistance;
 
-        float y2 = circle1.center.y + a * (circle2.center.y - circle1.center.y) / lvdistance;
+        double y2 = circle1.center.y + a * (circle2.center.y - circle1.center.y) / lvdistance;
 
-        float x31 = x2 + h * (circle2.center.y - circle1.center.y) / lvdistance;
+        double x31 = x2 + h * (circle2.center.y - circle1.center.y) / lvdistance;
 
-        float x32 = x2 - h * (circle2.center.y - circle1.center.y) / lvdistance;
+        double x32 = x2 - h * (circle2.center.y - circle1.center.y) / lvdistance;
 
-        float y31 = y2 - h * (circle2.center.x - circle1.center.x) / lvdistance;
+        double y31 = y2 - h * (circle2.center.x - circle1.center.x) / lvdistance;
 
-        float y32 = y2 + h * (circle2.center.x - circle1.center.x) / lvdistance;
+        double y32 = y2 + h * (circle2.center.x - circle1.center.x) / lvdistance;
 
         intersect.first.x = x31;
         intersect.first.y = y31;
@@ -266,8 +266,8 @@ public class NearestNeighborProjection extends Projector {
 
     class Point {
 
-        float x;
-        float y;
+        double x;
+        double y;
     }
 
     class Pair {
@@ -284,8 +284,8 @@ public class NearestNeighborProjection extends Projector {
         }
 
         Point center = new Point();
-        float radius;
+        double radius;
     }
 
-    private static final float EPSILON = 0.00001f;
+    private static final double EPSILON = 0.00001f;
 }

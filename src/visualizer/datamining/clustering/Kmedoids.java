@@ -78,7 +78,7 @@ public class Kmedoids extends Clustering {
             clusters.add(new ArrayList<Integer>());
         }
 
-        //Variável auxiliar para armazenar as medóides antigas
+        //Variï¿½vel auxiliar para armazenar as medï¿½ides antigas
         int[] oldMedoids = new int[nrclusters];
 
         //inicializar as medoides com alguns pontos
@@ -86,10 +86,10 @@ public class Kmedoids extends Clustering {
             medoids[i] = i * (dmat.getElementCount() / nrclusters);
         }
 
-        //indica se as medóides foram modificadas
+        //indica se as medï¿½ides foram modificadas
         boolean medoidModified = true;
 
-        //serve para executar o algoritmo até um número limitado de vazes
+        //serve para executar o algoritmo atï¿½ um nï¿½mero limitado de vazes
         int nroIterations = 0;
 
         while (medoidModified && nroIterations < dmat.getElementCount()) {
@@ -98,12 +98,12 @@ public class Kmedoids extends Clustering {
             int numberElements = Integer.MAX_VALUE;
 
             for (int point = 0; point < dmat.getElementCount(); point++) {
-                int nearestCluster = 0; //armazenará a cluster que o ponto pertencerá
-                float distance = dmat.getDistance(point, medoids[nearestCluster]);
+                int nearestCluster = 0; //armazenarï¿½ a cluster que o ponto pertencerï¿½
+                double distance = dmat.getDistance(point, medoids[nearestCluster]);
 
-                //verificar qual cluster o ponto está mais próximo (com base na medóide)
+                //verificar qual cluster o ponto estï¿½ mais prï¿½ximo (com base na medï¿½ide)
                 for (int cluster = 1; cluster < clusters.size(); cluster++) {
-                    float distance2 = dmat.getDistance(point, medoids[cluster]);
+                    double distance2 = dmat.getDistance(point, medoids[cluster]);
 
                     if (distance > distance2) {
                         nearestCluster = cluster;
@@ -120,13 +120,13 @@ public class Kmedoids extends Clustering {
                 clusters.get(nearestCluster).add(point);
             }
 
-            //Armazena os valores antigos das medóides
+            //Armazena os valores antigos das medï¿½ides
             oldMedoids = medoids;
 
-            //Atualiza as medóides
+            //Atualiza as medï¿½ides
             this.updateMedoids(dmat, clusters);
 
-            //Se não houve modificação, para o looping
+            //Se nï¿½o houve modificaï¿½ï¿½o, para o looping
             medoidModified = isMedoidModified(oldMedoids);
 
             //Incrementa a quantidade de vezes que foram realocados os pontos
@@ -144,19 +144,19 @@ public class Kmedoids extends Clustering {
         //Para cada cluster
         for (int cluster = 0; cluster < clusters.size(); cluster++) {
             int medoid = clusters.get(cluster).get(0);
-            float sumDistances = dmat.getMaxDistance();
+            double sumDistances = dmat.getMaxDistance();
 
             //para cada ponto do cluster
             for (int point = 0; point < clusters.get(cluster).size(); point++) {
-                float sumDistances2 = 0.0f;
+                double sumDistances2 = 0.0f;
 
-                //Encontrar a média da distância desse ponto para todos os outros pontos
+                //Encontrar a mï¿½dia da distï¿½ncia desse ponto para todos os outros pontos
                 for (int point2 = 0; point2 < clusters.get(cluster).size(); point2++) {
                     sumDistances2 += dmat.getDistance(clusters.get(cluster).get(point), clusters.get(cluster).get(point2));
                 }
                 sumDistances2 /= clusters.get(cluster).size();
 
-                //Assinalar como medóide o ponto que minimiza a distância média
+                //Assinalar como medï¿½ide o ponto que minimiza a distï¿½ncia mï¿½dia
                 if (sumDistances > sumDistances2) {
                     sumDistances = sumDistances2;
                     medoid = clusters.get(cluster).get(point);

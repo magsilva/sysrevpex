@@ -143,7 +143,7 @@ public class RulesTopicGrid {
             }
 
             try {
-                float[][] points = tdata.getMatrix().toMatrix();
+                double[][] points = tdata.getMatrix().toMatrix();
                 PrintWriter outPoints = new PrintWriter(
                         new FileWriter("pointsDump.txt"));
                 for (int i = 0; i < points.length; i++) {
@@ -283,11 +283,11 @@ public class RulesTopicGrid {
 
     private ArrayList<ArrayList<Integer>> createClusters(int nclusters) {
         //Create the clusters
-        float[][] points = new float[this.panel.getGraph().getVertex().size()][];
+        double[][] points = new double[this.panel.getGraph().getVertex().size()][];
 
         Matrix matrix = new DenseMatrix();
         for (int i = 0; i < points.length; i++) {
-            float point[] = new float[2];
+            double point[] = new double[2];
             point[0] = this.panel.getGraph().getVertex().get(i).getX();
             point[1] = this.panel.getGraph().getVertex().get(i).getY();
             matrix.addRow(new DenseVector(point));
@@ -325,7 +325,7 @@ public class RulesTopicGrid {
 
 
         Corpus corpora = panel.getGraph().getCorpus();
-        float[][] points;
+        double[][] points;
         for (int i = 0; i < corpora.getIds().size(); i++) {
             pointLine.put(corpora.getIds().get(i), new Integer(i));
         }
@@ -503,7 +503,7 @@ public class RulesTopicGrid {
             Set<ItemSet> selectedRuleSet, int currentRun) {
 
 
-        float[][] points;
+        double[][] points;
 
 
         HashMap<String, Integer> pointLine = new HashMap<String, Integer>();
@@ -512,22 +512,22 @@ public class RulesTopicGrid {
 
 
         Corpus corpora = panel.getGraph().getCorpus();
-        //float[][] points;
+        //double[][] points;
         //for(int i=0; i < corpora.getIds().size(); i++) {
         //    pointLine.put(corpora.getIds().get(i),new Integer(i));
         //}
 
         Scalar s = this.panel.getGraph().getScalarByName("TOPIC");
 
-        Set<Float> scalarValueSet = new HashSet<Float>();
+        Set<Double> scalarValueSet = new HashSet<Double>();
 
         for (int v = 0; v < this.panel.getGraph().getVertex().size(); v++) {
-            Float f = this.panel.getGraph().getVertex().get(v).getScalar(s);
+            double f = this.panel.getGraph().getVertex().get(v).getScalar(s);
             scalarValueSet.add(f);
         }
         int c = 0;
         //begin loop
-        for (Float scalarValue : scalarValueSet) {
+        for (Double scalarValue : scalarValueSet) {
             c++;
 
             out.print("::" + scalarValue + "::");
@@ -712,7 +712,7 @@ public class RulesTopicGrid {
 
 
         Corpus corpora = panel.getGraph().getCorpus();
-        float[][] points;
+        double[][] points;
         for (int i = 0; i < corpora.getIds().size(); i++) {
             pointLine.put(corpora.getIds().get(i), new Integer(i));
         }

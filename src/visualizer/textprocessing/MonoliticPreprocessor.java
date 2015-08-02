@@ -135,11 +135,11 @@ public class MonoliticPreprocessor extends BasicPreProcessor
             int freq = corpusNgrams_aux.get(key);
             if (upperCut >= 0) {
                 if (freq >= lowerCut && freq <= upperCut) {
-                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
+                    ngrams_aux.add(new Ngram(key, freq));
                 }
             } else {
                 if (freq >= lowerCut) {
-                    ngrams_aux.add(new Ngram(key, numberGrams, freq));
+                    ngrams_aux.add(new Ngram(key, freq));
                 }
             }
         }

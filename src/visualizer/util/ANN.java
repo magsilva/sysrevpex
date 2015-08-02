@@ -124,7 +124,7 @@ public class ANN {
                 for (int j = e + 1; j < clusters.get(c).size(); j++) {
                     int other = clusters.get(c).get(j);
 
-                    float dist = diss.calculate(matrix.getRow(el), matrix.getRow(other));
+                    double dist = diss.calculate(matrix.getRow(el), matrix.getRow(other));
 
                     this.addDistance(neighbors[el], other, dist);
                     this.addDistance(neighbors[other], el, dist);
@@ -158,7 +158,7 @@ public class ANN {
                             continue;
                         }
 
-                        float dist = diss.calculate(matrix.getRow(el), matrix.getRow(other));
+                        double dist = diss.calculate(matrix.getRow(el), matrix.getRow(other));
 
                         this.addDistance(neighbors[el], other, dist);
                     }
@@ -174,7 +174,7 @@ public class ANN {
         return neighbors;
     }
 
-    public void addDistance(Pair[] neighbors, int index, float dist) {
+    public void addDistance(Pair[] neighbors, int index, double dist) {
         if (neighbors[neighbors.length - 1].value > dist) {
             neighbors[neighbors.length - 1].index = index;
             neighbors[neighbors.length - 1].value = dist;
@@ -182,7 +182,7 @@ public class ANN {
             for (int k = neighbors.length - 2; k >= 0; k--) {
                 if (neighbors[k].value > dist) {
                     int tmp_index = neighbors[k].index;
-                    float tmp_value = neighbors[k].value;
+                    double tmp_value = neighbors[k].value;
 
                     neighbors[k].index = index;
                     neighbors[k].value = dist;

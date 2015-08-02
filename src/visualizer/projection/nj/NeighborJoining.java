@@ -89,10 +89,10 @@ public class NeighborJoining extends Content {
         this.radialLayout(m_PosJun - 1);
     }
 
-    public float[] calDivergence(int m_PosJun) {
-        float m_pSum;
+    public double[] calDivergence(int m_PosJun) {
+        double m_pSum;
         int m_pSizeV = m_PosJun;
-        float[] m_vDivergence = new float[m_pSizeV];
+        double[] m_vDivergence = new double[m_pSizeV];
         int p = m_Fil - 1;
 
         for (int i = 0; i < m_pSizeV; i++) {
@@ -118,9 +118,9 @@ public class NeighborJoining extends Content {
         return m_vDivergence;
     }
 
-    public void matrixDistance(float[] r, int m_PosJun, int m_PCluster) {
-        float m_pValue;
-        float m_pMinDistance = 0;
+    public void matrixDistance(double[] r, int m_PosJun, int m_PCluster) {
+        double m_pValue;
+        double m_pMinDistance = 0;
 
         int m_pSizeV = m_PosJun;
         int p = m_Fil - 1;
@@ -144,7 +144,7 @@ public class NeighborJoining extends Content {
         }
     }
 
-    public void branchLengths(float[] r, int m_PCluster) {
+    public void branchLengths(double[] r, int m_PCluster) {
         int A = this.m_Posx;
         int B = this.m_Posy;
         int p = m_Fil - 1;
@@ -189,8 +189,8 @@ public class NeighborJoining extends Content {
     }
 
     public void distNewNode(int m_PosJun) {
-        float m_pMinDistance = 0;
-        float m_pTempX, m_pTempY;
+        double m_pMinDistance = 0;
+        double m_pTempX, m_pTempY;
         int p = m_Fil - 1;
         int m_pInt = 0;
         int i;
@@ -234,9 +234,9 @@ public class NeighborJoining extends Content {
     }
 
     public void createDistanceMatrix(DistanceMatrix dmat) {
-        matriz = new float[m_Fil][];
+        matriz = new double[m_Fil][];
         for (int i = 0, f = m_Fil; i < m_Fil; i++, f--) {
-            matriz[i] = new float[f];
+            matriz[i] = new double[f];
             for (int k = 0; k < f; k++) {
                 matriz[i][k] = 0.0f;
             }
@@ -310,10 +310,10 @@ public class NeighborJoining extends Content {
         m_pTempMatH[i].m_pFlagP = 1;
     }
 
-    public float get_dis_are(int i) {
+    public double get_dis_are(int i) {
         //ArrayList<A_Arestas> aux = new ArrayList<A_Arestas>();
         A_Arestas aresta = Varesta.get(i);
-        float a = aresta.dist;
+        double a = aresta.dist;
         return a;
 
     }
@@ -346,7 +346,7 @@ public class NeighborJoining extends Content {
 
         postorderTraversal(pos);
         m_pTempMatH[pos].m_pFlagV = -2;
-        m_pTempMatH[pos].w = 2 * (float) Math.PI;
+        m_pTempMatH[pos].w = 2 * (double) Math.PI;
         m_pTempMatH[pos].t = 0;
         preorderTraversal(pos, pos);
     }
@@ -387,22 +387,22 @@ public class NeighborJoining extends Content {
         int m_pSon1 = m_pTempMatH[i].m_pFolha1;
         int m_pSon2 = m_pTempMatH[i].m_pFolha2;
         int m_pSon3 = m_pTempMatH[i].m_pInter;
-        float np;
+        double np;
 
         if ((m_pTempMatH[i].m_pFlagV != -2) && (m_pTempMatH[i].m_pFlagP != 2)) {
             if ((m_pTempMatH[i].m_pFlag == -1) || (i < p)) {
-                float m_pDis;
+                double m_pDis;
                 if (m_pTempMatH[i].m_pFlag == -1) {
                     m_pDis = m_pTempMatH[i].m_pDis_F / 10;
                 } else {
                     m_pDis = m_pTempMatH[i].m_pDis_F;
                 }
 
-                m_pTempMatH[i].x = (float) (m_pTempMatH[p].x + (m_pDis) * ((float) Math.cos(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2))));
-                m_pTempMatH[i].y = (float) (m_pTempMatH[p].y + (m_pDis) * ((float) Math.sin(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2))));
+                m_pTempMatH[i].x = (double) (m_pTempMatH[p].x + (m_pDis) * ((double) Math.cos(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2))));
+                m_pTempMatH[i].y = (double) (m_pTempMatH[p].y + (m_pDis) * ((double) Math.sin(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2))));
             } else {
-                m_pTempMatH[i].x = (float) (m_pTempMatH[p].x + ((m_pTempMatH[p].m_pDis_F) * ((float) cos(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2)))));
-                m_pTempMatH[i].y = (float) (m_pTempMatH[p].y + ((m_pTempMatH[p].m_pDis_F) * ((float) sin(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2)))));
+                m_pTempMatH[i].x = (double) (m_pTempMatH[p].x + ((m_pTempMatH[p].m_pDis_F) * ((double) cos(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2)))));
+                m_pTempMatH[i].y = (double) (m_pTempMatH[p].y + ((m_pTempMatH[p].m_pDis_F) * ((double) sin(m_pTempMatH[i].t + (m_pTempMatH[i].w / 2)))));
             }
 
         } else {
@@ -415,21 +415,21 @@ public class NeighborJoining extends Content {
 
         int parent = i;
         if ((m_pTempMatH[m_pSon1].m_pFlagV != 1) && (m_pTempMatH[m_pSon1].m_pFlagP != 2)) {
-            m_pTempMatH[m_pSon1].w = (m_pTempMatH[m_pSon1].lv / T) * (float) (2 * Math.PI);
+            m_pTempMatH[m_pSon1].w = (m_pTempMatH[m_pSon1].lv / T) * (double) (2 * Math.PI);
             m_pTempMatH[m_pSon1].t = np;
             np = np + m_pTempMatH[m_pSon1].w;
             preorderTraversal(m_pSon1, parent);
         }
 
         if ((m_pTempMatH[m_pSon2].m_pFlagV != 1) && (m_pTempMatH[m_pSon2].m_pFlagP != 2) && (m_pTempMatH[i].m_pFlag != -1)) {
-            m_pTempMatH[m_pSon2].w = (m_pTempMatH[m_pSon2].lv / T) * (float) (2 * Math.PI);
+            m_pTempMatH[m_pSon2].w = (m_pTempMatH[m_pSon2].lv / T) * (double) (2 * Math.PI);
             m_pTempMatH[m_pSon2].t = np;
             np = np + m_pTempMatH[m_pSon2].w;
             preorderTraversal(m_pSon2, parent);
         }
 
         if ((m_pTempMatH[m_pSon3].m_pFlagV != 1) && (m_pTempMatH[m_pSon3].m_pFlagP != 2) && (m_pTempMatH[i].m_pFlag != -1)) {
-            m_pTempMatH[m_pSon3].w = (m_pTempMatH[m_pSon3].lv / T) * (float) (2 * Math.PI);
+            m_pTempMatH[m_pSon3].w = (m_pTempMatH[m_pSon3].lv / T) * (double) (2 * Math.PI);
             m_pTempMatH[m_pSon3].t = np;
             np = np + m_pTempMatH[m_pSon3].w;
             preorderTraversal(m_pSon3, parent);
@@ -437,25 +437,25 @@ public class NeighborJoining extends Content {
 
     }
 
-    public float getX(int i) {
+    public double getX(int i) {
         return m_pTempMatH[i].x;
     }
 
-    public float getY(int i) {
+    public double getY(int i) {
         return m_pTempMatH[i].y;
     }
 
     private int numberPoints;
     private int m_pCluster;
     private int m_Fil;
-    private float T;
+    private double T;
     private Content[] m_pTempMatH;
-    private float Divergence_V[];
-    private float[][] matriz;
+    private double Divergence_V[];
+    private double[][] matriz;
     private int m_Posx;
     private int m_Posy;
-    private float m_Dx;
-    private float m_Dy;
+    private double m_Dx;
+    private double m_Dy;
     private int m_PosJun;
     private ArrayList<A_Arestas> Varesta = new ArrayList<A_Arestas>();
 }

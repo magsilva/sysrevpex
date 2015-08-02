@@ -29,7 +29,7 @@ public abstract class DimensionalityReduction {
         Matrix redmatrix = new DenseMatrix();
         Dissimilarity diss = DissimilarityFactory.getInstance(disstype);
 
-        float[][] red = this.execute(matrix, diss);
+        double[][] red = this.execute(matrix, diss);
 
         //transforming the reduce form into a dense matrix
         for (int i = 0; i < matrix.getRowCount(); i++) {
@@ -49,7 +49,7 @@ public abstract class DimensionalityReduction {
         return redmatrix;
     }
 
-    protected abstract float[][] execute(Matrix matrix, Dissimilarity diss) throws IOException;
+    protected abstract double[][] execute(Matrix matrix, Dissimilarity diss) throws IOException;
 
     protected int targetDimension;
 }

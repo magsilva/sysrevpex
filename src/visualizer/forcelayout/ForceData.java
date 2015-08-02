@@ -58,13 +58,13 @@ package visualizer.forcelayout;
  */
 public class ForceData {
 
-    public transient float dx;
-    public transient float dy;
-    public transient float mass;
-    public transient float[] force = new float[2];
-    public transient float[] velocity = new float[2];
-    public transient float[] location = new float[2];
-    public transient float[] plocation = new float[2]; // stores the previous location
-    public transient float[][] k = new float[4][2]; // temp variables for Runge-Kutta integration
-    public transient float[][] l = new float[4][2]; // temp variables for Runge-Kutta integration
+    public transient double dx;
+    public transient double dy;
+    public transient double mass;
+    public transient double[] force = new double[2];
+    public transient double[] velocity = new double[2];
+    public transient double[] location = new double[2];
+    public transient double[] plocation = new double[2]; // stores the previous location
+    public transient double[][] k = new double[4][2]; // temp variables for Runge-Kutta integration
+    public transient double[][] l = new double[4][2]; // temp variables for Runge-Kutta integration
 }

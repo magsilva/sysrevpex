@@ -47,37 +47,31 @@ address = {Washington, DC, USA},
 
 package visualizer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import visualizer.util.SystemPropertiesManager;
 import visualizer.view.ProjectionExplorerView;
 import visualizer.view.Splash;
 
 /**
- *
+ * 
  * @author Fernando Vieira Paulovich
  */
-public class ProjectionExplorer
-{
-    public static void main(String args[]) {
-        try {
-            String del = SystemPropertiesManager.getInstance().getProperty("SPLASH.DELAY");
-            if (del == null || del.trim().length() < 1) {
-                del = "3000";
-            }
-            Splash.getInstance().start();
-            Thread.sleep(Long.parseLong(del));
-            Splash.getInstance().stop();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ProjectionExplorer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+public class ProjectionExplorer {
+	public static void main(String args[]) throws Exception {
+		String del = SystemPropertiesManager.getInstance().getProperty(
+				"SPLASH.DELAY");
+		if (del == null || del.trim().length() < 1) {
+			del = "3000";
+		}
+		Splash.getInstance().start();
+		Thread.sleep(Long.parseLong(del));
+		Splash.getInstance().stop();
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ProjectionExplorerView pexview = new ProjectionExplorerView();
-                pexview.setVisible(true);
-                pexview.toFront();
-            }
-        });
-    }
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				ProjectionExplorerView pexview = new ProjectionExplorerView();
+				pexview.setVisible(true);
+				pexview.toFront();
+			}
+		});
+	}
 }

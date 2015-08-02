@@ -67,7 +67,7 @@ public class ForceSimulator {
     private Force[] sforces;
     private int iflen,  sflen;
     private RungeKuttaIntegrator integrator = new RungeKuttaIntegrator();
-    private float speedLimit = 1.0f;
+    private double speedLimit = 1.0f;
     public ForceSimulator() {
         iforces = new Force[5];
         sforces = new Force[5];
@@ -77,11 +77,11 @@ public class ForceSimulator {
         springs = new HashSet();
     }
 
-    public float getSpeedLimit() {
+    public double getSpeedLimit() {
         return speedLimit;
     }
 
-    public void setSpeedLimit(float limit) {
+    public void setSpeedLimit(double limit) {
         speedLimit = limit;
     }
 
@@ -139,15 +139,15 @@ public class ForceSimulator {
         return addSpring(item1, item2, -1.f, -1.f);
     }
 
-    public Spring addSpring(Vertex item1, Vertex item2, float length) {
+    public Spring addSpring(Vertex item1, Vertex item2, double length) {
         return addSpring(item1, item2, -1.f, length);
     }
 
-    public Spring addSpring(Vertex item1, Vertex item2, float coeff, float length) {
+    public Spring addSpring(Vertex item1, Vertex item2, double d, double e) {
         if (item1 == null || item2 == null) {
             throw new IllegalArgumentException("ForceItems must be non-null");
         }
-        Spring s = Spring.getFactory().getSpring(item1, item2, coeff, length);
+        Spring s = Spring.getFactory().getSpring(item1, item2, d, e);
         springs.add(s);
         return s;
     }

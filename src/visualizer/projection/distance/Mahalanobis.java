@@ -67,7 +67,7 @@ import visualizer.matrix.MatrixFactory;
 public class Mahalanobis {
 
     public DistanceMatrix getDistanceMatrix(Matrix matrix) {
-        float[][] points = matrix.toMatrix();
+        double[][] points = matrix.toMatrix();
         DoubleMatrix2D cov = this.createCovarianceMatrix(points);
 
         DoubleMatrix2D identity = DoubleFactory2D.sparse.identity(points[0].length);
@@ -80,8 +80,8 @@ public class Mahalanobis {
             for (int j = 0; j < i; j++) {
                 DoubleMatrix1D diff = DoubleFactory1D.sparse.make(points[0].length);
 
-                float[] vect1 = matrix.getRow(i).toArray();
-                float[] vect2 = matrix.getRow(j).toArray();
+                double[] vect1 = matrix.getRow(i).toArray();
+                double[] vect2 = matrix.getRow(j).toArray();
 
                 for (int k = 0; k < vect1.length; k++) {
                     diff.setQuick(k, vect1[k] - vect2[k]);
@@ -95,7 +95,7 @@ public class Mahalanobis {
                 }
 
                 double dist = diff.zDotProduct(diff_cinv);
-                dmat.setDistance(i, j, (float) Math.sqrt(dist));
+                dmat.setDistance(i, j, (double) Math.sqrt(dist));
             }
         }
 
@@ -105,7 +105,7 @@ public class Mahalanobis {
         return dmat;
     }
 
-    private DoubleMatrix2D createCovarianceMatrix(float[][] points) {
+    private DoubleMatrix2D createCovarianceMatrix(double[][] points) {
         //calculating the mean
         double[] mean = new double[points[0].length];
         Arrays.fill(mean, 0.0f);
@@ -144,8 +144,8 @@ public class Mahalanobis {
     }
 
     //calculate the covariance between columns a and b
-    private float covariance(float[][] points, int a, int b) {
-        float cov = 0.0f;
+    private double covariance(double[][] points, int a, int b) {
+        double cov = 0.0f;
 
         for (int i = 0; i < points.length; i++) {
             cov += points[i][a] * points[i][b];

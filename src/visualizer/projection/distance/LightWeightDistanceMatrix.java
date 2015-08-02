@@ -68,7 +68,7 @@ public class LightWeightDistanceMatrix extends DistanceMatrix
         this.diss = diss;
 
         this.ids = new ArrayList<String>();
-        this.cdata = new float[matrix.getRowCount()];
+        this.cdata = new double[matrix.getRowCount()];
 
         for (int i = 0; i < matrix.getRowCount(); i++) {
             this.ids.add(matrix.getRow(i).getId());
@@ -85,7 +85,7 @@ public class LightWeightDistanceMatrix extends DistanceMatrix
     }
 
     @Override
-    public float getDistance(int indexA, int indexB) {
+    public double getDistance(int indexA, int indexB) {
         assert (indexA >= 0 && indexA < nrElements && indexB >= 0 && indexB < nrElements) :
                 "ERROR: index out of bounds!";
 
@@ -93,12 +93,12 @@ public class LightWeightDistanceMatrix extends DistanceMatrix
     }
 
     @Override
-    public float getMaxDistance() {
+    public double getMaxDistance() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public float getMinDistance() {
+    public double getMinDistance() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -113,12 +113,12 @@ public class LightWeightDistanceMatrix extends DistanceMatrix
     }
 
     @Override
-    public void setClassData(float[] cdata) {
+    public void setClassData(double[] cdata) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void setDistance(int indexA, int indexB, float value) {
+    public void setDistance(int indexA, int indexB, double value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

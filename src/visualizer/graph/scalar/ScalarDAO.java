@@ -236,8 +236,8 @@ public class ScalarDAO
 					if (scalarName.equals(PExConstants.DOTS)) {
 						continue;
 					}
-					float scalarValue = v.getScalar(scalar);
-					out.write(Float.toString(scalarValue));
+					double scalarValue = v.getScalar(scalar);
+					out.write(Double.toString(scalarValue));
 					if (i.hasNext()) {
 						out.write(";");
 					}

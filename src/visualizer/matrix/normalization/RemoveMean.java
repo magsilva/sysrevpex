@@ -19,10 +19,10 @@ public class RemoveMean extends Normalization {
         assert (matrix.getRowCount() > 0) : "More than zero vectors must be used!";
 
         for (int i = 0; i < matrix.getRowCount(); i++) {
-            float[] vect = matrix.getRow(i).getValues();
+            double[] vect = matrix.getRow(i).getValues();
 
             //calculate the mean
-            float mean = 0;
+            double mean = 0;
             for (int j = 0; j < vect.length; j++) {
                 mean = mean + vect[j];
             }

@@ -97,11 +97,11 @@ public class MeshGenerator {
                 Iterator<Integer> visited_it = visited.iterator();
 
                 int closest = 0;
-                float min = Float.MAX_VALUE;
+                double min = Double.MAX_VALUE;
 
                 while (visited_it.hasNext()) {
                     int aux = visited_it.next();
-                    float distance = dmat.getDistance(aux, next);
+                    double distance = dmat.getDistance(aux, next);
 
                     if (min > distance) {
                         min = distance;
@@ -169,11 +169,11 @@ public class MeshGenerator {
                 Iterator<Integer> visited_it = visited.iterator();
 
                 int closest = 0;
-                float min = Float.MAX_VALUE;
+                double min = Double.MAX_VALUE;
 
                 while (visited_it.hasNext()) {
                     int aux = visited_it.next();
-                    float distance = diss.calculate(matrix.getRow(aux), matrix.getRow(next));
+                    double distance = diss.calculate(matrix.getRow(aux), matrix.getRow(next));
 
                     if (min > distance) {
                         min = distance;

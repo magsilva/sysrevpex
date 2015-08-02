@@ -78,7 +78,7 @@ import visualizer.wizard.ProjectionView;
 public class LLEProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         this.matrix = matrix;
 
         try {
@@ -101,10 +101,10 @@ public class LLEProjection extends Projection {
 
             for (int i = 0; i < matrix.getRowCount(); i++) {
                 //create matrix Z consisting of all neighbours of Xi
-                float[][] z_aux = new float[neighbors[i].length][];
+                double[][] z_aux = new double[neighbors[i].length][];
 
                 //subtract Xi from every column of Z
-                float[] x = matrix.getRow(i).toArray();
+                double[] x = matrix.getRow(i).toArray();
 
                 for (int j = 0; j < neighbors[i].length; j++) {
                     z_aux[j] = matrix.getRow(neighbors[i][j].index).toArray();
@@ -182,16 +182,16 @@ public class LLEProjection extends Projection {
 
             //set the qth ROW of Y to be the q+1 smallest eigenvector
             //     (discard the bottom eigenvector [1,1,1,1...] with eigenvalue zero)
-            float[][] projection = new float[matrix.getRowCount()][];
+            double[][] projection = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < projection.length; i++) {
-                projection[i] = new float[2];
+                projection[i] = new double[2];
             }
 
             for (int i = 1, j = 0; i < eigenvalues.size() && j < 2; i++) {
                 if (eigenvalues.get(i) > EPSILON) {
                     for (int n = 0; n < projection.length; n++) {
-                        projection[n][j] = (float) eigenvectors.getQuick(n, i);
+                        projection[n][j] = (double) eigenvectors.getQuick(n, i);
                     }
 
                     j++;
@@ -208,7 +208,7 @@ public class LLEProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -233,7 +233,7 @@ public class LLEProjection extends Projection {
                     pdata.setNumberNeighborsConnection(i);
 
                     LLEProjection lle = new LLEProjection();
-                    float[][] projection = lle.project(matrix, pdata, null);
+                    double[][] projection = lle.project(matrix, pdata, null);
 
                     out.write("DY\r\n");
                     out.write(Integer.toString(projection.length) + "\r\n");
@@ -243,11 +243,11 @@ public class LLEProjection extends Projection {
                     for (int j = 0; j < projection.length; j++) {
                         out.write(matrix.getRow(j).getId());
                         out.write(";");
-                        out.write(Float.toString(projection[j][0]));
+                        out.write(Double.toString(projection[j][0]));
                         out.write(";");
-                        out.write(Float.toString(projection[j][1]));
+                        out.write(Double.toString(projection[j][1]));
                         out.write(";");
-                        out.write(Float.toString(matrix.getRow(j).getKlass()));
+                        out.write(Double.toString(matrix.getRow(j).getKlass()));
                         out.write("\r\n");
                     }
 
@@ -270,5 +270,5 @@ public class LLEProjection extends Projection {
 
     }
 
-    private static final float EPSILON = Float.MIN_VALUE;
+    private static final double EPSILON = Double.MIN_VALUE;
 }

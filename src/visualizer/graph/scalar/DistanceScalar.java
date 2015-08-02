@@ -99,9 +99,9 @@ public class DistanceScalar {
         }
 
         //creating the scalar values
-        float[] scalar = new float[matrix.getRowCount()];
+        double[] scalar = new double[matrix.getRowCount()];
 
-        float min = Float.POSITIVE_INFINITY;
+        double min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < scalar.length; i++) {
             scalar[i] = measure.calculate(matrix.getRow(i), matrix.getRow(index));
 
@@ -138,9 +138,9 @@ public class DistanceScalar {
         }
 
         //creating the scalar values
-        float[] scalar = new float[dmat.getElementCount()];
+        double[] scalar = new double[dmat.getElementCount()];
 
-        float min = Float.POSITIVE_INFINITY;
+        double min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < dmat.getElementCount(); i++) {
             scalar[i] = dmat.getDistance(i, index);
 
@@ -154,11 +154,11 @@ public class DistanceScalar {
         return this.createScalar(scalar, filenames, vertex);
     }
 
-    private Scalar createScalar(float[] scalar, List<String> ids, Vertex v) throws IOException {
+    private Scalar createScalar(double[] scalar, List<String> ids, Vertex v) throws IOException {
         Scalar s = null;
 
         //Creating the new scalar inside the graph
-        HashMap<String, Float> index = new HashMap<String, Float>();
+        HashMap<String, Double> index = new HashMap<String, Double>();
         for (int i = 0; i < ids.size(); i++) {
             index.put(ids.get(i), scalar[i]);
         }
@@ -194,7 +194,7 @@ public class DistanceScalar {
 
     public class DistancesHistogram extends JFrame {
 
-        public DistancesHistogram(float[] scalar, String title) {
+        public DistancesHistogram(double[] scalar, String title) {
             super("Histogram of Distances");
 
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -210,24 +210,24 @@ public class DistanceScalar {
             setContentPane(panel);
         }
 
-        private IntervalXYDataset createDataset(float[] scalar, String title) {
+        private IntervalXYDataset createDataset(double[] scalar, String title) {
             HistogramDataset histogramdataset = new HistogramDataset();
 
             //extracting negative values
-            ArrayList<Float> scalar_aux = new ArrayList<Float>();
+            ArrayList<Double> scalar_aux = new ArrayList<Double>();
             for (int i = 0; i < scalar.length; i++) {
                 if (scalar[i] >= 0.0f) {
                     scalar_aux.add(scalar[i]);
                 }
             }
 
-            scalar = new float[scalar_aux.size()];
+            scalar = new double[scalar_aux.size()];
             for (int i = 0; i < scalar.length; i++) {
                 scalar[i] = scalar_aux.get(i);
             }
 
-            float max = Float.NEGATIVE_INFINITY;
-            float min = Float.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
+            double min = Double.POSITIVE_INFINITY;
 
             for (int i = 0; i < scalar.length; i++) {
                 if (max < scalar[i]) {

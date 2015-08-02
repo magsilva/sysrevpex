@@ -59,7 +59,7 @@ public class TFIDFTransformation implements MatrixTransformation
     public Matrix tranform(Matrix matrix, Object parameter)
     {
         // Store the number of documents which the term occur
-        float[] docsFreq = new float[matrix.getDimensions()];
+        double[] docsFreq = new double[matrix.getDimensions()];
 
         // Count the number of documents which the terms occur
         for (int row = 0; row < matrix.getRowCount(); row++) {
@@ -80,10 +80,10 @@ public class TFIDFTransformation implements MatrixTransformation
 
             for (int col = 0; col < svlength; col++) {
                 // Get the term-frequency
-                float tf = sv.getValues()[col];
-                float idf = 0.0f;
+                double tf = sv.getValues()[col];
+                double idf = 0.0f;
                 if (docsFreq[col] != 0) {
-                    idf = (float) Math.log(matrix.getRowCount() / docsFreq[sv.getIndex()[col]]);
+                    idf = Math.log(matrix.getRowCount() / docsFreq[sv.getIndex()[col]]);
                 }
 
                 // Calculate and store the T-IDF

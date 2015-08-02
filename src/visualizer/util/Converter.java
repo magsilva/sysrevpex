@@ -133,7 +133,7 @@ public class Converter {
         matrix.setAttributes(attributes);
 
         for (int i = 0; i < points.size(); i++) {
-            float[] point = new float[points.get(i).size() - 1];
+            double[] point = new double[points.get(i).size() - 1];
 
             for (int j = 0; j < points.get(i).size() - 1; j++) {
                 point[j] = points.get(i).get(j);

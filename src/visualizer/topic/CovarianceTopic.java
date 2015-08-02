@@ -130,7 +130,7 @@ public class CovarianceTopic extends Topic {
             //Reducing the points and creating an index
             if (matrix.getRowCount() > 0 && matrix.getDimensions() > 0) {
                 ArrayList<String> attributes = new ArrayList<String>();
-                float[][] points = this.cutDimensions(matrix, cpNgrams, attributes);
+                double[][] points = this.cutDimensions(matrix, cpNgrams, attributes);
 
                 this.createTopic(points, attributes, vertex);
             }
@@ -139,10 +139,10 @@ public class CovarianceTopic extends Topic {
         }
     }
 
-    private void createTopic(float[][] points, ArrayList<String> attributes,
+    private void createTopic(double[][] points, ArrayList<String> attributes,
             ArrayList<Vertex> vertex) throws IOException {
         //Extracting the mean of the columns
-        float[] mean = new float[points[0].length];
+        double[] mean = new double[points[0].length];
         Arrays.fill(mean, 0.0f);
 
         for (int i = 0; i < points.length; i++) {
@@ -191,17 +191,17 @@ public class CovarianceTopic extends Topic {
         }
     }
 
-    private StringBox createStringBoxes(float[][] points,
+    private StringBox createStringBoxes(double[][] points,
             ArrayList<String> attributes, ArrayList<Integer> indexes) {
 
         //Get the two attributes with largest covariance
-        float gcov1 = Float.MIN_VALUE;
+        double gcov1 = Float.MIN_VALUE;
         int icov = 0;
         int jcov = 0;
         for (int i = 0; i < points[0].length - 1; i++) {
             for (int j = points[0].length - 1; j > i; j--) {
                 if (!indexes.contains(i) && !indexes.contains(j)) {
-                    float aux = this.covariance(points, i, j);
+                    double aux = this.covariance(points, i, j);
                     if (gcov1 < aux) {
                         gcov1 = aux;
                         icov = i;
@@ -220,7 +220,7 @@ public class CovarianceTopic extends Topic {
 
             for (int i = 0; i < points[0].length - 1; i++) {
                 if (!indexes.contains(i)) {
-                    float aux = (this.covariance(points, icov, i) +
+                    double aux = (this.covariance(points, icov, i) +
                             this.covariance(points, jcov, i)) / 2;
 
                     if (aux / gcov1 > tdata.getPercentageTerms()) {
@@ -250,14 +250,14 @@ public class CovarianceTopic extends Topic {
         return null;
     }
 
-    private float[][] cutDimensions(Matrix matrix, Collection<Ngram> cpNgrams, ArrayList<String> indexGrams)
+    private double[][] cutDimensions(Matrix matrix, Collection<Ngram> cpNgrams, ArrayList<String> indexGrams)
     {
         //keep on the new points matrix no more than 200 dimensions
-        float[][] newpoints = new float[matrix.getRowCount()][];
+        double[][] newpoints = new double[matrix.getRowCount()][];
 
         for (int i = 0; i < newpoints.length; i++) {
-            newpoints[i] = new float[(matrix.getDimensions() < 200) ? matrix.getDimensions() : 200];
-            float[] point = matrix.getRow(i).toArray();
+            newpoints[i] = new double[(matrix.getDimensions() < 200) ? matrix.getDimensions() : 200];
+            double[] point = matrix.getRow(i).toArray();
             for (int j = 0; j < newpoints[i].length; j++) {
                 newpoints[i][j] = point[j];
             }
@@ -273,8 +273,8 @@ public class CovarianceTopic extends Topic {
     }
 
     //calculate the covariance between columns a and b
-    private float covariance(float[][] points, int a, int b) {
-        float covariance = 0.0f;
+    private double covariance(double[][] points, int a, int b) {
+        double covariance = 0.0f;
         for (int i = 0; i < points.length; i++) {
             covariance += points[i][a] * points[i][b];
         }
@@ -283,13 +283,13 @@ public class CovarianceTopic extends Topic {
         return covariance;
     }
 
-    private void colorVertex(float[][] points, ArrayList<Vertex> vertex,
+    private void colorVertex(double[][] points, ArrayList<Vertex> vertex,
             ArrayList<Integer> indexes) throws IOException {
 
         Scalar s = this.graph.getScalarByName(PExConstants.TOPICS);
 
         for (int i = 0; i < vertex.size(); i++) {
-            float value = 1.0f;
+            double value = 1.0f;
 
             for (int j = 0; j < indexes.size(); j++) {
                 value *= (points[i][indexes.get(j)] > 0.0f) ? 1.0f : 0.0f;
@@ -300,7 +300,7 @@ public class CovarianceTopic extends Topic {
     }
 
     private boolean firstTopic;
-    private float maxcov;
+    private double maxcov;
     private TopicData tdata;
     private Graph graph;
 }

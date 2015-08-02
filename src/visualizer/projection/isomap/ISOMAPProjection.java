@@ -74,7 +74,7 @@ import visualizer.wizard.ProjectionView;
 public class ISOMAPProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         try {
             Dissimilarity diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
             DistanceMatrix dmat_aux = new DistanceMatrix(matrix, diss);
@@ -90,7 +90,7 @@ public class ISOMAPProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         try {
             if (view != null) {
                 view.setStatus("Creating the new distance matrix...", 40);
@@ -118,7 +118,7 @@ public class ISOMAPProjection extends Projection {
             Dijkstra d = new Dijkstra(neighborhood, dmat.getElementCount());
 
             for (int i = 0; i < dmat.getElementCount(); i++) {
-                float[] dist = d.execute(i);
+                double[] dist = d.execute(i);
 
                 for (int j = 0; j < dist.length; j++) {
                     new_dmat.setDistance(i, j, dist[j]);
@@ -159,18 +159,18 @@ public class ISOMAPProjection extends Projection {
                     pdata.setNumberNeighborsConnection(i);
 
                     ISOMAPProjection lle = new ISOMAPProjection();
-                    float[][] projection = lle.project(matrix, pdata, null);
+                    double[][] projection = lle.project(matrix, pdata, null);
 
                     out.write("x;y\r\n");
 
                     for (int j = 0; j < projection.length; j++) {
                         out.write(matrix.getRow(j).getId());
                         out.write(";");
-                        out.write(Float.toString(projection[j][0]));
+                        out.write(Double.toString(projection[j][0]));
                         out.write(";");
-                        out.write(Float.toString(projection[j][1]));
+                        out.write(Double.toString(projection[j][1]));
                         out.write(";");
-                        out.write(Float.toString(matrix.getRow(j).getKlass()));
+                        out.write(Double.toString(matrix.getRow(j).getKlass()));
                         out.write("\r\n");
                     }
 

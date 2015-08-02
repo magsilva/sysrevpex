@@ -138,7 +138,7 @@ public class Util {
 
                     Integer from = index.get(t.nextToken());
                     Integer to = index.get(t.nextToken());
-                    float len = Float.parseFloat(t.nextToken());
+                    double len = Float.parseFloat(t.nextToken());
 
                     if (from != null && to != null) {
                         neigh_aux.get(from).add(new Pair(to, len));
@@ -198,7 +198,7 @@ public class Util {
                 out.write(";");
                 out.write(e.getTarget().getUrl());
                 out.write(";");
-                out.write(Float.toString(e.getLength()));
+                out.write(Double.toString(e.getLength()));
                 out.write("\r\n");
             }
         } catch (IOException e) {
@@ -259,11 +259,11 @@ public class Util {
         }
 
         for (int i = 0; i < graph.getVertex().size(); i++) {
-            float[] point = new float[2];
+            double[] point = new double[2];
             point[0] = graph.getVertex().get(i).getX();
             point[1] = graph.getVertex().get(i).getY();
 
-            float cdata = graph.getVertex().get(i).getScalar(scalar);
+            double cdata = graph.getVertex().get(i).getScalar(scalar);
             String id = graph.getVertex().get(i).getUrl();
 
             matrix.addRow(new DenseVector(point, id, cdata));
@@ -293,17 +293,17 @@ public class Util {
             out.write("DATASET POLYDATA\r\n");
             out.write("POINTS ");
             out.write(Integer.toString(graph.getVertex().size()));
-            out.write(" float\r\n");
+            out.write(" double\r\n");
 
             //Writting the points coordinates
             for (Vertex v : graph.getVertex()) {
                 Scalar s = graph.getScalarByName(PExConstants.CDATA);
 
-                out.write(Float.toString(v.getX()));
+                out.write(Double.toString(v.getX()));
                 out.write(" ");
-                out.write(Float.toString(v.getY()));
+                out.write(Double.toString(v.getY()));
                 out.write(" ");
-                out.write(Float.toString(v.getScalar(s)));
+                out.write(Double.toString(v.getScalar(s)));
                 out.write("\r\n");
             }
 
@@ -332,11 +332,11 @@ public class Util {
             for (Scalar s : graph.getScalars()) {
                 out.write("SCALARS ");
                 out.write(s.getName().replace("\'", " ").trim().replace(" ", "+"));
-                out.write(" float\r\n");
+                out.write(" double\r\n");
                 out.write("LOOKUP_TABLE default\r\n");
 
                 for (Vertex v : graph.getVertex()) {
-                    out.write(Float.toString(v.getScalar(s)));
+                    out.write(Double.toString(v.getScalar(s)));
                     out.write("\r\n");
                 }
                 out.write("\r\n");
@@ -513,13 +513,13 @@ public class Util {
 
     }
 
-    public static void normalize(float[][] result) {
+    public static void normalize(double[][] result) {
         int lvdimensions = result[0].length;
         int lvinstances = result.length;
 
         //for normalization
-        float[] lvlowrange = new float[lvdimensions];
-        float[] lvhighrange = new float[lvdimensions];
+        double[] lvlowrange = new double[lvdimensions];
+        double[] lvhighrange = new double[lvdimensions];
 
         //for each instance
         for (int lvins = 0; lvins < lvinstances; lvins++) {
@@ -574,11 +574,11 @@ public class Util {
 		return numberFiles;
 	}
 
-    public static float[][] transpose(float[][] matrix) {
-        float[][] transpMatrix = new float[matrix[0].length][];
+    public static double[][] transpose(double[][] matrix) {
+        double[][] transpMatrix = new double[matrix[0].length][];
 
         for (int i = 0; i < matrix[0].length; i++) {
-            transpMatrix[i] = new float[matrix.length];
+            transpMatrix[i] = new double[matrix.length];
 
             for (int j = 0; j < matrix.length; j++) {
                 transpMatrix[i][j] = matrix[j][i];
@@ -653,7 +653,7 @@ public class Util {
 
             out.write("<!-- data schema -->\n");
             out.write("<key id=\"label\" for=\"node\" attr.name=\"label\" attr.type=\"string\"/>\n");
-            out.write("<key id=\"cdata\" for=\"node\" attr.name=\"cdata\" attr.type=\"float\"/>\n");
+            out.write("<key id=\"cdata\" for=\"node\" attr.name=\"cdata\" attr.type=\"double\"/>\n");
 
             out.write("<!-- nodes -->\n");
 
@@ -683,7 +683,7 @@ public class Util {
 
                 if (v.isValid()) {
                     Scalar s = graph.getScalarByName(PExConstants.CDATA);
-                    out.write(Float.toString(v.getScalar(s)));
+                    out.write(Double.toString(v.getScalar(s)));
                 } else {
                     out.write("-1.0");
                 }
@@ -799,7 +799,7 @@ public class Util {
                     StringTokenizer t = new StringTokenizer(line, ";");
 
                     String name = t.nextToken();
-                    float value = Float.parseFloat(t.nextToken());
+                    double value = Float.parseFloat(t.nextToken());
 
                     legend.addItem(name, value);
                 }

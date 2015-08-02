@@ -64,24 +64,24 @@ public abstract class Vector {
 
     public abstract void normalize();
 
-    public abstract float dot(Vector vector);
+    public abstract double dot(Vector vector);
 
-    public abstract float[] toArray();
+    public abstract double[] toArray();
 
-    public abstract float getValue(int index);
+    public abstract double getValue(int index);
 
-    public abstract void setValue(int index, float value);
+    public abstract void setValue(int index, double value);
 
     public abstract void write(BufferedWriter out) throws IOException;
 
     @Override
     public abstract Object clone() throws CloneNotSupportedException;
 
-    protected abstract void create(float[] vector, String id, float klass);
+    protected abstract void create(double[] vector, String id, double klass);
 
     protected abstract void updateNorm();
 
-    public float norm() {
+    public double norm() {
         if (this.updateNorm) {
             this.updateNorm();
         }
@@ -105,11 +105,11 @@ public abstract class Vector {
         this.id = id;
     }
 
-    public float getKlass() {
+    public double getKlass() {
         return klass;
     }
 
-    public void setKlass(float klass) {
+    public void setKlass(double klass) {
         this.klass = klass;
     }
 
@@ -129,15 +129,15 @@ public abstract class Vector {
      * This method it is only to be used if you know what you are doing.
      * @return The values stored on this vector.
      */
-    public float[] getValues() {
+    public double[] getValues() {
         return values;
     }
 
-    protected float[] values;
-    protected float norm;
+    protected double[] values;
+    protected double norm;
     protected boolean updateNorm = true;
     protected int size = 0;
     protected String id;
-    protected float klass;
-    protected static final float DELTA = 0.00001f;
+    protected double klass;
+    protected static final double DELTA = 0.00001f;
 }

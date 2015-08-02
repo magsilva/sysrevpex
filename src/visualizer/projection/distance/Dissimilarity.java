@@ -55,6 +55,6 @@ import visualizer.matrix.Vector;
  */
 public interface Dissimilarity {
 
-    public float calculate(Vector v1, Vector v2);
+    public double calculate(Vector v1, Vector v2);
 
 }

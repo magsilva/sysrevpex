@@ -353,7 +353,7 @@ public class DataBaseCorpus extends BaseCorpus {
 
     private void createCdata() {
         if (this.url != null && this.ids != null) {
-            float[] cdata = new float[this.ids.size()];
+            double[] cdata = new double[this.ids.size()];
             Arrays.fill(cdata, 0.0f);
 
             PreparedStatement stmt = null;
@@ -365,7 +365,7 @@ public class DataBaseCorpus extends BaseCorpus {
                 rs = stmt.executeQuery();
 
                 while (rs.next()) {
-                    float value = rs.getFloat("class");
+                    double value = rs.getFloat("class");
                     String id = Integer.toString(rs.getInt("id"));
                     cdata[this.ids.indexOf(id)] = value;
                 }

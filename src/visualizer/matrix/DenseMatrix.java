@@ -134,15 +134,15 @@ public class DenseMatrix extends Matrix {
                 String id = t2.nextToken().trim();
 
                 //class data
-                float klass = 0.0f;
+                double klass = 0.0f;
 
                 //the vector
-                float[] vector = new float[nrdims];
+                double[] vector = new double[nrdims];
 
                 int index = 0;
                 while (t2.hasMoreTokens()) {
                     String token = t2.nextToken();
-                    float value = Float.parseFloat(token.trim());
+                    double value = Double.parseDouble(token.trim());
 
                     if (header[1] == 'Y') {
                         if (t2.hasMoreTokens()) {

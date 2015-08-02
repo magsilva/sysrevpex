@@ -24,7 +24,7 @@ public class IroniaCorpus implements Corpus
 		return null;
 	}
 
-	public float[] getClassData()
+	public double[] getClassData()
 	{
 		// TODO Auto-generated method stub
 		return null;

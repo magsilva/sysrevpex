@@ -65,10 +65,10 @@ public class StandardizationColumns extends Normalization {
     public Matrix execute(Matrix matrix) throws IOException {
         assert (matrix.getRowCount() > 0) : "More than zero vectors must be used!";
 
-        float[][] points = null;
+        double[][] points = null;
 
         if (matrix instanceof DenseMatrix) {
-            points = new float[matrix.getRowCount()][];
+            points = new double[matrix.getRowCount()][];
 
             for (int i = 0; i < points.length; i++) {
                 points[i] = matrix.getRow(i).getValues();
@@ -142,5 +142,5 @@ public class StandardizationColumns extends Normalization {
         }
     }
     
-    private static final float EPSILON = 0.0000001f;
+    private static final double EPSILON = 0.0000001f;
 }

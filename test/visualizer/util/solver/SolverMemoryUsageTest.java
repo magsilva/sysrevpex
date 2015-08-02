@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.StringTokenizer;
 
+import lspsolver.Solver;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -69,7 +71,7 @@ public class SolverMemoryUsageTest
 			StringTokenizer t = new StringTokenizer(line, " \t");
 			int i = Integer.parseInt(t.nextToken());
 			int j = Integer.parseInt(t.nextToken());
-			float value = Float.parseFloat(t.nextToken());
+			double value = Float.parseFloat(t.nextToken());
 
 			matrixA.set(i, j, value);
 		}
@@ -82,7 +84,7 @@ public class SolverMemoryUsageTest
 			StringTokenizer t = new StringTokenizer(line, " \t");
 			int i = Integer.parseInt(t.nextToken());
 			int j = Integer.parseInt(t.nextToken());
-			float value = Float.parseFloat(t.nextToken());
+			double value = Float.parseFloat(t.nextToken());
 
 			matrixB.set(i, j, value);
 		}

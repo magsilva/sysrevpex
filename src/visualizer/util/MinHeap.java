@@ -81,7 +81,7 @@ public class MinHeap {
         n = 0;
     }
 
-    public MinHeap(int capacity, float[] priorityIn, int count) // Constructs a heap using the provided priorities.
+    public MinHeap(int capacity, double[] priority, int count) // Constructs a heap using the provided priorities.
     // priorityIn[i] will have id i in the constructed heap,
     // so handle[i] may be used to track it.
     {
@@ -100,7 +100,7 @@ public class MinHeap {
         // Caller should know conventions for ids and handles.
         for (i = 0; i < count; i++) {
             heap[i + 1] = new HeapEntry(); // Create entries as needed
-            heap[i + 1].priority = priorityIn[i];
+            heap[i + 1].priority = priority[i];
             heap[i + 1].id = i;
             handle[i] = i + 1;
         }
@@ -194,7 +194,7 @@ public class MinHeap {
         handle[heap[j].id] = j;
     }
 
-    public float getPriority(int id) throws IOException {
+    public double getPriority(int id) throws IOException {
         if (id < 0 || id >= maxSub || handle[id] == (-1)) {
             throw new IOException("id " + id + " issue for getPriority");
         }
@@ -285,7 +285,7 @@ public class MinHeap {
 
     public static class HeapEntry {
 
-        public float priority;
+        public double priority;
         public int id; // Indicates which item the priority applies to
     }
 

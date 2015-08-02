@@ -74,18 +74,18 @@ import visualizer.wizard.ProjectionView;
 public class ProjClusProjection extends Projection {
 
     @Override
-    public float[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(Matrix matrix, ProjectionData pdata, ProjectionView view) {
         this.matrix = matrix;
         
         long start = System.currentTimeMillis();
         
-        float[][] projection = null;
+        double[][] projection = null;
 
         try {
             //defining the distance diss to be used
             diss = DissimilarityFactory.getInstance(pdata.getDissimilarityType());
 
-            ArrayList<float[][]> projections = new ArrayList<float[][]>();
+            ArrayList<double[][]> projections = new ArrayList<double[][]>();
 
             if (view != null) {
                 view.setStatus("Creating the clusters...", 35);
@@ -100,7 +100,7 @@ public class ProjClusProjection extends Projection {
                 view.setStatus("Positioning the pivots...", 60);
             }
 
-            float[][] pivotsProjection = this.createPivotsProjection(centroids, pdata);
+            double[][] pivotsProjection = this.createPivotsProjection(centroids, pdata);
 
             //For each cluster
             if (view != null) {
@@ -117,7 +117,7 @@ public class ProjClusProjection extends Projection {
 
                 //Based on the projection type, create the projection using JAVA REFLECTION
                 Projector proj = ProjectorFactory.getInstance(pdata.getProjectorType());
-                float[][] projection_aux = proj.project(dmat_aux);
+                double[][] projection_aux = proj.project(dmat_aux);
 
                 //Add the new projection to the list of projections
                 projections.add(projection_aux);
@@ -135,11 +135,11 @@ public class ProjClusProjection extends Projection {
                 view.setStatus("Assembling the final projection...", 85);
             }
 
-            projection = new float[matrix.getRowCount()][];
+            projection = new double[matrix.getRowCount()][];
 
             //Armazena as maiores distancias ate o centroid
-            float[] centroidMaxDistances = new float[clusters.size()];
-            float overallMaxDistance = Float.MIN_VALUE;
+            double[] centroidMaxDistances = new double[clusters.size()];
+            double overallMaxDistance = Float.MIN_VALUE;
             Arrays.fill(centroidMaxDistances, Float.MIN_VALUE);
 
             //Encontar as maiores distancias
@@ -148,7 +148,7 @@ public class ProjClusProjection extends Projection {
                     view.setStatus("Assembling the final projection...", 85 + i / 10);
                 }
                 for (int j = 0; j < clusters.get(i).size(); j++) {
-                    float distance = diss.calculate(centroids.getRow(i),
+                    double distance = diss.calculate(centroids.getRow(i),
                             matrix.getRow(clusters.get(i).get(j)));
                     if (distance > centroidMaxDistances[i]) {
                         centroidMaxDistances[i] = distance;
@@ -161,7 +161,7 @@ public class ProjClusProjection extends Projection {
             }
 
             for (int i = 0; i < clusters.size(); i++) {
-                float[][] p = projections.get(i);
+                double[][] p = projections.get(i);
                 this.normalize2D(p, 0, centroidMaxDistances[i] / overallMaxDistance);
 
                 //////////////////////////////////////////////////////////////////////
@@ -191,12 +191,12 @@ public class ProjClusProjection extends Projection {
     }
 
     @Override
-    public float[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
+    public double[][] project(DistanceMatrix dmat, ProjectionData pdata, ProjectionView view) {
         this.dmat = dmat;
 
         try {
             //The clusters projections
-            ArrayList<float[][]> projections = new ArrayList<float[][]>();
+            ArrayList<double[][]> projections = new ArrayList<double[][]>();
 
             if (view != null) {
                 view.setStatus("Creating the clusters...", 55);
@@ -217,10 +217,10 @@ public class ProjClusProjection extends Projection {
                 if (clusters.get(cluster).size() < 4) {
                     //encontrar o medoid mais proximo do mesmo e unir os dois clusters
                     int nearestMedoid = 0;
-                    float distance = dmat.getDistance(medoids_aux.get(cluster), medoids_aux.get(nearestMedoid));
+                    double distance = dmat.getDistance(medoids_aux.get(cluster), medoids_aux.get(nearestMedoid));
                     for (int m = 1; m < medoids_aux.size(); m++) {
                         if (cluster != m) {
-                            float distance2 = dmat.getDistance(medoids_aux.get(cluster), medoids_aux.get(m));
+                            double distance2 = dmat.getDistance(medoids_aux.get(cluster), medoids_aux.get(m));
                             if (distance2 < distance) {
                                 distance = distance2;
                                 nearestMedoid = m;
@@ -247,7 +247,7 @@ public class ProjClusProjection extends Projection {
             if (view != null) {
                 view.setStatus("Positioning the pivots...", 60);
             }
-            float[][] pivotsProjection = this.createPivotsProjection(dmat, medoids, pdata);
+            double[][] pivotsProjection = this.createPivotsProjection(dmat, medoids, pdata);
 
 
             if (view != null) {
@@ -263,7 +263,7 @@ public class ProjClusProjection extends Projection {
 
                 //Based on the projection type, create the projection using JAVA REFLECTION
                 Projector proj = ProjectorFactory.getInstance(pdata.getProjectorType());
-                float[][] projection = proj.project(dmat_c);
+                double[][] projection = proj.project(dmat_c);
 
                 //Add the new projection to the list of projections
                 projections.add(projection);
@@ -280,11 +280,11 @@ public class ProjClusProjection extends Projection {
             if (view != null) {
                 view.setStatus("Assembling the final projection...", 85);
             }
-            float[][] projection = new float[dmat.getElementCount()][];
+            double[][] projection = new double[dmat.getElementCount()][];
 
             //Armazena as maiores distancias ate o medoid
-            float[] medoidMaxDistances = new float[clusters.size()];
-            float overallMaxDistance = Float.MIN_VALUE;
+            double[] medoidMaxDistances = new double[clusters.size()];
+            double overallMaxDistance = Float.MIN_VALUE;
             Arrays.fill(medoidMaxDistances, Float.MIN_VALUE);
 
             //Encontar as maiores distancias
@@ -293,7 +293,7 @@ public class ProjClusProjection extends Projection {
                     view.setStatus("Assembling the final projection...", 85 + i / 5);
                 }
                 for (int j = 0; j < clusters.get(i).size(); j++) {
-                    float distance = dmat.getDistance(medoids[i], clusters.get(i).get(j));
+                    double distance = dmat.getDistance(medoids[i], clusters.get(i).get(j));
 
                     if (distance > medoidMaxDistances[i]) {
                         medoidMaxDistances[i] = distance;
@@ -306,7 +306,7 @@ public class ProjClusProjection extends Projection {
             }
 
             for (int i = 0; i < clusters.size(); i++) {
-                float[][] p = projections.get(i);
+                double[][] p = projections.get(i);
                 this.normalize2D(p, 0, medoidMaxDistances[i] / overallMaxDistance);
 
                 //////////////////////////////////////////////////////////////////////
@@ -336,8 +336,8 @@ public class ProjClusProjection extends Projection {
         return new ProjClusProjectionView(pdata);
     }
 
-    private float[][] createPivotsProjection(Matrix pivots, ProjectionData pdata) {
-        float[][] projection = null;
+    private double[][] createPivotsProjection(Matrix pivots, ProjectionData pdata) {
+        double[][] projection = null;
 
         try {
             DistanceMatrix dmat = new DistanceMatrix(pivots, this.diss);
@@ -376,11 +376,11 @@ public class ProjClusProjection extends Projection {
         return new DistanceMatrix(nMatrix, this.diss);
     }
 
-    private void normalize2D(float[][] projection, float begin, float end) {
-        float maxX = projection[0][0];
-        float minX = projection[0][0];
-        float maxY = projection[0][1];
-        float minY = projection[0][1];
+    private void normalize2D(double[][] projection, double begin, double end) {
+        double maxX = projection[0][0];
+        double minX = projection[0][0];
+        double maxY = projection[0][1];
+        double minY = projection[0][1];
         
         for (int _ins = 1; _ins < projection.length; _ins++) {
             if (minX > projection[_ins][0]) {
@@ -396,8 +396,8 @@ public class ProjClusProjection extends Projection {
             }
         }
         
-        float endY = (maxY - minY) / (maxX - minX);
-        //float endY = end;
+        double endY = (maxY - minY) / (maxX - minX);
+        //double endY = end;
 
         //for each position in the ArrayList ... normalize!
         for (int _ins = 0; _ins < projection.length; _ins++) {
@@ -429,8 +429,8 @@ public class ProjClusProjection extends Projection {
         return dmat_c;
     }
 
-    private float[][] createPivotsProjection(DistanceMatrix dmat, int[] medoids, ProjectionData pdata) {
-        float[][] projection = null;
+    private double[][] createPivotsProjection(DistanceMatrix dmat, int[] medoids, ProjectionData pdata) {
+        double[][] projection = null;
 
 
         //Creating the pivots distance matrix

@@ -59,11 +59,11 @@ import visualizer.projection.distance.DistanceMatrix;
  */
 public abstract class Stress {
 
-    public abstract float calculate(Matrix matrix, Dissimilarity diss, Graph graph) throws IOException;
+    public abstract double calculate(Matrix matrix, Dissimilarity diss, Graph graph) throws IOException;
 
-    public abstract float calculate(DistanceMatrix dmat, Graph graph) throws IOException;
+    public abstract double calculate(DistanceMatrix dmat, Graph graph) throws IOException;
 
-    public abstract float calculate(Matrix matrix, Dissimilarity diss, Matrix projection) throws IOException;
+    public abstract double calculate(Matrix matrix, Dissimilarity diss, Matrix projection) throws IOException;
 
-    public abstract float calculate(DistanceMatrix dmat, Matrix projection) throws IOException;
+    public abstract double calculate(DistanceMatrix dmat, Matrix projection) throws IOException;
 }

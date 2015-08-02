@@ -65,9 +65,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -76,12 +74,14 @@ import java.util.zip.ZipOutputStream;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.ironiacorp.datastructure.StringCircularBuffer;
+import com.ironiacorp.string.StringUtil;
 
 import visualizer.corpus.BaseCorpus;
 import visualizer.corpus.Corpus;
 import visualizer.corpus.Encoding;
 import visualizer.corpus.database.DataBaseCorpus;
 import visualizer.textprocessing.Ngram;
+import visualizer.textprocessing.RegExpTermExtractor;
 import visualizer.textprocessing.TermExtractor;
 
 /**
@@ -90,12 +90,14 @@ import visualizer.textprocessing.TermExtractor;
  */
 public class InvertedZipCorpus
 {
-	private static final String INVERTED_FILE_PROPERTIES = "inverted.properties";
+	private static final String CONFIGURATION_FILENAME = "inverted.properties";
+	
+	private static final String NGRAMS_FILENAME = "corpusNgrams.txt";
+
+	private static final String INVERTED_DIRECTORY = "inv" + File.separator;
 	
 	public static final String FILENAME_EXTENSION = ".inv";
 	
-	private static final String invDir = "inv/";
-
 	private String invFilename;
 
 	private ZipFile zip;
@@ -128,8 +130,7 @@ public class InvertedZipCorpus
 	public void removeFile()
 	{
 		// if the inverted file exists, remove it.
-		File f = new File(this.invFilename);
-
+		File f = new File(invFilename);
 		if (f.exists()) {
 			f.delete();
 		}
@@ -146,7 +147,7 @@ public class InvertedZipCorpus
 				zip = new ZipFile(invFilename);
 			}
 
-			ZipEntry entry = zip.getEntry(invDir + filename);
+			ZipEntry entry = zip.getEntry(INVERTED_DIRECTORY + filename);
 			if (entry != null) {
 				bis = new BufferedInputStream(zip.getInputStream(entry));
 				ois = new ObjectInputStream(bis);
@@ -187,7 +188,7 @@ public class InvertedZipCorpus
 				zip = new ZipFile(invFilename);
 			}
 
-			ZipEntry entry = zip.getEntry("corpusNgrams.txt");
+			ZipEntry entry = zip.getEntry(NGRAMS_FILENAME);
 			if (entry != null) {
 				bis = new BufferedInputStream(zip.getInputStream(entry));
 				ois = new ObjectInputStream(bis);
@@ -219,12 +220,13 @@ public class InvertedZipCorpus
 
 	public void dispose()
 	{
-		if (this.zip != null) {
+		if (zip != null) {
 			try {
-				this.zip.close();
-				this.zip = null;
+				zip.close();
 			} catch (IOException ex) {
 				Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+			} finally {
+				zip = null;
 			}
 		}
 	}
@@ -236,8 +238,7 @@ public class InvertedZipCorpus
 
 	private void processCorpus()
 	{
-		HashMap<String, Integer> corpusNgrams = new HashMap<String, Integer>();
-
+		Map<String, Integer> corpusNgrams = new HashMap<String, Integer>();
 		ZipOutputStream zout = null;
 
 		try {
@@ -246,22 +247,23 @@ public class InvertedZipCorpus
 			zout.setMethod(ZipOutputStream.DEFLATED);
 			zout.setLevel(Deflater.BEST_SPEED);
 
-			// add the number of grams and encoding to the inverted corpus
-			// properties file
-			ZipEntry entry = new ZipEntry(INVERTED_FILE_PROPERTIES);
+			// Add the number of grams and encoding to the inverted corpus properties file
+			ZipEntry entry = new ZipEntry(CONFIGURATION_FILENAME);
 			zout.putNextEntry(entry);
 			String prop = "number.grams=" + nrGrams + "\n";
 			zout.write(prop.getBytes(), 0, prop.length());
 			prop = "char.encoding=" + encoding.toString() + "\n";
 			zout.write(prop.getBytes(), 0, prop.length());
 
+			// Add the ngrams of each document of the corpus. Each document is named by a single number.
 			for (int i = 0; i < corpus.getIds().size(); i++) {
 				List<Ngram> ngrams = getNgramsFromFile(corpus.getIds().get(i));
-				addFile(zout, ngrams, invDir + corpus.getIds().get(i));
+				Iterator<Ngram> iNgram;
+				addFile(zout, ngrams, INVERTED_DIRECTORY + corpus.getIds().get(i));
 
-				for (int j = 0; j < ngrams.size(); j++) {
-					Ngram n = ngrams.get(j);
-
+				iNgram = ngrams.iterator();
+				while (iNgram.hasNext()) {
+					Ngram n = iNgram.next();
 					if (corpusNgrams.containsKey(n.getNgram())) {
 						corpusNgrams.put(n.getNgram(), corpusNgrams.get(n.getNgram()) + n.getFrequency());
 					} else {
@@ -272,11 +274,11 @@ public class InvertedZipCorpus
 
 			List<Ngram> ngrams = new ArrayList<Ngram>();
 			for (String key : corpusNgrams.keySet()) {
-				ngrams.add(new Ngram(key, nrGrams, corpusNgrams.get(key)));
+				ngrams.add(new Ngram(key, corpusNgrams.get(key)));
 			}
 
-			Collections.sort(ngrams);
-			addFile(zout, ngrams, "corpusNgrams.txt");
+			Collections.sort(ngrams, new Ngram.ForgivingComparator());
+			addFile(zout, ngrams, NGRAMS_FILENAME);
 
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,43 +296,14 @@ public class InvertedZipCorpus
 		}
 	}
 
-	private void loadFile()
-	{
-		String fileEncoding;
-		int fileNrGrams;
-		ZipFile fileZip = null;
-
-		try {
-			fileZip = new ZipFile(invFilename);
-			ZipEntry entry = fileZip.getEntry(INVERTED_FILE_PROPERTIES);
-			if (entry != null) {
-				Properties prop = new Properties();
-				prop.load(fileZip.getInputStream(entry));
-				fileEncoding = prop.getProperty("char.encoding");
-				fileNrGrams = Integer.parseInt(prop.getProperty("number.grams"));
-			}
-		} catch (NumberFormatException ex) {
-			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (IOException ex) {
-			Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-		} finally {
-			try {
-				fileZip.close();
-			} catch (IOException ex) {
-				Logger.getLogger(InvertedZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
-
-
 	private void addFile(ZipOutputStream zout, List<Ngram> ngrams, String filename) throws IOException
 	{
-		Collections.sort(ngrams);
-
 		ZipEntry entry = new ZipEntry(filename);
+		ObjectOutputStream oos;
+		
 		zout.putNextEntry(entry);
-
-		ObjectOutputStream oos = new ObjectOutputStream(zout);
+		oos = new ObjectOutputStream(zout);
+		Collections.sort(ngrams, new Ngram.ForgivingComparator());
 		oos.writeObject(ngrams);
 		oos.flush();
 	}
@@ -347,22 +320,22 @@ public class InvertedZipCorpus
 		String filecontent = corpus.getFullContent(filename);
 		List<Ngram> ngrams = new ArrayList<Ngram>();
 
-		if (filecontent == null) {
+		if (filecontent == null || StringUtil.isEmpty(filecontent)) {
 			return ngrams;
 		}
 
 		Multiset<String> bag = HashMultiset.create();
-		Pattern pattern = Pattern.compile(TermExtractor.getRegularExpression());
+		TermExtractor<String> termExtractor = new RegExpTermExtractor(filecontent); 
+		
 		StringCircularBuffer[] buffers = new StringCircularBuffer[nrGrams - 1];
 		for (int i = 2; i <= nrGrams; i++) {
 			buffers[i - 2] = new StringCircularBuffer(i);
 			buffers[i - 2].setSeparator(Corpus.NGRAM_SEPARATOR);
 		}
-		Matcher matcher = pattern.matcher(filecontent);
 		
-		while (matcher.find()) {
-			String term = matcher.group().trim().toLowerCase();
-			if (! term.isEmpty()) {
+		String term;
+		while ((term = termExtractor.next()) != null) {
+			if (! StringUtil.isEmpty(term)) {
 				bag.add(term);
 				for (StringCircularBuffer buffer : buffers) { 
 					String ngram = buffer.add(term);
@@ -382,7 +355,7 @@ public class InvertedZipCorpus
 		Iterator<String> i = bag.iterator();
 		while (i.hasNext()) {
 			String ngramText = i.next();
-			Ngram ngram = new Ngram(ngramText, nrGrams);
+			Ngram ngram = new Ngram(ngramText);
 			ngram.setFrequency(bag.count(ngramText));
 			ngrams.add(ngram);
 		}

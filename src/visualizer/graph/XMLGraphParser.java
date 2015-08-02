@@ -118,10 +118,10 @@ public class XMLGraphParser extends DefaultHandler {
             long vertex1 = Long.parseLong(attributes.getValue(SOURCE));
             long vertex2 = Long.parseLong(attributes.getValue(TARGET));
 
-            float length = Edge.NO_SIZE;
+            double length = Edge.NO_SIZE;
             String aux_len = attributes.getValue(LENGTH);
             if (aux_len != null) {
-                length = Float.parseFloat(aux_len);
+                length = Double.parseDouble(aux_len);
             }
 
             Vertex v1 = vertexIndex.get(vertex1);

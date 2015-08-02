@@ -69,15 +69,15 @@ public class DistanceMatrix implements Cloneable
 {
     protected List<String> ids;
 
-    protected float[] cdata;
+    protected double[] cdata;
 
-    protected float[][] distmatrix;
+    protected double[][] distmatrix;
 
     protected int nrElements;	//the number of points
 
-    protected float maxDistance;		//Maximun distance in the distmatrix
+    protected double maxDistance;		//Maximun distance in the distmatrix
 
-    protected float minDistance;		//Minimum distance in the distmatrix
+    protected double minDistance;		//Minimum distance in the distmatrix
 
 
     public DistanceMatrix(String filename) throws IOException {
@@ -88,10 +88,10 @@ public class DistanceMatrix implements Cloneable
         this.maxDistance = Float.NEGATIVE_INFINITY;
         this.minDistance = Float.POSITIVE_INFINITY;
         this.nrElements = nrElements;
-        this.distmatrix = new float[nrElements - 1][];
+        this.distmatrix = new double[nrElements - 1][];
 
         for (int i = 0; i < this.nrElements - 1; i++) {
-            this.distmatrix[i] = new float[i + 1];
+            this.distmatrix[i] = new double[i + 1];
         }
     }
 
@@ -108,13 +108,13 @@ public class DistanceMatrix implements Cloneable
         this.minDistance = Float.POSITIVE_INFINITY;
 
         //Create and fill the distance distmatrix
-        this.distmatrix = new float[this.nrElements - 1][];
+        this.distmatrix = new double[this.nrElements - 1][];
 
         for (int i = 0; i < this.nrElements - 1; i++) {
-            this.distmatrix[i] = new float[i + 1];
+            this.distmatrix[i] = new double[i + 1];
 
             for (int j = 0; j < this.distmatrix[i].length; j++) {
-                float distance = diss.calculate(matrix.getRow(i + 1), matrix.getRow(j));
+                double distance = diss.calculate(matrix.getRow(i + 1), matrix.getRow(j));
                 this.setDistance(i + 1, j, distance);
             }
         }
@@ -130,24 +130,24 @@ public class DistanceMatrix implements Cloneable
      * This method modify a distance in the distance matriz.
      * @param indexA The number of the first point.
      * @param indexB The number of the second point.
-     * @param value The new value for the distance between the two points.
+     * @param epsilon The new value for the distance between the two points.
      */
-    public void setDistance(int indexA, int indexB, float value) {
+    public void setDistance(int indexA, int indexB, double epsilon) {
         assert (indexA >= 0 && indexA < nrElements && indexB >= 0 && indexB < nrElements) :
                 "ERROR: index out of bounds!";
 
         if (indexA != indexB) {
             if (indexA < indexB) {
-                this.distmatrix[indexB - 1][indexA] = value;
+                this.distmatrix[indexB - 1][indexA] = epsilon;
             } else {
-                this.distmatrix[indexA - 1][indexB] = value;
+                this.distmatrix[indexA - 1][indexB] = epsilon;
             }
 
-            if (minDistance > value && value >= 0.0f) {
-                minDistance = value;
+            if (minDistance > epsilon && epsilon >= 0.0f) {
+                minDistance = epsilon;
             } else {
-                if (maxDistance < value && value >= 0.0f) {
-                    maxDistance = value;
+                if (maxDistance < epsilon && epsilon >= 0.0f) {
+                    maxDistance = epsilon;
                 }
             }
         }
@@ -159,7 +159,7 @@ public class DistanceMatrix implements Cloneable
      * @param indexB The number of the second point.
      * @return The distance between the two points.
      */
-    public float getDistance(int indexA, int indexB) {
+    public double getDistance(int indexA, int indexB) {
         assert (indexA >= 0 && indexA < nrElements && indexB >= 0 && indexB < nrElements) :
                 "ERROR: index out of bounds!";
 
@@ -178,7 +178,7 @@ public class DistanceMatrix implements Cloneable
      * This method returns the maximum distance stored on the distance distmatrix.
      * @return Returns the maximun distance stored.
      */
-    public float getMaxDistance() {
+    public double getMaxDistance() {
         return maxDistance;
     }
 
@@ -186,7 +186,7 @@ public class DistanceMatrix implements Cloneable
      * This method returns the minimum distance stored on the distance distmatrix.
      * @return Returns the minimun distance stored.
      */
-    public float getMinDistance() {
+    public double getMinDistance() {
         return minDistance;
     }
 
@@ -244,11 +244,11 @@ public class DistanceMatrix implements Cloneable
             //writing the cdata
             if (cdata != null) {
                 for (int i = 0; i < cdata.length - 1; i++) {
-                    out.write(Float.toString(cdata[i]));
+                    out.write(Double.toString(cdata[i]));
                     out.write(";");
                 }
 
-                out.write(Float.toString(cdata[cdata.length - 1]));
+                out.write(Double.toString(cdata[cdata.length - 1]));
                 out.write("\r\n");
             } else {
                 for (int i = 0; i < this.nrElements - 1; i++) {
@@ -260,7 +260,7 @@ public class DistanceMatrix implements Cloneable
 
             for (int i = 0; i < this.distmatrix.length; i++) {
                 for (int j = 0; j < this.distmatrix[i].length; j++) {
-                    out.write(Float.toString(this.distmatrix[i][j]));
+                    out.write(Double.toString(this.distmatrix[i][j]));
 
                     if (j < this.distmatrix[i].length - 1) {
                         out.write(";");
@@ -325,7 +325,7 @@ public class DistanceMatrix implements Cloneable
                         " - " + this.nrElements + ").");
             }
 
-            this.cdata = new float[cdata_aux.size()];
+            this.cdata = new double[cdata_aux.size()];
             for (int i = 0; i < this.cdata.length; i++) {
                 this.cdata[i] = cdata_aux.get(i);
             }
@@ -334,10 +334,10 @@ public class DistanceMatrix implements Cloneable
             //creating the distance matrix
             this.maxDistance = Float.NEGATIVE_INFINITY;
             this.minDistance = Float.POSITIVE_INFINITY;
-            this.distmatrix = new float[this.nrElements - 1][];
+            this.distmatrix = new double[this.nrElements - 1][];
 
             for (int i = 0; i < this.distmatrix.length; i++) {
-                this.distmatrix[i] = new float[i + 1];
+                this.distmatrix[i] = new double[i + 1];
             }
 
             for (int i = 0; i < this.distmatrix.length; i++) {
@@ -349,7 +349,7 @@ public class DistanceMatrix implements Cloneable
                     for (int j = 0; j < this.distmatrix[i].length; j++) {
                         if (tDistance.hasMoreTokens()) {
                             String token = tDistance.nextToken();
-                            float dist = Float.parseFloat(token.trim());
+                            double dist = Float.parseFloat(token.trim());
                             this.setDistance(i + 1, j, dist);
                         } else {
                             throw new IOException("Wrong distance matrix file format.");
@@ -373,7 +373,7 @@ public class DistanceMatrix implements Cloneable
         }
     }
 
-    public float[] getClassData() {
+    public double[] getClassData() {
         return this.cdata;
     }
 
@@ -381,7 +381,7 @@ public class DistanceMatrix implements Cloneable
         return ids;
     }
 
-    public void setClassData(float[] cdata) {
+    public void setClassData(double[] cdata) {
         this.cdata = cdata;
     }
 

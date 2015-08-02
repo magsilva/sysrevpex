@@ -45,30 +45,30 @@ public class BKmeansTest extends TestCase {
             Matrix matrix = new SparseMatrix();
 
             for (int i = 0; i < 25; i++) {
-                float[] point = new float[2];
-                point[0] = (float) Math.random();
-                point[1] = (float) Math.random();
+                double[] point = new double[2];
+                point[0] = (double) Math.random();
+                point[1] = (double) Math.random();
                 matrix.addRow(new SparseVector(point));
             }
 
             for (int i = 0; i < 25; i++) {
-                float[] point = new float[2];
-                point[0] = (float) Math.random() + 10;
-                point[1] = (float) Math.random();
+                double[] point = new double[2];
+                point[0] = (double) Math.random() + 10;
+                point[1] = (double) Math.random();
                 matrix.addRow(new SparseVector(point));
             }
 
             for (int i = 0; i < 25; i++) {
-                float[] point = new float[2];
-                point[0] = (float) Math.random();
-                point[1] = (float) Math.random() + 10;
+                double[] point = new double[2];
+                point[0] = (double) Math.random();
+                point[1] = (double) Math.random() + 10;
                 matrix.addRow(new SparseVector(point));
             }
 
             for (int i = 0; i < 25; i++) {
-                float[] point = new float[2];
-                point[0] = (float) Math.random() + 10;
-                point[1] = (float) Math.random() + 10;
+                double[] point = new double[2];
+                point[0] = (double) Math.random() + 10;
+                point[1] = (double) Math.random() + 10;
                 matrix.addRow(new SparseVector(point));
             }
 
@@ -95,19 +95,19 @@ public class BKmeansTest extends TestCase {
             int DIM = 1000;
 
             for (int i = 0; i < 50; i++) {
-                float[] point = new float[DIM];
+                double[] point = new double[DIM];
                 Arrays.fill(point, 0.0f);
                 matrix.addRow(new SparseVector(point));
             }
 
             for (int i = 0; i < 450; i++) {
-                float[] point = new float[DIM];
+                double[] point = new double[DIM];
                 Arrays.fill(point, 0.0f);
 
                 for (int j = 0; j < point.length; j++) {
-                    float esp = (float) Math.random();
+                    double esp = (double) Math.random();
                     if (esp > 0.75f) {
-                        point[j] = (float) Math.random();
+                        point[j] = (double) Math.random();
                     }
                 }
 

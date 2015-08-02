@@ -49,7 +49,7 @@ public interface Corpus
 	 * 
 	 * @return The cdata of the corpus documents.
 	 */
-	float[] getClassData();
+	double[] getClassData();
 
 	/**
 	 * Get the ids of the documents belonging to this corpus.

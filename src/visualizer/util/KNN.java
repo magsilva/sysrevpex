@@ -95,7 +95,7 @@ public class KNN {
                     continue;
                 }
 
-                float dist = dmat.getDistance(i, j);
+                double dist = dmat.getDistance(i, j);
 
                 if (dist < neighbors[i][neighbors[i].length - 1].value) {
                     for (int k = 0; k < neighbors[i].length; k++) {

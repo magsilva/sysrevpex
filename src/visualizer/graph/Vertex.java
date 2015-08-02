@@ -73,14 +73,14 @@ public class Vertex implements Comparable, Serializable
 {
     private static final long serialVersionUID = 1L;
     
-    private static final float EPSILON = 0.00001f;
+    private static final double EPSILON = 0.00001f;
     
     private long id = 0; //The vertex identification
 
     /**
      * The scalars associated with this vertex.
      */
-    private Map<Scalar, Float> scalars = new HashMap<Scalar, Float>();
+    private Map<Scalar, Double> scalars = new HashMap<Scalar, Double>();
     
     private List<String> titles = new ArrayList<String>();  //The titles associated with this vertex
     
@@ -94,13 +94,13 @@ public class Vertex implements Comparable, Serializable
     
     private Color color = Color.BLACK; //The vertex color
     
-    private float x = 0; //The x-coodinate of the vertex
+    private double x = 0; //The x-coodinate of the vertex
     
-    private float y = 0;  //The y-coodinate of the vertex
+    private double y = 0;  //The y-coodinate of the vertex
     
     private static int rayBase = 4; //The rayFactor of the vertex
     
-    private float rayFactor = 0;  //The size of vertex ray (it must stay between 0.0 and 1.0)
+    private double rayFactor = 0;  //The size of vertex ray (it must stay between 0.0 and 1.0)
     
     public ForceData fdata; //Use to repositioning the points
     
@@ -112,19 +112,19 @@ public class Vertex implements Comparable, Serializable
     
     private static boolean drawAsCircles = true;
     
-    private static float alpha = 1.0f;
+    private static double alpha = 1.0f;
 
     /**
      * A vertex constructor
      *
      * @param id The identification of the vertex
-     * @param x The x-coordinate of the vertex
-     * @param y The y-coordinate of the vertex
+     * @param d The x-coordinate of the vertex
+     * @param e The y-coordinate of the vertex
      */
-    public Vertex(long id, float x, float y) {
+    public Vertex(long id, double d, double e) {
         this.id = id;
-        this.x = x;
-        this.y = y;
+        this.x = d;
+        this.y = e;
     }
 
     /**
@@ -169,7 +169,7 @@ public class Vertex implements Comparable, Serializable
                     rayBase /= 2.5;
                 } else {
                 	Color borderColor = new Color((int) (color.getRed() * 0.3), (int) (color.getBlue() * 0.3), (int) (color.getGreen() * 0.3), color.getAlpha()); 
-                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha));
 
                     g2.setColor(color);
                     g2.fillOval(((int) this.x) - this.getRay(), ((int) this.y) - this.getRay(), this.getRay() * 2, this.getRay() * 2);
@@ -246,7 +246,7 @@ public class Vertex implements Comparable, Serializable
                         this.simulateAlpha(image, alpha, (int) this.x, (int) this.y + 1, rgb);
                         this.simulateAlpha(image, alpha, (int) this.x + 1, (int) this.y + 1, rgb);
                     } else {
-                        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
+                        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) alpha));
 
                         g2.setColor(this.color);
                         g2.fillRect((int) this.x - 1, (int) this.y - 1, 3, 3);
@@ -352,7 +352,7 @@ public class Vertex implements Comparable, Serializable
      * 
      * @return The x-coordinate of the vertex
      */
-    public float getX() {
+    public double getX() {
         return x;
     }
 
@@ -361,7 +361,7 @@ public class Vertex implements Comparable, Serializable
      * 
      * @param x The new x-coordinate of the vertex
      */
-    public void setX(float x) {
+    public void setX(double x) {
         this.x = x;
     }
 
@@ -370,7 +370,7 @@ public class Vertex implements Comparable, Serializable
      * 
      * @return The y-coordinate of the vertex
      */
-    public float getY() {
+    public double getY() {
         return y;
     }
 
@@ -379,7 +379,7 @@ public class Vertex implements Comparable, Serializable
      * 
      * @param y The new y-coordinate of the vertex
      */
-    public void setY(float y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -401,13 +401,13 @@ public class Vertex implements Comparable, Serializable
         rayBase = aRay;
     }
 
-    public void setRayFactor(float ray) {
+    public void setRayFactor(double ray) {
         assert (ray >= 0.0f && ray <= 1.0f) : "Out of range ray factor.";
 
         this.rayFactor = ray;
     }
 
-    public float getRayFactor() {
+    public double getRayFactor() {
         return this.rayFactor;
     }
 
@@ -507,7 +507,7 @@ public class Vertex implements Comparable, Serializable
         }
     }
 
-    public void setScalar(Scalar scalar, float value) {
+    public void setScalar(Scalar scalar, double value) {
     	if (scalar == null) {
     		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
     	}
@@ -523,7 +523,7 @@ public class Vertex implements Comparable, Serializable
         }
     }
     
-    public float getScalar(Scalar scalar) {
+    public double getScalar(Scalar scalar) {
     	if (scalar == null) {
     		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
     	}
@@ -535,7 +535,7 @@ public class Vertex implements Comparable, Serializable
     	}
     }
 
-    public float getNormalizedScalar(Scalar scalar) {
+    public double getNormalizedScalar(Scalar scalar) {
     	if (scalar == null) {
     		throw new IllegalArgumentException("Invalid scalar", new NullPointerException());
     	}
@@ -544,7 +544,7 @@ public class Vertex implements Comparable, Serializable
     		return 0.0f;
     	} else {
            if (scalar.getMax() > scalar.getMin()) {
-                float value = scalars.get(scalar);
+                double value = scalars.get(scalar);
                 return (value - scalar.getMin()) / (scalar.getMax() - scalar.getMin());
            } else {
                 return 0.0f;
@@ -609,19 +609,19 @@ public class Vertex implements Comparable, Serializable
     /**
      * @return the alpha
      */
-    public static float getAlpha() {
+    public static double getAlpha() {
         return alpha;
     }
 
     /**
      * @param aAlpha the alpha to set
      */
-    public static void setAlpha(float aAlpha) {
+    public static void setAlpha(double aAlpha) {
         alpha = aAlpha;
     }
 
     //C = (alpha * (A-B)) + B
-    private void simulateAlpha(BufferedImage image, float alpha, int x, int y, int rgb) {
+    private void simulateAlpha(BufferedImage image, double alpha, int x, int y, int rgb) {
         int oldrgb = image.getRGB(x, y);
         int oldr = (oldrgb >> 16) & 0xFF;
         int oldg = (oldrgb >> 8) & 0xFF;

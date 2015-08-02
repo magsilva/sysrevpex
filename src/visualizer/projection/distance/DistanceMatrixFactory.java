@@ -97,7 +97,7 @@ public class DistanceMatrixFactory {
         return dmat;
     }
 
-    public static DistanceMatrix getInstance(float[][] points, Dissimilarity diss) throws IOException {
+    public static DistanceMatrix getInstance(double[][] points, Dissimilarity diss) throws IOException {
         Matrix matrix = new DenseMatrix();
         for (int i = 0; i < points.length; i++) {
             matrix.addRow(new DenseVector(points[i]));
